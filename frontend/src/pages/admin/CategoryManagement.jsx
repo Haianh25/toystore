@@ -28,6 +28,22 @@ const CategoryManagement = () => {
     };
 
     useEffect(() => {
+        const fetchCategories = async () => {
+            setLoading(true);
+            const apiConfig = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
+                }
+            };
+            try {
+                const response = await axios.get('http://localhost:5000/api/v1/categories', apiConfig);
+                setCategories(response.data.data.categories);
+            } catch (error) {
+                console.error("Lỗi tải danh mục:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchCategories();
     }, []);
 
@@ -64,7 +80,7 @@ const CategoryManagement = () => {
             try {
                 await axios.delete(`http://localhost:5000/api/v1/categories/${categoryId}`, apiConfig);
                 fetchCategories();
-            } catch (error) {
+            } catch {
                 alert('Xóa danh mục thất bại!');
             }
         }

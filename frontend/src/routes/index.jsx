@@ -13,6 +13,7 @@ import ProductManagement from '../pages/admin/ProductManagement';
 import CategoryManagement from '../pages/admin/CategoryManagement';
 import OrderManagement from '../pages/admin/OrderManagement';
 import ProductForm from '../pages/admin/ProductForm';
+import OrderDetail from '../pages/admin/OrderDetail';
 
 // Component bảo vệ route
 const ProtectedRoute = () => {
@@ -37,6 +38,7 @@ const AppRoutes = () => {
                 <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
                 <Route path="/admin/products/new" element={<ProductForm />} />
                 <Route path="/admin/products/edit/:id" element={<ProductForm />} />
+                <Route path="/admin/orders/:id" element={<OrderDetail />} />
             </Route>
 
             {/* Route trang chủ */}

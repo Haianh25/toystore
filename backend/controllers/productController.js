@@ -21,14 +21,18 @@ exports.createProduct = async (req, res) => {
 // READ ALL
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('category', 'name');
+        const query = {};
+        if (req.query.search) {
+            query.name = new RegExp(req.query.search, 'i');
+        }
+        const products = await Product.find(query).populate('category', 'name');
         res.status(200).json({ status: 'success', data: { products } });
-    } catch (err) {
+    } catch (err) { // <<== LỖI THIẾU DẤU {} Ở ĐÂY
         res.status(500).json({ status: 'fail', message: err.message });
     }
 };
 
-// READ ONE (Thêm mới)
+// READ ONE
 exports.getProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id).populate('category');
@@ -39,7 +43,7 @@ exports.getProduct = async (req, res) => {
     }
 };
 
-// UPDATE (Thêm mới)
+// UPDATE
 exports.updateProduct = async (req, res) => {
     try {
         let updateData = { ...req.body };
@@ -60,13 +64,12 @@ exports.updateProduct = async (req, res) => {
     }
 };
 
-// DELETE (Thêm mới)
+// DELETE
 exports.deleteProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
 
-        // Xóa các file ảnh liên quan
         const imagesToDelete = [product.mainImage, ...product.detailImages];
         imagesToDelete.forEach(imgPath => {
             if (imgPath) {
