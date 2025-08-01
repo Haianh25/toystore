@@ -14,6 +14,8 @@ import CategoryManagement from '../pages/admin/CategoryManagement';
 import OrderManagement from '../pages/admin/OrderManagement';
 import ProductForm from '../pages/admin/ProductForm';
 import OrderDetail from '../pages/admin/OrderDetail';
+import VoucherManagement from '../pages/admin/VoucherManagement';
+
 
 // Component bảo vệ route
 const ProtectedRoute = () => {
@@ -39,6 +41,7 @@ const AppRoutes = () => {
                 <Route path="/admin/products/new" element={<ProductForm />} />
                 <Route path="/admin/products/edit/:id" element={<ProductForm />} />
                 <Route path="/admin/orders/:id" element={<OrderDetail />} />
+                <Route path="/admin/vouchers" element={<VoucherManagement />} />
             </Route>
 
             {/* Route trang chủ */}

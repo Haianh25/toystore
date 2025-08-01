@@ -7,6 +7,9 @@ const authRouter = require('./routes/authRoutes'); // Import auth router
 const categoryRouter = require('./routes/categoryRoutes');
 const productRouter = require('./routes/productRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const voucherRouter = require('./routes/voucherRoutes');
+const dashboardRouter = require('./routes/dashboardRoutes');
+
 
 const app = express();
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -19,6 +22,9 @@ app.use('/api/v1/auth', authRouter); // Gắn auth router
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/vouchers', voucherRouter);
+app.use('/api/v1/dashboard', dashboardRouter);
+app.use('/api/v1/dashboard', dashboardRouter);
 
 
 module.exports = app;

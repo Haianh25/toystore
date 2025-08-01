@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserTable from '../../components/admin/UserTable';
 import UserFormModal from '../../components/admin/UserFormModal';
+import './UserManagement.css'; // <-- 1. Import file CSS
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -10,14 +11,12 @@ const UserManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
 
-    // Hàm gọi API lấy danh sách người dùng (đã có nội dung đầy đủ)
+    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }};
+
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('adminToken');
-            const response = await axios.get('http://localhost:5000/api/v1/users', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const response = await axios.get('http://localhost:5000/api/v1/users', apiConfig);
             setUsers(response.data.data.users);
         } catch (err) {
             setError('Không thể tải dữ liệu người dùng.');
@@ -31,7 +30,6 @@ const UserManagement = () => {
         fetchUsers();
     }, []);
 
-    // Các hàm xử lý Modal
     const handleOpenModalForCreate = () => {
         setEditingUser(null);
         setIsModalOpen(true);
@@ -47,19 +45,15 @@ const UserManagement = () => {
         setEditingUser(null);
     };
 
-    // Hàm xử lý gửi Form (Thêm mới hoặc Sửa)
     const handleSubmitForm = async (formData) => {
-        const token = localStorage.getItem('adminToken');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        
         try {
             if (editingUser) {
                 const updatedData = Object.fromEntries(
                     Object.entries(formData).filter(([_, v]) => v !== '' && v !== null)
                 );
-                await axios.patch(`http://localhost:5000/api/v1/users/${editingUser._id}`, updatedData, config);
+                await axios.patch(`http://localhost:5000/api/v1/users/${editingUser._id}`, updatedData, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/users', formData, config);
+                await axios.post('http://localhost:5000/api/v1/users', formData, apiConfig);
             }
             handleCloseModal();
             fetchUsers();
@@ -69,14 +63,10 @@ const UserManagement = () => {
         }
     };
 
-    // Hàm xử lý xóa người dùng
     const handleDelete = async (userId) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này không?')) {
             try {
-                const token = localStorage.getItem('adminToken');
-                await axios.delete(`http://localhost:5000/api/v1/users/${userId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                await axios.delete(`http://localhost:5000/api/v1/users/${userId}`, apiConfig);
                 fetchUsers();
             } catch (err) {
                 alert('Xóa người dùng thất bại!');
@@ -89,10 +79,11 @@ const UserManagement = () => {
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        // 2. Áp dụng các className
+        <div className="page-container">
+            <div className="page-header">
                 <h1>Quản lý Người dùng</h1>
-                <button onClick={handleOpenModalForCreate} style={{ padding: '10px 15px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                <button className="btn-primary" onClick={handleOpenModalForCreate}>
                     Thêm người dùng mới
                 </button>
             </div>

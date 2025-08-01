@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/admin/Sidebar';
 import { useAuth } from '../context/AuthContext';
+import './AdminLayout.css'; // <-- Import file CSS mới
 
 const AdminLayout = () => {
     const { logout } = useAuth();
@@ -13,9 +14,9 @@ const AdminLayout = () => {
     };
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div className="admin-layout">
             <Sidebar />
-            <main style={{ flexGrow: 1, padding: '20px' }}>
+            <main className="admin-content">
                 <div style={{ textAlign: 'right', marginBottom: '20px' }}>
                     <button onClick={handleLogout} style={{ padding: '8px 16px', cursor: 'pointer' }}>
                         Đăng xuất

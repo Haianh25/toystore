@@ -53,18 +53,23 @@ const OrderDetail = () => {
     }, [id, apiConfig]);
 
     const handleStatusUpdate = async () => {
-        if (window.confirm(`Bạn có chắc muốn cập nhật trạng thái thành "${newStatus}"?`)) {
-            try {
-                await axios.patch(`http://localhost:5000/api/v1/orders/${id}`, { status: newStatus }, apiConfig);
-                alert('Cập nhật trạng thái thành công!');
-                fetchOrder();
-                setIsEditing(false);
-            } catch (error) {
-                alert(`Cập nhật thất bại: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
-                console.error("Lỗi cập nhật:", error);
-            }
+    // Thêm dòng kiểm tra này
+    if (newStatus === order.status) {
+        alert('Bạn chưa chọn trạng thái mới để cập nhật.');
+        return;
+    }
+
+    if (window.confirm(`Bạn có chắc muốn cập nhật trạng thái thành "${newStatus}"?`)) {
+        try {
+            await axios.patch(`http://localhost:5000/api/v1/orders/${id}`, { status: newStatus }, apiConfig);
+            alert('Cập nhật trạng thái thành công!');
+            fetchOrder(); // Tải lại để thấy trạng thái mới
+        } catch (error) {
+            alert(`Cập nhật thất bại: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
+            console.error("Lỗi cập nhật:", error);
         }
-    };
+    }
+};
 
     const handleToggleEdit = () => setIsEditing(!isEditing);
 

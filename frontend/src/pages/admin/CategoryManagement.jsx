@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CategoryTable from '../../components/admin/CategoryTable';
 import CategoryFormModal from '../../components/admin/CategoryFormModal';
+import './CategoryManagement.css'; // <-- 1. Import file CSS mới
 
 const CategoryManagement = () => {
     const [categories, setCategories] = useState([]);
@@ -28,22 +29,6 @@ const CategoryManagement = () => {
     };
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            setLoading(true);
-            const apiConfig = {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
-                }
-            };
-            try {
-                const response = await axios.get('http://localhost:5000/api/v1/categories', apiConfig);
-                setCategories(response.data.data.categories);
-            } catch (error) {
-                console.error("Lỗi tải danh mục:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchCategories();
     }, []);
 
@@ -62,10 +47,8 @@ const CategoryManagement = () => {
     const handleSubmitForm = async (formData) => {
         try {
             if (editingCategory) {
-                // Sửa danh mục
                 await axios.patch(`http://localhost:5000/api/v1/categories/${editingCategory._id}`, formData, apiConfig);
             } else {
-                // Thêm danh mục mới
                 await axios.post('http://localhost:5000/api/v1/categories', formData, apiConfig);
             }
             handleCloseModal();
@@ -80,7 +63,7 @@ const CategoryManagement = () => {
             try {
                 await axios.delete(`http://localhost:5000/api/v1/categories/${categoryId}`, apiConfig);
                 fetchCategories();
-            } catch {
+            } catch (error) {
                 alert('Xóa danh mục thất bại!');
             }
         }
@@ -89,10 +72,13 @@ const CategoryManagement = () => {
     if (loading) return <p>Đang tải...</p>;
 
     return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        // 2. Áp dụng các className
+        <div className="page-container">
+            <div className="page-header">
                 <h1>Quản lý Danh mục</h1>
-                <button onClick={handleOpenModalForCreate}>Thêm danh mục mới</button>
+                <button className="btn-primary" onClick={handleOpenModalForCreate}>
+                    Thêm danh mục mới
+                </button>
             </div>
             <CategoryTable categories={categories} onEdit={handleOpenModalForEdit} onDelete={handleDelete} />
             <CategoryFormModal

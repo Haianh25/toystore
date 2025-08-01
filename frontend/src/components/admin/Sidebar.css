@@ -2,19 +2,24 @@
     width: 250px;
     background-color: #2c3e50;
     color: white;
-    height: 100vh;
     padding: 20px;
+    /* Dòng height: 100vh; đã được xóa ở các bước trước */
 }
 
 .sidebar-header {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 30px;
+    padding-left: 10px; /* Thêm để căn lề đẹp hơn */
 }
 
 .sidebar-nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    /* THÊM 2 DÒNG NÀY ĐỂ SỬA LỖI */
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-nav li a {
@@ -26,6 +31,7 @@
     border-radius: 4px;
     margin-bottom: 8px;
     transition: background-color 0.2s;
+    white-space: nowrap; /* Ngăn chữ bị xuống dòng */
 }
 
 .sidebar-nav li a:hover {
@@ -39,4 +45,5 @@
 
 .sidebar-nav li a .icon {
     margin-right: 10px;
+    font-size: 1.1rem; /* Chỉnh kích thước icon */
 }
