@@ -43,6 +43,16 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: [true, 'Sản phẩm phải thuộc về một danh mục'],
     },
+    brand: { // <-- THÊM TRƯỜNG MỚI NÀY
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Brand',
+        required: false, // Không bắt buộc, có thể có sản phẩm không có thương hiệu
+    },
+    productCollection: { // <-- Đã đổi tên từ 'collection' thành 'productCollection'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Collection',
+        required: false,
+    },
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

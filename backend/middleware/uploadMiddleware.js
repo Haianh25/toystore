@@ -1,11 +1,10 @@
 const multer = require('multer');
 const path = require('path');
 
-// Cấu hình lưu trữ file (giữ nguyên)
-const storage = multer.diskStorage({
+// Cấu hình lưu trữ file
+const storage = (folder) => multer.diskStorage({
     destination: function (req, file, cb) {
-        // Ảnh của danh mục và sản phẩm sẽ lưu chung một nơi cho đơn giản
-        cb(null, 'public/images/products'); 
+        cb(null, `public/images/${folder}`); // Thư mục lưu file linh hoạt
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -13,16 +12,17 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+// Cấu hình upload chung
+const upload = (folder) => multer({ storage: storage(folder) });
 
-// >> Thêm cấu hình upload cho sản phẩm
-// Middleware này sẽ xử lý nhiều trường file khác nhau
-const productUpload = upload.fields([
-    { name: 'mainImage', maxCount: 1 },      // Trường 'mainImage' chỉ nhận 1 file
-    { name: 'detailImages', maxCount: 10 }   // Trường 'detailImages' nhận tối đa 10 file
+// Middleware upload cho sản phẩm (nhiều ảnh)
+const productUpload = multer({ storage: storage('products') }).fields([
+    { name: 'mainImage', maxCount: 1 },
+    { name: 'detailImages', maxCount: 10 }
 ]);
 
 module.exports = {
-    categoryUpload: upload, // Giữ lại upload cũ cho category
-    productUpload: productUpload // Export upload mới cho product
+    categoryUpload: upload('categories'),
+    brandUpload: upload('brands'), // <-- Thêm upload cho brand
+    productUpload: productUpload
 };

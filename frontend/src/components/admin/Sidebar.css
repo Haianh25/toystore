@@ -3,36 +3,39 @@
     background-color: #2c3e50;
     color: white;
     padding: 20px;
-    /* Dòng height: 100vh; đã được xóa ở các bước trước */
 }
 
 .sidebar-header {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 30px;
-    padding-left: 10px; /* Thêm để căn lề đẹp hơn */
+    padding-left: 10px;
 }
 
 .sidebar-nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
-    /* THÊM 2 DÒNG NÀY ĐỂ SỬA LỖI */
     display: flex;
     flex-direction: column;
 }
 
-.sidebar-nav li a {
+/* === SỬA LẠI KHỐI NÀY === */
+/* Áp dụng style cho tất cả các trạng thái của link */
+.sidebar-nav li a,
+.sidebar-nav li a:link,
+.sidebar-nav li a:visited {
     display: flex;
     align-items: center;
-    color: #ecf0f1;
-    text-decoration: none;
+    color: #ecf0f1; /* Luôn là màu trắng */
+    text-decoration: none; /* Luôn không có gạch chân */
     padding: 12px 15px;
     border-radius: 4px;
     margin-bottom: 8px;
     transition: background-color 0.2s;
-    white-space: nowrap; /* Ngăn chữ bị xuống dòng */
+    white-space: nowrap;
 }
+/* ======================== */
 
 .sidebar-nav li a:hover {
     background-color: #34495e;
@@ -45,5 +48,5 @@
 
 .sidebar-nav li a .icon {
     margin-right: 10px;
-    font-size: 1.1rem; /* Chỉnh kích thước icon */
+    font-size: 1.1rem;
 }

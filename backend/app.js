@@ -9,7 +9,9 @@ const productRouter = require('./routes/productRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const voucherRouter = require('./routes/voucherRoutes');
 const dashboardRouter = require('./routes/dashboardRoutes');
-
+const flashSaleRouter = require('./routes/flashSaleRoutes');
+const brandRouter = require('./routes/brandRoutes');
+const collectionRouter = require('./routes/collectionRoutes');
 
 const app = express();
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -25,6 +27,9 @@ app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/vouchers', voucherRouter);
 app.use('/api/v1/dashboard', dashboardRouter);
 app.use('/api/v1/dashboard', dashboardRouter);
+app.use('/api/v1/flash-sales', flashSaleRouter);
+app.use('/api/v1/brands', brandRouter);
+app.use('/api/v1/collections', collectionRouter);
 
 
 module.exports = app;

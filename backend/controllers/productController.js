@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const FlashSale = require('../models/flashSaleModel'); // <-- Dòng này bị thiếu
 const fs = require('fs');
 const path = require('path');
 
@@ -18,16 +19,37 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-// READ ALL
+// READ ALL (Đã cập nhật logic)
 exports.getAllProducts = async (req, res) => {
     try {
-        const query = {};
+        let query = {};
         if (req.query.search) {
             query.name = new RegExp(req.query.search, 'i');
         }
-        const products = await Product.find(query).populate('category', 'name');
+
+        // LOGIC LỌC SẢN PHẨM TRONG SALE
+        if (req.query.excludeActiveSale === 'true') {
+            const now = new Date();
+            const activeSales = await FlashSale.find({
+                startTime: { $lte: now },
+                endTime: { $gte: now }
+            });
+
+            if (activeSales.length > 0) {
+                const excludedProductIds = activeSales.flatMap(sale => sale.products.map(p => p.product));
+                if (excludedProductIds.length > 0) {
+                    query._id = { $nin: excludedProductIds };
+                }
+            }
+        }
+
+        const products = await Product.find(query)
+            .populate('category', 'name')
+            .populate('brand', 'name')
+            .populate('productCollection', 'name');
+            
         res.status(200).json({ status: 'success', data: { products } });
-    } catch (err) { // <<== LỖI THIẾU DẤU {} Ở ĐÂY
+    } catch (err) {
         res.status(500).json({ status: 'fail', message: err.message });
     }
 };
@@ -35,7 +57,7 @@ exports.getAllProducts = async (req, res) => {
 // READ ONE
 exports.getProduct = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id).populate('category');
+        const product = await Product.findById(req.params.id).populate('category').populate('brand').populate('productCollection');
         if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
         res.status(200).json({ status: 'success', data: { product } });
     } catch (err) {

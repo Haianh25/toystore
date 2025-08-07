@@ -1,0 +1,118 @@
+.page-container {
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    color: #333;
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.admin-table th, .admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.action-buttons a, .action-buttons button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.expanded-row td {
+    padding: 0;
+    border-bottom: 2px solid #007bff; /* Tạo điểm nhấn cho dòng được mở */
+}
+
+.expanded-content {
+    padding: 20px;
+    background-color: #fdfdfd;
+}
+
+.expanded-content h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.product-sub-list {
+    list-style: none;
+    padding: 0;
+}
+
+.product-sub-list li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.product-sub-list li:last-child {
+    border-bottom: none;
+}
+
+.product-sub-list img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}

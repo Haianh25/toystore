@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
-import { FaTachometerAlt, FaBoxOpen, FaTags, FaShoppingCart, FaUsers, FaGift } from 'react-icons/fa';
+import { FaTachometerAlt, FaBoxOpen, FaTags, FaShoppingCart, FaUsers, FaGift, FaBolt, FaCopyright, FaLayerGroup } from 'react-icons/fa';
 
 const Sidebar = () => {
     return (
@@ -22,6 +22,16 @@ const Sidebar = () => {
                         </NavLink>
                     </li>
                     <li>
+                            <NavLink to="/admin/brands">
+                                <FaCopyright className="icon" /> Quản lý Thương hiệu
+                            </NavLink>
+                    </li>
+                    <li>
+                            <NavLink to="/admin/collections">
+                                <FaLayerGroup className="icon" /> Quản lý Bộ sưu tập
+                            </NavLink>
+                    </li>
+                    <li>
                         <NavLink to="/admin/categories">
                             <FaTags className="icon" /> Quản lý Danh mục
                         </NavLink>
@@ -34,8 +44,15 @@ const Sidebar = () => {
                     <li>
                         <NavLink to="/admin/vouchers">
                             <FaGift className="icon" /> Quản lý Voucher
-                         </NavLink>
+                        </NavLink>
                     </li>
+                    {/* === SỬA LẠI KHỐI NÀY === */}
+                    <li>
+                        <NavLink to="/admin/flash-sales">
+                            <FaBolt className="icon" /> Quản lý Flash Sale
+                        </NavLink>
+                    </li>
+                    {/* ======================== */}
                     <li>
                         <NavLink to="/admin/users">
                             <FaUsers className="icon" /> Quản lý Người dùng
