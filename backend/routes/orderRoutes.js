@@ -1,5 +1,6 @@
 const express = require('express');
 const orderController = require('../controllers/orderController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
 
@@ -20,5 +21,7 @@ router.route('/:id/products')
 router.route('/:id/products/:productId')
     .patch(orderController.updateProductInOrder)
     .delete(orderController.removeProductFromOrder);
-    
+
+
+router.get('/my-orders', authController.protect, orderController.getMyOrders);    
 module.exports = router;

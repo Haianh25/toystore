@@ -20,7 +20,9 @@ import FlashSaleManagement from '../pages/admin/FlashSaleManagement';
 import FlashSaleForm from '../pages/admin/FlashSaleForm';
 import BrandManagement from '../pages/admin/BrandManagement';
 import CollectionManagement from '../pages/admin/CollectionManagement';
-
+import Register from '../pages/public/Register';
+import Login from '../pages/public/Login';
+import MyAccount from '../pages/public/MyAccount';
 // Import các trang User
 import HomePage from '../pages/public/HomePage';
 
@@ -29,6 +31,11 @@ import HomePage from '../pages/public/HomePage';
 const ProtectedRoute = () => {
     const { token } = useAuth();
     return token ? <AdminLayout /> : <Navigate to="/admin/login" replace />;
+};
+
+const UserProtectedRoute = ({ children }) => {
+    const userToken = localStorage.getItem('userToken'); // Kiểm tra token của user
+    return userToken ? children : <Navigate to="/login" replace />;
 };
 
 const AppRoutes = () => {
@@ -52,11 +59,22 @@ const AppRoutes = () => {
                 <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
                 <Route path="/admin/brands" element={<BrandManagement />} />
                 <Route path="/admin/collections" element={<CollectionManagement />} />
+                
             </Route>
 
             {/* === ROUTE USER (NẰM TRONG MAINLAYOUT) === */}
             <Route element={<MainLayout />}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/register" element={<Register />} />
+                 <Route path="/login" element={<Login />} />
+                 <Route 
+                    path="/my-account" 
+                    element={
+                        <UserProtectedRoute>
+                            <MyAccount />
+                        </UserProtectedRoute>
+                    } 
+                />
                 {/* Các trang khác của user như /products, /cart... sẽ thêm vào đây */}
             </Route>
         </Routes>

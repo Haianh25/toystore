@@ -157,3 +157,12 @@ exports.removeProductFromOrder = async (req, res) => {
         res.status(400).json({ status: 'fail', message: error.message });
     }
 };
+
+exports.getMyOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ user: req.user.id }).sort('-createdAt');
+        res.status(200).json({ status: 'success', data: { orders } });
+    } catch (error) {
+        res.status(500).json({ status: 'fail', message: error.message });
+    }
+};

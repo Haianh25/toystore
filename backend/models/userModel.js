@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const crypto = require('crypto');
 
-const addressSchema = new mongoose.Schema({
-    street: { type: String, required: true },
-    ward: { type: String, required: true },
-    district: { type: String, required: true },
-    city: { type: String, required: true },
-    isDefault: { type: Boolean, default: false },
-});
+// Không cần addressSchema riêng nữa
 
 const userSchema = new mongoose.Schema({
     fullName: {
@@ -41,11 +36,23 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user',
     },
-    addresses: [addressSchema],
+    // Thay thế mảng "addresses" bằng object "address"
+    address: {
+        street: { type: String, default: '' },
+        ward: { type: String, default: '' },
+        district: { type: String, default: '' },
+        city: { type: String, default: '' },
+    },
     active: {
         type: Boolean,
         default: true,
         select: false,
+    },
+    emailVerificationToken: String,
+    emailVerificationExpires: Date,
+    emailVerified: {
+        type: Boolean,
+        default: false,
     },
 }, { timestamps: true });
 
@@ -56,12 +63,21 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-// *** PHƯƠNG THỨC SO SÁNH MẬT KHẨU PHẢI NẰM Ở ĐÂY ***
+// Phương thức so sánh mật khẩu
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-// Sau đó mới đến dòng tạo Model
-const User = mongoose.model('User', userSchema);
+// Method tạo token xác thực email
+userSchema.methods.createEmailVerifyToken = function() {
+    const verifyToken = crypto.randomBytes(32).toString('hex');
+    this.emailVerificationToken = crypto
+        .createHash('sha256')
+        .update(verifyToken)
+        .digest('hex');
+    this.emailVerificationExpires = Date.now() + 10 * 60 * 1000; // 10 phút
+    return verifyToken;
+};
 
+const User = mongoose.model('User', userSchema);
 module.exports = User;
