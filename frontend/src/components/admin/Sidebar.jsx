@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
-import { FaTachometerAlt, FaBoxOpen, FaTags, FaShoppingCart, FaUsers, FaGift, FaBolt, FaCopyright, FaLayerGroup } from 'react-icons/fa';
+import { FaTachometerAlt, FaBoxOpen, FaTags, FaShoppingCart, FaUsers, FaGift, FaBolt, FaCopyright, FaLayerGroup, FaImage, FaThList} from 'react-icons/fa';
 
 const Sidebar = () => {
     return (
@@ -36,6 +36,16 @@ const Sidebar = () => {
                             <FaTags className="icon" /> Quản lý Danh mục
                         </NavLink>
                     </li>
+                    <li>
+                            <NavLink to="/admin/banners">
+                                <FaImage className="icon" /> Quản lý Banner
+                            </NavLink>
+                    </li>
+                    <li>
+                            <NavLink to="/admin/sections">
+                                <FaThList className="icon" /> Quản lý Section
+                            </NavLink>
+                     </li>
                     <li>
                         <NavLink to="/admin/orders">
                             <FaShoppingCart className="icon" /> Quản lý Đơn hàng

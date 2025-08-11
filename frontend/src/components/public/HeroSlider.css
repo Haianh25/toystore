@@ -1,0 +1,36 @@
+.hero-slider-container {
+    max-width: 1990px; /* Chiều rộng tối đa của box */
+    height: 643px;    /* Chiều cao cố định của box */
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-slider {
+    width: 100%;
+    height: 100%;
+}
+
+.hero-slider .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-slider .swiper-slide img {
+    display: block;
+    width: 1600px;  /* Chiều rộng cố định của ảnh */
+    height: 620px; /* Chiều cao cố định của ảnh */
+    object-fit: cover; /* Ảnh sẽ tự crop để lấp đầy khung mà không bị méo */
+}
+
+/* Tùy chỉnh nút điều hướng */
+.hero-slider .swiper-button-next,
+.hero-slider .swiper-button-prev {
+    color: #333;
+}

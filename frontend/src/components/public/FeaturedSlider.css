@@ -1,0 +1,53 @@
+.featured-section {
+    max-width: 1600px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #f0f2f5;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    position: relative;
+}
+
+.featured-section h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.featured-slider .swiper-slide {
+    display: flex;
+    justify-content: center;
+    /* Ngăn slide bị co lại và xuống dòng */
+    flex-shrink: 0;
+}
+
+/* Tùy chỉnh nút điều hướng */
+.featured-slider .swiper-button-next,
+.featured-slider .swiper-button-prev {
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    top: 50%; /* Căn giữa theo chiều dọc */
+}
+
+.featured-slider .swiper-button-next::after,
+.featured-slider .swiper-button-prev::after {
+    font-size: 18px;
+}
+
+/* Thêm style cho thanh scrollbar */
+.featured-slider .swiper-scrollbar {
+    background: rgba(0, 0, 0, 0.1);
+    bottom: 0px; /* Di chuyển thanh kéo xuống dưới */
+    height: 8px;
+    border-radius: 4px;
+    cursor: grab;
+}
+.featured-slider .swiper-scrollbar-drag {
+    background: #007bff;
+    border-radius: 4px;
+}

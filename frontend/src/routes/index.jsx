@@ -23,6 +23,8 @@ import CollectionManagement from '../pages/admin/CollectionManagement';
 import Register from '../pages/public/Register';
 import Login from '../pages/public/Login';
 import MyAccount from '../pages/public/MyAccount';
+import BannerManagement from '../pages/admin/BannerManagement';
+import SectionManagement from '../pages/admin/SectionManagement';
 // Import các trang User
 import HomePage from '../pages/public/HomePage';
 
@@ -34,7 +36,7 @@ const ProtectedRoute = () => {
 };
 
 const UserProtectedRoute = ({ children }) => {
-    const userToken = localStorage.getItem('userToken'); // Kiểm tra token của user
+    const userToken = localStorage.getItem('userToken');
     return userToken ? children : <Navigate to="/login" replace />;
 };
 
@@ -59,7 +61,8 @@ const AppRoutes = () => {
                 <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
                 <Route path="/admin/brands" element={<BrandManagement />} />
                 <Route path="/admin/collections" element={<CollectionManagement />} />
-                
+                <Route path="/admin/banners" element={<BannerManagement />} />
+                <Route path="/admin/sections" element={<SectionManagement />} />
             </Route>
 
             {/* === ROUTE USER (NẰM TRONG MAINLAYOUT) === */}

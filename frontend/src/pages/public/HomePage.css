@@ -1,0 +1,58 @@
+/* Container chính của trang chủ */
+.homepage-content {
+    /* Các style chung cho trang chủ nếu cần */
+}
+
+/* --- STYLE CHUNG CHO CÁC SECTION --- */
+.product-section, .featured-section {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 15px;
+    position: relative;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+/* --- STYLE CHO SLIDER SẢN PHẨM (FeaturedSlider) --- */
+.featured-slider {
+    padding-bottom: 40px; /* Tạo không gian cho thanh kéo */
+}
+.featured-slider .swiper-slide {
+    flex-shrink: 0; /* Quan trọng: Ngăn slide bị co lại */
+}
+.featured-slider .swiper-scrollbar {
+    background: #e0e0e0;
+    bottom: 0;
+    height: 6px;
+    border-radius: 3px;
+}
+.featured-slider .swiper-scrollbar-drag {
+    background: #007bff;
+}
+.featured-slider .swiper-button-next,
+.featured-slider .swiper-button-prev {
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    top: 50%;
+    transform: translateY(-50%);
+}
+.featured-slider .swiper-button-next::after,
+.featured-slider .swiper-button-prev::after {
+    font-size: 18px;
+}
+
+/* --- STYLE CHO LƯỚI SẢN PHẨM (ProductSection) --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}

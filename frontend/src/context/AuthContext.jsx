@@ -1,35 +1,49 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(localStorage.getItem('adminToken'));
+    // State riêng cho admin token
+    const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
+    // State riêng cho user token
+    const [userToken, setUserToken] = useState(localStorage.getItem('userToken'));
 
-    // Mỗi khi token thay đổi, cập nhật localStorage
-    useEffect(() => {
-        if (token) {
-            localStorage.setItem('adminToken', token);
-        } else {
-            localStorage.removeItem('adminToken');
-        }
-    }, [token]);
-
-    const login = (newToken) => {
-        setToken(newToken);
+    // Hàm cho admin
+    const adminLogin = (token) => {
+        localStorage.setItem('adminToken', token);
+        setAdminToken(token);
+    };
+    const adminLogout = () => {
+        localStorage.removeItem('adminToken');
+        setAdminToken(null);
     };
 
-    const logout = () => {
-        setToken(null);
+    // Hàm cho user
+    const userLogin = (token) => {
+        localStorage.setItem('userToken', token);
+        setUserToken(token);
+    };
+    const userLogout = () => {
+        localStorage.removeItem('userToken');
+        setUserToken(null);
+    };
+
+    const value = {
+        token: adminToken, // Giữ lại "token" cho trang admin
+        adminLogin,
+        adminLogout,
+        userToken, // Thêm userToken
+        userLogin,
+        userLogout,
     };
 
     return (
-        <AuthContext.Provider value={{ token, login, logout }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-// Tạo một custom hook để dễ dàng sử dụng context
 export const useAuth = () => {
     return useContext(AuthContext);
 };
