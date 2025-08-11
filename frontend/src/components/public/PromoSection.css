@@ -1,0 +1,87 @@
+.promo-section {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 15px;
+}
+
+.promo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.promo-header h2 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.see-more-btn {
+    background-color: #eee;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.see-more-btn:hover {
+    background-color: #ddd;
+}
+
+.promo-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    align-items: stretch; /* Đảm bảo các cột cao bằng nhau */
+}
+
+.promo-banner {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.promo-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.promo-banner a:hover img {
+    transform: scale(1.05);
+}
+
+.promo-products {
+    width: 100%;
+    /* Quan trọng: Phải thêm để Swiper không bị tràn */
+    overflow: hidden; 
+}
+
+.promo-product-slider {
+    height: 100%;
+}
+
+.promo-product-slider .swiper-slide {
+    height: auto; /* Để slide tự điều chỉnh chiều cao theo content */
+}
+.promo-product-slider .product-card {
+    height: 100%; /* Đảm bảo card chiếm hết chiều cao của slide */
+}
+
+.promo-product-slider .swiper-button-next,
+.promo-product-slider .swiper-button-prev {
+    color: #000;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.promo-product-slider .swiper-button-next:after,
+.promo-product-slider .swiper-button-prev:after {
+    font-size: 16px;
+    font-weight: bold;
+}

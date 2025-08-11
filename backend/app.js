@@ -28,7 +28,6 @@ app.use('/api/v1/products', productRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/vouchers', voucherRouter);
 app.use('/api/v1/dashboard', dashboardRouter);
-app.use('/api/v1/dashboard', dashboardRouter);
 app.use('/api/v1/flash-sales', flashSaleRouter);
 app.use('/api/v1/brands', brandRouter);
 app.use('/api/v1/collections', collectionRouter);

@@ -21,7 +21,9 @@ const productUpload = multer({ storage: storage('products') }).fields([
 module.exports = {
     categoryUpload: upload('categories'),
     brandUpload: upload('brands'),
-    bannerUpload: upload('banners'), // <-- Thêm upload cho banner
-    sectionUpload: upload('sections'),
+    bannerUpload: upload('banners'),
+    // SỬA LẠI DÒNG NÀY:
+    // Trả về một đối tượng multer, chưa gọi .single()
+    sectionUpload: upload('sections'), 
     productUpload: productUpload
 };

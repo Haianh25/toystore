@@ -29,9 +29,19 @@ const SectionManagement = () => {
     const handleSubmit = async (formData) => {
         try {
             if (editingSection) {
-                await axios.patch(`http://localhost:5000/api/v1/sections/${editingSection._id}`, formData, apiConfig);
+                await axios.patch(`http://localhost:5000/api/v1/sections/${editingSection._id}`, formData, {
+                    headers: { 
+                        ...apiConfig.headers,
+                        'Content-Type': 'multipart/form-data' 
+                    }
+                });
             } else {
-                await axios.post('http://localhost:5000/api/v1/sections', formData, apiConfig);
+                await axios.post('http://localhost:5000/api/v1/sections', formData, {
+                     headers: { 
+                        ...apiConfig.headers,
+                        'Content-Type': 'multipart/form-data' 
+                    }
+                });
             }
             fetchSections();
             setIsModalOpen(false);

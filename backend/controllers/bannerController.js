@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Banner = require('../models/bannerModel');
 
 exports.createBanner = async (req, res) => {
@@ -25,9 +27,37 @@ exports.getAllBanners = async (req, res) => {
     }
 };
 
+// --- LOGIC MỚI ĐƯỢC THÊM VÀO ĐÂY ---
 exports.deleteBanner = async (req, res) => {
-    // ... logic xóa banner và file ảnh tương ứng ...
+    try {
+        // 1. Tìm banner dựa trên ID để lấy đường dẫn ảnh
+        const banner = await Banner.findById(req.params.id);
+        if (!banner) {
+            return res.status(404).json({ message: 'Không tìm thấy banner' });
+        }
+
+        // 2. Xóa file ảnh khỏi server
+        if (banner.image) {
+            // Tạo đường dẫn tuyệt đối đến file ảnh
+            const imagePath = path.join(__dirname, '..', banner.image);
+            
+            // Kiểm tra xem file có tồn tại không rồi mới xóa
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+
+        // 3. Xóa banner khỏi database
+        await Banner.findByIdAndDelete(req.params.id);
+
+        // 4. Trả về mã 204 (No Content) báo hiệu thành công
+        res.status(204).json({ status: 'success', data: null });
+
+    } catch (err) {
+        res.status(500).json({ status: 'fail', message: err.message });
+    }
 };
+// --- KẾT THÚC LOGIC MỚI ---
 
 exports.updateBanner = async (req, res) => {
     try {

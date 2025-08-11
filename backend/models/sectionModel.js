@@ -1,28 +1,36 @@
 const mongoose = require('mongoose');
 
 const sectionSchema = new mongoose.Schema({
-    title: { // Ví dụ: "Hàng mới về", "Bộ sưu tập LEGO"
+    title: {
         type: String,
         required: [true, 'Tiêu đề section không được để trống'],
         trim: true,
     },
-    type: { // Loại section để frontend biết cách hiển thị
+    type: {
         type: String,
-        enum: ['product_grid', 'single_banner', 'product_slider'],
+        enum: ['product_grid', 'single_banner', 'product_slider', 'promo_with_products'],
         required: true,
     },
     content: {
-        products: { // Sửa lại phần này
+        // === SỬA LỖI CẤU TRÚC VALIDATE TẠI ĐÂY ===
+        products: {
             type: [{
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Product'
             }],
-            validate: [val => val.length <= 10, 'Một section chỉ có thể chứa tối đa 10 sản phẩm']
+            // Validator phải được đặt trong một đối tượng 'validate'
+            validate: {
+                validator: function(v) {
+                    // Mảng sản phẩm không được có nhiều hơn 10 phần tử
+                    return v.length <= 10;
+                },
+                message: props => `Một section chỉ có thể chứa tối đa 10 sản phẩm.`
+            }
         },
-        image: String,
+        bannerImage: String,
         link: String,
     },
-    sortOrder: { // Để sắp xếp thứ tự
+    sortOrder: {
         type: Number,
         default: 0,
     },
@@ -33,4 +41,4 @@ const sectionSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const Section = mongoose.model('Section', sectionSchema);
-module.exports = Section;   
+module.exports = Section;

@@ -3,18 +3,19 @@ import axios from 'axios';
 import HeroSlider from '../../components/public/HeroSlider';
 import ProductSection from '../../components/public/ProductSection';
 import FeaturedSlider from '../../components/public/FeaturedSlider';
+import PromoSection from '../../components/public/PromoSection'; // <-- Import component mới
 import { Link } from 'react-router-dom';
 import './HomePage.css';
+
 const HomePage = () => {
     const [sections, setSections] = useState([]);
-    const [banners, setBanners] = useState([]); // State riêng cho slider banner
+    const [banners, setBanners] = useState([]);
     const [loading, setLoading] = useState(true);
     const serverUrl = 'http://localhost:5000';
 
     useEffect(() => {
         const fetchHomePageData = async () => {
             try {
-                // Lấy song song dữ liệu sections và banners
                 const [sectionsRes, bannersRes] = await Promise.all([
                     axios.get('http://localhost:5000/api/v1/sections?activeOnly=true'),
                     axios.get('http://localhost:5000/api/v1/banners?activeOnly=true')
@@ -35,7 +36,6 @@ const HomePage = () => {
         return <p>Đang tải trang...</p>;
     }
 
-    // Hàm để render section tương ứng (giữ nguyên)
     const renderSection = (section) => {
         switch (section.type) {
             case 'product_grid':
@@ -50,6 +50,9 @@ const HomePage = () => {
                         </Link>
                     </div>
                 );
+            // THÊM CASE MỚI Ở ĐÂY
+            case 'promo_with_products':
+                return <PromoSection key={section._id} section={section} />;
             default:
                 return null;
         }
@@ -57,13 +60,10 @@ const HomePage = () => {
 
     return (
         <div>
-            {/* Hiển thị HeroSlider với dữ liệu từ Quản lý Banner */}
             {banners.length > 0 && <HeroSlider banners={banners} />}
-
-            {/* Render tất cả các section bạn đã tạo */}
             {sections.map(section => renderSection(section))}
         </div>
     );
 };
 
-export default HomePage;    
+export default HomePage;
