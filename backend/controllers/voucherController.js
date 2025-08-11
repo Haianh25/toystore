@@ -1,6 +1,6 @@
 const Voucher = require('../models/voucherModel');
 
-// Lấy tất cả voucher
+
 exports.getAllVouchers = async (req, res) => {
     try {
         const vouchers = await Voucher.find();
@@ -10,7 +10,7 @@ exports.getAllVouchers = async (req, res) => {
     }
 };
 
-// Lấy một voucher
+
 exports.getVoucher = async (req, res) => {
     try {
         const voucher = await Voucher.findById(req.params.id);
@@ -21,7 +21,7 @@ exports.getVoucher = async (req, res) => {
     }
 };
 
-// Tạo voucher mới
+
 exports.createVoucher = async (req, res) => {
     try {
         const newVoucher = await Voucher.create(req.body);
@@ -31,7 +31,7 @@ exports.createVoucher = async (req, res) => {
     }
 };
 
-// Cập nhật voucher
+
 exports.updateVoucher = async (req, res) => {
     try {
         const voucher = await Voucher.findByIdAndUpdate(req.params.id, req.body, {
@@ -45,7 +45,7 @@ exports.updateVoucher = async (req, res) => {
     }
 };
 
-// Xóa voucher
+
 exports.deleteVoucher = async (req, res) => {
     try {
         const voucher = await Voucher.findByIdAndDelete(req.params.id);

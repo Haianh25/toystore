@@ -1,7 +1,7 @@
 const Section = require('../models/sectionModel');
 const slugify = require('slugify');
 
-// Lấy tất cả sections
+
 exports.getAllSections = async (req, res) => {
     try {
         const query = req.query.activeOnly === 'true' ? { isActive: true } : {};
@@ -12,7 +12,7 @@ exports.getAllSections = async (req, res) => {
     }
 };
 
-// Tạo section mới
+
 exports.createSection = async (req, res) => {
     try {
         let content = {};
@@ -37,7 +37,7 @@ exports.createSection = async (req, res) => {
     }
 };
 
-// Cập nhật section (Thêm mới)
+
 exports.updateSection = async (req, res) => {
     try {
         let updateData = { ...req.body };
@@ -62,12 +62,12 @@ exports.updateSection = async (req, res) => {
     }
 };
 
-// Xóa section (Thêm mới)
+
 exports.deleteSection = async (req, res) => {
     try {
         const section = await Section.findByIdAndDelete(req.params.id);
         if (!section) return res.status(404).json({ message: 'Không tìm thấy section' });
-        // (Nâng cao: có thể thêm logic xóa ảnh nếu là banner)
+        
         res.status(204).json({ status: 'success', data: null });
     } catch (err) {
         res.status(500).json({ status: 'fail', message: err.message });

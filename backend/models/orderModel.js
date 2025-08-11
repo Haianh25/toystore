@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema({
             type: Number,
             required: true,
         },
-        price: { // Lưu lại giá tại thời điểm mua
+        price: { 
             type: Number,
             required: true,
         }

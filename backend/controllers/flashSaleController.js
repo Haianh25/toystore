@@ -1,7 +1,7 @@
 const FlashSale = require('../models/flashSaleModel');
 const Product = require('../models/productModel');
 
-// Lấy tất cả chương trình Flash Sale
+
 exports.getAllFlashSales = async (req, res) => {
     try {
         const flashSales = await FlashSale.find()
@@ -13,7 +13,7 @@ exports.getAllFlashSales = async (req, res) => {
     }
 };
 
-// Lấy chi tiết một chương trình
+
 exports.getFlashSale = async (req, res) => {
     try {
         const flashSale = await FlashSale.findById(req.params.id).populate('products.product', 'name mainImage sellPrice stockQuantity');
@@ -24,12 +24,12 @@ exports.getFlashSale = async (req, res) => {
     }
 };
 
-// Tạo chương trình mới
+
 exports.createFlashSale = async (req, res) => {
     try {
         const now = new Date();
         for (const item of req.body.products) {
-            // Kiểm tra giá sale
+          
             const product = await Product.findById(item.product);
             if (!product || item.flashSalePrice > product.sellPrice) {
                 return res.status(400).json({ 
@@ -37,7 +37,7 @@ exports.createFlashSale = async (req, res) => {
                 });
             }
 
-            // LOGIC MỚI: Kiểm tra sản phẩm có trong sale khác đang hoạt động không
+            
             const otherActiveSale = await FlashSale.findOne({
                 'products.product': item.product,
                 startTime: { $lte: now },
@@ -55,13 +55,13 @@ exports.createFlashSale = async (req, res) => {
     }
 };
 
-// Cập nhật chương trình
+
 exports.updateFlashSale = async (req, res) => {
     try {
         const now = new Date();
         if (req.body.products) {
             for (const item of req.body.products) {
-                // Kiểm tra giá sale
+                
                 const product = await Product.findById(item.product);
                 if (!product || item.flashSalePrice > product.sellPrice) {
                     return res.status(400).json({ 
@@ -69,9 +69,9 @@ exports.updateFlashSale = async (req, res) => {
                     });
                 }
 
-                // LOGIC MỚI: Kiểm tra sản phẩm có trong sale khác đang hoạt động không (loại trừ chính sale đang sửa)
+                
                 const otherActiveSale = await FlashSale.findOne({
-                    _id: { $ne: req.params.id }, // Loại trừ chương trình đang được sửa
+                    _id: { $ne: req.params.id }, 
                     'products.product': item.product,
                     startTime: { $lte: now },
                     endTime: { $gte: now }
@@ -90,7 +90,7 @@ exports.updateFlashSale = async (req, res) => {
     }
 };
 
-// Xóa chương trình
+
 exports.deleteFlashSale = async (req, res) => {
     try {
         const flashSale = await FlashSale.findByIdAndDelete(req.params.id);

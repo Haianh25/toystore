@@ -7,21 +7,21 @@ const categorySchema = new mongoose.Schema({
         unique: true,
         trim: true,
     },
-    slug: { // Dùng cho URL thân thiện, vd: /do-choi-be-trai
+    slug: {
         type: String,
         required: true,
         unique: true,
     },
     bannerImage: {
-        type: String, // Sẽ lưu đường dẫn đến file ảnh
+        type: String,
         required: [true, 'Ảnh banner không được để trống'],
     },
     status: {
         type: String,
-        enum: ['Active', 'Inactive'], // Chỉ cho phép 2 giá trị này
+        enum: ['Active', 'Inactive'],
         default: 'Active',
     },
-    sortOrder: { // Dùng để sắp xếp vị trí hiển thị
+    sortOrder: {
         type: Number,
         default: 0,
     }

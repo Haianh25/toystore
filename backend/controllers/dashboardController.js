@@ -1,19 +1,19 @@
 const Order = require('../models/orderModel');
 
-// Lấy các số liệu thống kê tổng quan
+
 exports.getOverviewStats = async (req, res) => {
     try {
         // 1. Tổng số đơn hàng đã bán (không tính đơn bị hủy)
         const totalOrders = await Order.countDocuments({ status: { $ne: 'Cancelled' } });
 
-        // 2. Tổng doanh thu (chỉ tính các đơn đã hoàn thành)
+       
         const revenueResult = await Order.aggregate([
             { $match: { status: 'Completed' } },
             { $group: { _id: null, totalRevenue: { $sum: '$totalAmount' } } }
         ]);
         const totalRevenue = revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0;
 
-        // 3. Tổng số sản phẩm đã bán
+       
         const productsSoldResult = await Order.aggregate([
             { $match: { status: { $ne: 'Cancelled' } } },
             { $unwind: '$products' },
@@ -30,7 +30,7 @@ exports.getOverviewStats = async (req, res) => {
     }
 };
 
-// Lấy dữ liệu cho biểu đồ (mặc định 30 ngày gần nhất)
+
 exports.getChartData = async (req, res) => {
     try {
         const thirtyDaysAgo = new Date();

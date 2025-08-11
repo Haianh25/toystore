@@ -8,7 +8,7 @@ const brandSchema = new mongoose.Schema({
         trim: true,
     },
     logo: {
-        type: String, // Lưu đường dẫn ảnh logo
+        type: String, 
         required: [true, 'Logo thương hiệu không được để trống'],
     },
     description: {

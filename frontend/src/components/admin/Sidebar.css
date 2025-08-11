@@ -20,22 +20,19 @@
     flex-direction: column;
 }
 
-/* === SỬA LẠI KHỐI NÀY === */
-/* Áp dụng style cho tất cả các trạng thái của link */
 .sidebar-nav li a,
 .sidebar-nav li a:link,
 .sidebar-nav li a:visited {
     display: flex;
     align-items: center;
-    color: #ecf0f1; /* Luôn là màu trắng */
-    text-decoration: none; /* Luôn không có gạch chân */
+    color: #ecf0f1;
+    text-decoration: none;
     padding: 12px 15px;
     border-radius: 4px;
     margin-bottom: 8px;
     transition: background-color 0.2s;
     white-space: nowrap;
 }
-/* ======================== */
 
 .sidebar-nav li a:hover {
     background-color: #34495e;

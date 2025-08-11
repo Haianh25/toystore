@@ -6,30 +6,30 @@ const voucherSchema = new mongoose.Schema({
         required: [true, 'Mã voucher không được để trống'],
         unique: true,
         trim: true,
-        uppercase: true, // Tự động chuyển mã thành chữ hoa
+        uppercase: true, 
     },
     discountType: {
         type: String,
-        enum: ['percentage', 'fixed_amount'], // Giảm theo % hoặc số tiền cố định
+        enum: ['percentage', 'fixed_amount'], 
         required: true,
     },
     discountValue: {
         type: Number,
         required: [true, 'Giá trị giảm giá không được để trống'],
     },
-    maxUses: { // Số lần sử dụng tối đa
+    maxUses: { 
         type: Number,
         required: [true, 'Số lượng mã không được để trống'],
     },
-    usesCount: { // Số lần đã sử dụng
+    usesCount: { 
         type: Number,
         default: 0,
     },
-    expiresAt: { // Ngày hết hạn
+    expiresAt: { 
         type: Date,
         required: [true, 'Ngày hết hạn không được để trống'],
     },
-    isActive: { // Cho phép admin bật/tắt voucher
+    isActive: { // 
         type: Boolean,
         default: true,
     },

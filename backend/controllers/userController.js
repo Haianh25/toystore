@@ -1,17 +1,16 @@
 const User = require('../models/userModel');
 
-// Middleware để lấy id của user đang đăng nhập
 exports.getMe = (req, res, next) => {
     req.params.id = req.user.id;
     next();
 };
 
-// User tự cập nhật thông tin (bao gồm cả địa chỉ)
+
 exports.updateMe = async (req, res) => {
     try {
         const { fullName, phone, address } = req.body;
 
-        // Sử dụng "dot notation" để cập nhật object lồng nhau một cách an toàn
+        
         const updateData = {
             fullName,
             phone,

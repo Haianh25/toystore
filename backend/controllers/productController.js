@@ -1,9 +1,9 @@
 const Product = require('../models/productModel');
-const FlashSale = require('../models/flashSaleModel'); // <-- Dòng này bị thiếu
+const FlashSale = require('../models/flashSaleModel'); 
 const fs = require('fs');
 const path = require('path');
 
-// CREATE
+
 exports.createProduct = async (req, res) => {
     try {
         if (!req.files || !req.files.mainImage) {
@@ -19,7 +19,7 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-// READ ALL (Đã cập nhật logic)
+
 exports.getAllProducts = async (req, res) => {
     try {
         let query = {};
@@ -27,7 +27,7 @@ exports.getAllProducts = async (req, res) => {
             query.name = new RegExp(req.query.search, 'i');
         }
 
-        // LOGIC LỌC SẢN PHẨM TRONG SALE
+        
         if (req.query.excludeActiveSale === 'true') {
             const now = new Date();
             const activeSales = await FlashSale.find({
@@ -54,7 +54,7 @@ exports.getAllProducts = async (req, res) => {
     }
 };
 
-// READ ONE
+
 exports.getProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id).populate('category').populate('brand').populate('productCollection');
@@ -65,7 +65,6 @@ exports.getProduct = async (req, res) => {
     }
 };
 
-// UPDATE
 exports.updateProduct = async (req, res) => {
     try {
         let updateData = { ...req.body };
@@ -86,7 +85,7 @@ exports.updateProduct = async (req, res) => {
     }
 };
 
-// DELETE
+
 exports.deleteProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);

@@ -14,16 +14,14 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user }) => {
 
     useEffect(() => {
         if (isEditing) {
-            // Nếu là sửa, điền thông tin user vào form
             setFormData({
                 fullName: user.fullName || '',
                 email: user.email || '',
                 phone: user.phone || '',
-                password: '', // Để trống mật khẩu khi sửa
+                password: '',
                 role: user.role || 'user',
             });
         } else {
-            // Nếu là thêm mới, reset form
             setFormData({ fullName: '', email: '', phone: '', password: '', role: 'user' });
         }
     }, [user, isOpen]);

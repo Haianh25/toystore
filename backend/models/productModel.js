@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Giá bán không được để trống'],
     },
-    weight: { // Đơn vị: gram
+    weight: { 
         type: Number,
         default: 0,
     },
@@ -31,24 +31,24 @@ const productSchema = new mongoose.Schema({
         required: [true, 'Số lượng tồn kho không được để trống'],
         default: 0,
     },
-    mainImage: { // Ảnh đại diện
+    mainImage: { 
         type: String,
         required: [true, 'Ảnh đại diện không được để trống'],
     },
-    detailImages: [{ // Album ảnh chi tiết
+    detailImages: [{ 
         type: String,
     }],
-    category: { // Quan hệ với Category Model
+    category: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: [true, 'Sản phẩm phải thuộc về một danh mục'],
     },
-    brand: { // <-- THÊM TRƯỜNG MỚI NÀY
+    brand: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
-        required: false, // Không bắt buộc, có thể có sản phẩm không có thương hiệu
+        required: false, 
     },
-    productCollection: { // <-- Đã đổi tên từ 'collection' thành 'productCollection'
+    productCollection: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Collection',
         required: false,
