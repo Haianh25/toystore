@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HeroSlider from '../../components/public/HeroSlider';
-import ProductSection from '../../components/public/ProductSection';
-import FeaturedSlider from '../../components/public/FeaturedSlider';
-import PromoSection from '../../components/public/PromoSection'; // <-- Import component mới
-import { Link } from 'react-router-dom';
+import PromoSection from '../../components/public/PromoSection';
+import SectionBannerSlider from '../../components/public/SectionBannerSlider';
 import './HomePage.css';
 
 const HomePage = () => {
     const [sections, setSections] = useState([]);
     const [banners, setBanners] = useState([]);
     const [loading, setLoading] = useState(true);
-    const serverUrl = 'http://localhost:5000';
 
     useEffect(() => {
         const fetchHomePageData = async () => {
@@ -20,7 +17,6 @@ const HomePage = () => {
                     axios.get('http://localhost:5000/api/v1/sections?activeOnly=true'),
                     axios.get('http://localhost:5000/api/v1/banners?activeOnly=true')
                 ]);
-                
                 setSections(sectionsRes.data.data.sections);
                 setBanners(bannersRes.data.data.banners);
             } catch (error) {
@@ -32,27 +28,23 @@ const HomePage = () => {
         fetchHomePageData();
     }, []);
 
-    if (loading) {
-        return <p>Đang tải trang...</p>;
-    }
+    if (loading) return <p>Đang tải trang...</p>;
 
     const renderSection = (section) => {
+        // Kiểm tra nội dung trước khi render
+        const hasTitle = section.title && section.title.trim() !== '';
+        
         switch (section.type) {
-            case 'product_grid':
-                return <ProductSection key={section._id} title={section.title} products={section.content.products} />;
-            case 'product_slider':
-                return <FeaturedSlider key={section._id} title={section.title} products={section.content.products} />;
-            case 'single_banner':
-                return (
-                    <div key={section._id} style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 15px' }}>
-                         <Link to={section.content.link}>
-                            <img src={`${serverUrl}${section.content.image}`} alt={section.title} style={{ width: '100%', borderRadius: '8px' }} />
-                        </Link>
-                    </div>
-                );
-            // THÊM CASE MỚI Ở ĐÂY
             case 'promo_with_products':
+                const hasPromoContent = section.content?.bannerImage && section.content?.products?.length > 0;
+                if (!hasTitle || !hasPromoContent) return null; // Chỉ hiện khi có đủ tiêu đề, ảnh và sản phẩm
                 return <PromoSection key={section._id} section={section} />;
+
+            case 'banner_slider':
+                const hasBanners = section.content?.bannerGroup?.length > 0;
+                if (!hasBanners) return null; // Chỉ hiện khi có banner trong nhóm
+                return <SectionBannerSlider key={section._id} section={section} />;
+                
             default:
                 return null;
         }

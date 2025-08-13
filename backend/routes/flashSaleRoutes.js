@@ -3,6 +3,9 @@ const flashSaleController = require('../controllers/flashSaleController');
 
 const router = express.Router();
 
+
+router.get('/active', flashSaleController.getActiveFlashSales);
+
 router.route('/')
     .get(flashSaleController.getAllFlashSales)
     .post(flashSaleController.createFlashSale);

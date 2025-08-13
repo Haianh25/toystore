@@ -1,11 +1,13 @@
 const Product = require('../models/productModel');
-const FlashSale = require('../models/flashSaleModel'); 
+const FlashSale = require('../models/flashSaleModel');
 const fs = require('fs');
 const path = require('path');
 
-
 exports.createProduct = async (req, res) => {
     try {
+        if (req.body.ageGroups && typeof req.body.ageGroups === 'string') {
+            req.body.ageGroups = req.body.ageGroups.split(',');
+        }
         if (!req.files || !req.files.mainImage) {
             return res.status(400).json({ message: 'Vui lòng tải lên ảnh đại diện.' });
         }
@@ -19,41 +21,55 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-
 exports.getAllProducts = async (req, res) => {
     try {
         let query = {};
-        if (req.query.search) {
-            query.name = new RegExp(req.query.search, 'i');
-        }
+        const { search, age, category, collection, brand, minPrice, maxPrice, sort } = req.query;
 
+        if (search) query.name = new RegExp(search, 'i');
+        if (category) query.category = category;
+        if (collection) query.productCollection = collection;
+        if (brand) query.brand = brand;
+        if (age) query.ageGroups = { $in: age.split(',') };
         
-        if (req.query.excludeActiveSale === 'true') {
-            const now = new Date();
-            const activeSales = await FlashSale.find({
-                startTime: { $lte: now },
-                endTime: { $gte: now }
-            });
-
-            if (activeSales.length > 0) {
-                const excludedProductIds = activeSales.flatMap(sale => sale.products.map(p => p.product));
-                if (excludedProductIds.length > 0) {
-                    query._id = { $nin: excludedProductIds };
-                }
-            }
+        if (minPrice || maxPrice) {
+            query.sellPrice = {};
+            if (minPrice) query.sellPrice.$gte = Number(minPrice);
+            if (maxPrice) query.sellPrice.$lte = Number(maxPrice);
         }
 
-        const products = await Product.find(query)
+        let productQuery = Product.find(query);
+
+        if (sort) {
+            const sortBy = sort.replace(',', ' ');
+            productQuery = productQuery.sort(sortBy);
+        } else {
+            productQuery = productQuery.sort('-createdAt');
+        }
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 18;
+        const skip = (page - 1) * limit;
+
+        productQuery = productQuery.skip(skip).limit(limit);
+
+        const products = await productQuery
             .populate('category', 'name')
-            .populate('brand', 'name')
-            .populate('productCollection', 'name');
+            .populate('brand', 'name');
             
-        res.status(200).json({ status: 'success', data: { products } });
+        const totalProducts = await Product.countDocuments(query);
+        const totalPages = Math.ceil(totalProducts / limit);
+            
+        res.status(200).json({ 
+            status: 'success', 
+            results: products.length,
+            data: { products },
+            pagination: { page, limit, totalPages, totalProducts }
+        });
     } catch (err) {
         res.status(500).json({ status: 'fail', message: err.message });
     }
 };
-
 
 exports.getProduct = async (req, res) => {
     try {
@@ -67,6 +83,12 @@ exports.getProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
     try {
+        if (req.body.ageGroups && typeof req.body.ageGroups === 'string') {
+            req.body.ageGroups = req.body.ageGroups === '' ? [] : req.body.ageGroups.split(',');
+        } else if (!req.body.ageGroups) {
+            req.body.ageGroups = [];
+        }
+
         let updateData = { ...req.body };
         if (req.files) {
             if (req.files.mainImage) {
@@ -84,7 +106,6 @@ exports.updateProduct = async (req, res) => {
         res.status(400).json({ status: 'fail', message: err.message });
     }
 };
-
 
 exports.deleteProduct = async (req, res) => {
     try {

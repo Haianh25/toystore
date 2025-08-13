@@ -80,3 +80,69 @@
 .nav-list li a:hover {
     color: #007bff;
 }
+
+/* === CSS CHO MENU XỔ XUỐNG === */
+
+/* Nút đăng xuất */
+.logout-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem; /* Kích thước chữ giống các link khác */
+    color: #333;
+    padding: 0;
+    font-family: inherit;
+}
+
+/* Class cho mục cha chứa menu con */
+.nav-item-dropdown {
+    position: relative;
+}
+
+/* Link có mũi tên */
+.nav-link-with-arrow {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Khoảng cách giữa chữ và mũi tên */
+}
+
+/* Khung menu xổ xuống */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 10px 0;
+    min-width: 220px; /* Độ rộng tối thiểu của menu */
+    z-index: 1000;
+    border-top: 3px solid #e74c3c; /* Đường viền màu nhấn mạnh */
+
+    /* Animation */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+/* Hiển thị menu khi hover */
+.nav-item-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Các mục con trong menu */
+.dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+    white-space: nowrap; /* Ngăn xuống dòng */
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}

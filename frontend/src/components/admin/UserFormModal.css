@@ -44,3 +44,42 @@
     text-align: right;
     margin-top: 20px;
 }
+
+/* === CSS CHO DANH SÁCH CHỌN LỰA MỚI === */
+.searchable-list-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.searchable-list-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.searchable-list {
+    max-height: 200px; /* Giới hạn chiều cao và cho phép cuộn */
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.searchable-list li {
+    padding: 8px 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.searchable-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.searchable-list li input[type="checkbox"] {
+    margin-right: 10px;
+    width: auto;
+}

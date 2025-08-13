@@ -1,7 +1,6 @@
 const Collection = require('../models/collectionModel');
 const slugify = require('slugify');
 
-// Lấy tất cả
 exports.getAllCollections = async (req, res) => {
     try {
         const collections = await Collection.find();
@@ -11,7 +10,6 @@ exports.getAllCollections = async (req, res) => {
     }
 };
 
-// Tạo mới
 exports.createCollection = async (req, res) => {
     try {
         const { name, description } = req.body;
@@ -26,12 +24,12 @@ exports.createCollection = async (req, res) => {
     }
 };
 
-// Cập nhật
 exports.updateCollection = async (req, res) => {
     try {
         const { name, description } = req.body;
         const updateData = { name, description };
         if (name) {
+            // Logic quan trọng nằm ở đây, nó sẽ tạo lại slug khi bạn sửa tên
             updateData.slug = slugify(name, { lower: true });
         }
         const collection = await Collection.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
@@ -42,7 +40,6 @@ exports.updateCollection = async (req, res) => {
     }
 };
 
-// Xóa
 exports.deleteCollection = async (req, res) => {
     try {
         const collection = await Collection.findByIdAndDelete(req.params.id);
@@ -50,5 +47,17 @@ exports.deleteCollection = async (req, res) => {
         res.status(204).json({ status: 'success', data: null });
     } catch (error) {
         res.status(500).json({ status: 'fail', message: error.message });
+    }
+};
+
+exports.getCollectionBySlug = async (req, res) => {
+    try {
+        const collection = await Collection.findOne({ slug: req.params.slug });
+        if (!collection) {
+            return res.status(404).json({ message: 'Không tìm thấy bộ sưu tập' });
+        }
+        res.status(200).json({ status: 'success', data: { collection } });
+    } catch (err) {
+        res.status(500).json({ status: 'fail', message: err.message });
     }
 };

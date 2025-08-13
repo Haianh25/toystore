@@ -100,3 +100,17 @@ exports.deleteFlashSale = async (req, res) => {
         res.status(500).json({ status: 'fail', message: error.message });
     }
 };
+
+exports.getActiveFlashSales = async (req, res) => {
+    try {
+        const now = new Date();
+        const activeSales = await FlashSale.find({
+            startTime: { $lte: now }, // Bắt đầu trước hoặc bằng thời điểm hiện tại
+            endTime: { $gte: now }    // Kết thúc sau hoặc bằng thời điểm hiện tại
+        }).sort('startTime');
+
+        res.status(200).json({ status: 'success', data: { flashSales: activeSales } });
+    } catch (error) {
+        res.status(500).json({ status: 'fail', message: error.message });
+    }
+};

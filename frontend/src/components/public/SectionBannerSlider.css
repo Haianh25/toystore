@@ -1,0 +1,64 @@
+.section-banner-slider-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 15px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.see-more-btn {
+    background-color: #eee;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.see-more-btn:hover {
+    background-color: #ddd;
+}
+
+.section-banner-slider .swiper-slide {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.banner-item-link {
+    display: block;
+    width: 100%;
+    /* XÓA aspect-ratio VÀ THAY BẰNG HEIGHT CỐ ĐỊNH */
+    height: 350px; /* <--- TĂNG CHIỀU CAO TẠI ĐÂY */
+    background-color: #f0f0f0;
+}
+
+.banner-item-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.section-banner-slider .swiper-button-next,
+.section-banner-slider .swiper-button-prev {
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+}
+
+.section-banner-slider .swiper-button-next::after,
+.section-banner-slider .swiper-button-prev::after {
+    font-size: 18px;
+}

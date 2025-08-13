@@ -22,7 +22,11 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Giá bán không được để trống'],
     },
-    weight: { 
+    ageGroups: {
+        type: [String],
+        enum: ['1-3', '3-6', '6-12', '12+']
+    },
+    weight: {
         type: Number,
         default: 0,
     },
@@ -31,24 +35,24 @@ const productSchema = new mongoose.Schema({
         required: [true, 'Số lượng tồn kho không được để trống'],
         default: 0,
     },
-    mainImage: { 
+    mainImage: {
         type: String,
         required: [true, 'Ảnh đại diện không được để trống'],
     },
-    detailImages: [{ 
+    detailImages: [{
         type: String,
     }],
-    category: { 
+    category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: [true, 'Sản phẩm phải thuộc về một danh mục'],
     },
-    brand: { 
+    brand: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
-        required: false, 
+        required: false,
     },
-    productCollection: { 
+    productCollection: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Collection',
         required: false,

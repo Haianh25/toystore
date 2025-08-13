@@ -19,7 +19,7 @@ exports.createCategory = async (req, res) => {
         });
         res.status(201).json({ status: 'success', data: { category: newCategory } });
     } catch (err) {
-        console.error('LỖI CREATE CATEGORY:', err); // <-- Thêm dòng này
+        console.error('LỖI CREATE CATEGORY:', err);
         res.status(400).json({ status: 'fail', message: err.message });
     }
 };
@@ -29,7 +29,7 @@ exports.getAllCategories = async (req, res) => {
         const categories = await Category.find().sort({ sortOrder: 'asc' });
         res.status(200).json({ status: 'success', data: { categories } });
     } catch (err) {
-        console.error('LỖI GET ALL CATEGORIES:', err); // <-- Thêm dòng này
+        console.error('LỖI GET ALL CATEGORIES:', err);
         res.status(500).json({ status: 'fail', message: err.message });
     }
 };
@@ -51,7 +51,7 @@ exports.updateCategory = async (req, res) => {
 
         res.status(200).json({ status: 'success', data: { category } });
     } catch (err) {
-        console.error('LỖI UPDATE CATEGORY:', err); // <-- Thêm dòng này
+        console.error('LỖI UPDATE CATEGORY:', err);
         res.status(400).json({ status: 'fail', message: err.message });
     }
 };
@@ -70,7 +70,19 @@ exports.deleteCategory = async (req, res) => {
 
         res.status(204).json({ status: 'success', data: null });
     } catch (err) {
-        console.error('LỖI DELETE CATEGORY:', err); // <-- Thêm dòng này
+        console.error('LỖI DELETE CATEGORY:', err);
+        res.status(500).json({ status: 'fail', message: err.message });
+    }
+};
+
+exports.getCategoryBySlug = async (req, res) => {
+    try {
+        const category = await Category.findOne({ slug: req.params.slug });
+        if (!category) {
+            return res.status(404).json({ message: 'Không tìm thấy danh mục' });
+        }
+        res.status(200).json({ status: 'success', data: { category } });
+    } catch (err) {
         res.status(500).json({ status: 'fail', message: err.message });
     }
 };

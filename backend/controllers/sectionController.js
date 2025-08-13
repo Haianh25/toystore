@@ -2,11 +2,9 @@ const Section = require('../models/sectionModel');
 const fs = require('fs');
 const path = require('path');
 
-// Lấy tất cả sections
 exports.getAllSections = async (req, res) => {
     try {
         const query = req.query.activeOnly === 'true' ? { isActive: true } : {};
-        // populate là đúng, nó sẽ bỏ qua nếu path không tồn tại hoặc rỗng
         const sections = await Section.find(query).sort('sortOrder').populate('content.products');
         res.status(200).json({ status: 'success', data: { sections } });
     } catch (err) {
@@ -14,26 +12,27 @@ exports.getAllSections = async (req, res) => {
     }
 };
 
-// Tạo section mới
 exports.createSection = async (req, res) => {
     try {
-        const { title, type, sortOrder, isActive, link, products } = req.body;
-        let content = {
-            link,
-            products: products ? products.split(',') : []
+        const { title, type, sortOrder, isActive, link, products, bannerGroupLinks } = req.body;
+        const content = {
+            link: link || '',
+            products: products ? products.split(',') : [],
         };
-        
-        if (req.file) {
-            content.bannerImage = `/public/images/sections/${req.file.filename}`;
+
+        if (req.files) {
+            if (type === 'promo_with_products' && req.files.bannerImage) {
+                content.bannerImage = `/public/images/sections/${req.files.bannerImage[0].filename}`;
+            } else if (type === 'banner_slider' && req.files.bannerImages) {
+                const links = bannerGroupLinks ? JSON.parse(bannerGroupLinks) : [];
+                content.bannerGroup = req.files.bannerImages.map((file, index) => ({
+                    image: `/public/images/sections/${file.filename}`,
+                    link: links[index] || ''
+                }));
+            }
         }
-        
-        const newSection = await Section.create({
-            title,
-            type,
-            sortOrder,
-            isActive,
-            content
-        });
+
+        const newSection = await Section.create({ title, type, sortOrder, isActive, content });
         res.status(201).json({ status: 'success', data: { section: newSection } });
     } catch (err) {
         console.error("LỖI CREATE SECTION:", err);
@@ -41,36 +40,44 @@ exports.createSection = async (req, res) => {
     }
 };
 
-// Cập nhật section
 exports.updateSection = async (req, res) => {
     try {
-        const { title, type, sortOrder, isActive, link, products } = req.body;
-        
+        const { title, type, sortOrder, isActive, link, products, bannerGroup, bannerGroupLinks } = req.body;
         const oldSection = await Section.findById(req.params.id);
-        if (!oldSection) {
-            return res.status(404).json({ message: 'Không tìm thấy section' });
-        }
+        if (!oldSection) return res.status(404).json({ message: 'Không tìm thấy section' });
 
-        let content = {
-            link,
+        const content = {
+            link: link || '',
             products: products ? products.split(',') : [],
-            // === SỬA LỖI TẠI ĐÂY ===
-            // Sử dụng optional chaining (?.) để truy cập an toàn
-            bannerImage: oldSection?.content?.bannerImage 
+            bannerImage: oldSection.content?.bannerImage,
+            bannerGroup: oldSection.content?.bannerGroup || []
         };
         
-        if (req.file) {
-            content.bannerImage = `/public/images/sections/${req.file.filename}`;
-        }
-        
-        const updatedSection = await Section.findByIdAndUpdate(req.params.id, {
-            title,
-            type,
-            sortOrder,
-            isActive,
-            content
-        }, { new: true, runValidators: true }).populate('content.products');
+        if(req.files) {
+            if (type === 'promo_with_products' && req.files.bannerImage) {
+                content.bannerImage = `/public/images/sections/${req.files.bannerImage[0].filename}`;
+            } else if (type === 'banner_slider') {
+                const existingBanners = bannerGroup ? JSON.parse(bannerGroup) : [];
+                const newLinks = bannerGroupLinks ? JSON.parse(bannerGroupLinks) : [];
+                const newFiles = req.files.bannerImages || [];
+                let fileCounter = 0;
 
+                const finalBanners = existingBanners.map((banner, index) => {
+                    if (banner.isNew && newFiles[fileCounter]) { // Banner mới cần file mới
+                        const file = newFiles[fileCounter++];
+                        return { image: `/public/images/sections/${file.filename}`, link: newLinks[index] || '' };
+                    }
+                    // Banner cũ, chỉ cập nhật link
+                    return { image: banner.image, link: newLinks[index] || '' };
+                });
+                content.bannerGroup = finalBanners;
+            }
+        }
+
+        const updatedSection = await Section.findByIdAndUpdate(req.params.id,
+            { title, type, sortOrder, isActive, content },
+            { new: true, runValidators: true }
+        );
         res.status(200).json({ status: 'success', data: { section: updatedSection } });
     } catch (err) {
         console.error("LỖI UPDATE SECTION:", err);
@@ -78,22 +85,23 @@ exports.updateSection = async (req, res) => {
     }
 };
 
-// Xóa section
 exports.deleteSection = async (req, res) => {
     try {
         const section = await Section.findById(req.params.id);
-        if (!section) {
-            return res.status(404).json({ message: 'Không tìm thấy section' });
-        }
-        
-        // Xóa ảnh banner của section nếu có
-        if (section.content && section.content.bannerImage) {
+        if (!section) return res.status(404).json({ message: 'Không tìm thấy section' });
+
+        if (section.content?.bannerImage) {
             const imagePath = path.join(__dirname, '..', section.content.bannerImage);
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
-            }
+            if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
         }
-        
+        if (section.content?.bannerGroup) {
+            section.content.bannerGroup.forEach(banner => {
+                if(banner.image){
+                    const imagePath = path.join(__dirname, '..', banner.image);
+                    if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+                }
+            });
+        }
         await Section.findByIdAndDelete(req.params.id);
         res.status(204).json({ status: 'success', data: null });
     } catch (err) {
