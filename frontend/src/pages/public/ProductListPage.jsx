@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ProductGrid from '../../components/public/ProductGrid';
 import FilterSidebar from '../../components/public/FilterSidebar';
 import Pagination from '../../components/public/Pagination';
 import './ProductListPage.css';
+
+// --- CẬP NHẬT: "Mặc định" bây giờ có giá trị là "random" ---
+const sortOptions = [
+    { label: 'Mặc định (Ngẫu nhiên)', value: 'random' }, 
+    { label: 'Sản phẩm mới', value: '-createdAt' },
+    { label: 'Tên sản phẩm A-Z', value: 'name' },
+    { label: 'Tên sản phẩm Z-A', value: '-name' },
+    { label: 'Giá tăng dần', value: 'sellPrice' },
+    { label: 'Giá giảm dần', value: '-sellPrice' },
+];
 
 const ProductListPage = () => {
     const [products, setProducts] = useState([]);
@@ -15,6 +25,7 @@ const ProductListPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { slug } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -32,6 +43,11 @@ const ProductListPage = () => {
                     const res = await axios.get(`http://localhost:5000/api/v1/collections/slug/${slug}`);
                     params.set('collection', res.data.data.collection._id);
                     title = res.data.data.collection.name;
+                }
+                
+                // --- CẬP NHẬT LOGIC: Luôn mặc định sắp xếp ngẫu nhiên nếu không có tham số sort ---
+                if (!params.has('sort')) {
+                    params.set('sort', 'random');
                 }
                 
                 setPageTitle(title);
@@ -54,16 +70,44 @@ const ProductListPage = () => {
     }, [slug, location.pathname, location.search]);
 
     const handlePageChange = (page) => {
-        const params = new URLSearchParams(location.search);
-        params.set('page', page);
-        navigate({ search: params.toString() });
+        searchParams.set('page', page);
+        setSearchParams(searchParams);
     };
+
+    const handleSortChange = (e) => {
+        const sortValue = e.target.value;
+        searchParams.set('sort', sortValue);
+        searchParams.delete('page');
+        setSearchParams(searchParams);
+    };
+    
+    // Hàm để xác định giá trị hiện tại của dropdown
+    const getCurrentSortValue = () => {
+        return searchParams.get('sort') || 'random';
+    }
 
     return (
         <div className="product-list-page-container">
             <FilterSidebar />
             <main className="product-list-main">
                 <h1 className="product-list-title">{pageTitle}</h1>
+
+                <div className="toolbar">
+                    <div className="product-count">
+                        {pagination.totalProducts || 0} sản phẩm
+                    </div>
+                    <div className="sort-by">
+                        <label htmlFor="sort">Sắp xếp theo:</label>
+                        <select id="sort" value={getCurrentSortValue()} onChange={handleSortChange}>
+                            {sortOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
                 {loading && <p>Đang tải sản phẩm...</p>}
                 {error && <p>{error}</p>}
                 {!loading && !error && (
@@ -80,4 +124,5 @@ const ProductListPage = () => {
         </div>
     );
 };
+
 export default ProductListPage;

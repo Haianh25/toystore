@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserFormModal.css';
 
+const DESIRED_BANNER_WIDTH = 277.5;
+const DESIRED_BANNER_HEIGHT = 350;
+
 const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
     const [title, setTitle] = useState('');
     const [type, setType] = useState('promo_with_products');
@@ -12,7 +15,7 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
     const [productSearch, setProductSearch] = useState('');
-    const [sliderBanners, setSliderBanners] = useState([]); // State cho banner slider
+    const [sliderBanners, setSliderBanners] = useState([]);
     const isEditing = section !== null;
 
     useEffect(() => {
@@ -25,7 +28,7 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
                 setIsActive(section.isActive);
                 setLink(section.content.link || '');
                 setSelectedProducts(section.content.products?.map(p => p._id) || []);
-                setSliderBanners(section.content.bannerGroup?.map(b => ({ ...b, file: null, isNew: false })) || []);
+                setSliderBanners(section.content.bannerGroup?.map(b => ({ ...b, file: null, isNew: false, tempId: `existing_${b._id}` })) || []);
             } else {
                 setTitle(''); setType('promo_with_products'); setSortOrder(0);
                 setIsActive(true); setLink(''); setSelectedProducts([]); setSliderBanners([]);
@@ -33,6 +36,61 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
             setBannerImageFile(null); setProductSearch('');
         }
     }, [isOpen, section]);
+
+    const processAndSetBannerFile = (file, tempId) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = DESIRED_BANNER_WIDTH;
+                canvas.height = DESIRED_BANNER_HEIGHT;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, DESIRED_BANNER_WIDTH, DESIRED_BANNER_HEIGHT);
+                canvas.toBlob((blob) => {
+                    const resizedFile = new File([blob], file.name, { type: file.type, lastModified: Date.now() });
+                    // SỬA LẠI: Dùng functional update để đảm bảo state luôn mới nhất
+                    setSliderBanners(currentBanners => {
+                        return currentBanners.map(banner => 
+                            banner.tempId === tempId ? { ...banner, file: resizedFile } : banner
+                        );
+                    });
+                }, file.type, 0.8);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleBannerChange = (tempId, field, value) => {
+        if (field === 'file' && value) {
+            processAndSetBannerFile(value, tempId);
+        } else if (field === 'link') {
+            setSliderBanners(currentBanners => {
+                return currentBanners.map(banner => 
+                    banner.tempId === tempId ? { ...banner, link: value } : banner
+                );
+            });
+        }
+    };
+    
+    // SỬA LẠI: Thêm một ID tạm thời, duy nhất cho mỗi banner mới
+    const handleAddBanner = () => {
+        const newBanner = { 
+            image: null, 
+            link: '', 
+            file: null, 
+            isNew: true, 
+            tempId: `new_${Date.now()}` // ID tạm thời
+        };
+        setSliderBanners(prev => [...prev, newBanner]);
+    };
+    
+    const handleRemoveBanner = (tempId) => {
+        setSliderBanners(prev => prev.filter(banner => banner.tempId !== tempId));
+    };
+
+    const handleProductSelect = (productId) => setSelectedProducts(prev => prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -46,10 +104,15 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
         if (selectedProducts.length > 0) formData.append('products', selectedProducts.join(','));
 
         if (type === 'banner_slider') {
-            formData.append('bannerGroup', JSON.stringify(sliderBanners));
-            formData.append('bannerGroupLinks', JSON.stringify(sliderBanners.map(b => b.link)));
+            const bannerStructure = sliderBanners.map(banner => ({
+                link: banner.link,
+                image: banner.file ? '__NEW_FILE__' : banner.image,
+                isNew: banner.isNew,
+            }));
+            formData.append('bannerGroup', JSON.stringify(bannerStructure));
+            
             sliderBanners.forEach(banner => {
-                if (banner.isNew && banner.file) {
+                if (banner.file) {
                     formData.append('bannerImages', banner.file);
                 }
             });
@@ -57,30 +120,15 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
         onSubmit(formData);
     };
 
-    const handleAddBanner = () => setSliderBanners(prev => [...prev, { image: null, link: '', file: null, isNew: true }]);
-    const handleRemoveBanner = (index) => setSliderBanners(prev => prev.filter((_, i) => i !== index));
-    const handleBannerChange = (index, field, value) => {
-        const newBanners = [...sliderBanners];
-        const banner = { ...newBanners[index] };
-        if (field === 'file') {
-            banner.file = value;
-        } else if (field === 'link') {
-            banner.link = value;
-        }
-        newBanners[index] = banner;
-        setSliderBanners(newBanners);
-    };
-
-    const handleProductSelect = (productId) => setSelectedProducts(prev => prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]);
-    const filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase()));
-    
     if (!isOpen) return null;
+    const filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase()));
 
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxHeight: '90vh', overflowY: 'auto' }}>
                 <h2>{isEditing ? 'Sửa Section' : 'Thêm Section Mới'}</h2>
                 <form onSubmit={handleSubmit}>
+                    {/* ... các input khác ... */}
                     <div className="form-group"><label>Tiêu đề Section</label><input value={title} onChange={e => setTitle(e.target.value)} /></div>
                     <div className="form-group"><label>Loại Section</label><select value={type} onChange={e => setType(e.target.value)}><option value="promo_with_products">Banner và Sản phẩm</option><option value="banner_slider">Slider Banner</option></select></div>
                     
@@ -93,13 +141,14 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
                     {type === 'banner_slider' && (
                         <div className="form-group">
                             <label>Các Banner trong Slider</label>
-                            {sliderBanners.map((banner, index) => (
-                                <div key={index} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
-                                    <label>Banner {index + 1}</label>
-                                    {!banner.isNew && banner.image && <p><small>Ảnh hiện tại: {banner.image.split('/').pop()}</small></p>}
-                                    <input type="file" onChange={e => handleBannerChange(index, 'file', e.target.files[0])} />
-                                    <input type="text" value={banner.link} onChange={e => handleBannerChange(index, 'link', e.target.value)} placeholder="Đường dẫn (VD: /sale)" style={{marginTop: '5px'}}/>
-                                    <button type="button" onClick={() => handleRemoveBanner(index)} style={{marginTop: '5px'}}>Xóa Banner</button>
+                            {/* SỬA LẠI: Dùng `tempId` làm key và để truyền vào các hàm xử lý */}
+                            {sliderBanners.map((banner) => (
+                                <div key={banner.tempId} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
+                                    <label>Banner</label>
+                                    {banner.image && !banner.isNew && <p><small>Ảnh hiện tại: {banner.image.split('/').pop()}</small></p>}
+                                    <input type="file" onChange={e => handleBannerChange(banner.tempId, 'file', e.target.files[0])} />
+                                    <input type="text" value={banner.link} onChange={e => handleBannerChange(banner.tempId, 'link', e.target.value)} placeholder="Đường dẫn (VD: /sale)" style={{marginTop: '5px'}}/>
+                                    <button type="button" onClick={() => handleRemoveBanner(banner.tempId)} style={{marginTop: '5px'}}>Xóa Banner</button>
                                 </div>
                             ))}
                             <button type="button" onClick={handleAddBanner}>Thêm Banner</button>

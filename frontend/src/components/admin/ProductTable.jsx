@@ -16,6 +16,13 @@ const ProductTable = ({ products, onDelete }) => {
         return groups.map(g => ageGroupLabels[g] || g).join(', ');
     };
 
+    // --- HÀM MỚI ĐỂ HIỂN THỊ NHIỀU DANH MỤC ---
+    const formatCategories = (categories) => {
+        if (!categories || categories.length === 0) return 'N/A';
+        // Lấy tên từ mỗi object category và nối chúng lại
+        return categories.map(cat => cat.name).join(', ');
+    };
+
     return (
         <table className="admin-table">
             <thead>
@@ -30,11 +37,14 @@ const ProductTable = ({ products, onDelete }) => {
                 </tr>
             </thead>
             <tbody>
-                {products.length > 0 ? products.map(product => (
+                {products && products.length > 0 ? products.map(product => (
                     <tr key={product._id}>
                         <td><img src={`${serverUrl}${product.mainImage}`} alt={product.name} style={{ width: '60px', height: '60px', objectFit: 'cover' }} /></td>
                         <td>{product.name}</td>
-                        <td>{product.category?.name || 'N/A'}</td>
+                        
+                        {/* === SỬA LẠI LOGIC HIỂN THỊ Ở ĐÂY === */}
+                        <td>{formatCategories(product.categories)}</td>
+                        
                         <td>{product.sellPrice.toLocaleString('vi-VN')} VND</td>
                         <td>{product.stockQuantity}</td>
                         <td>{formatAgeGroups(product.ageGroups)}</td>

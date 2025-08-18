@@ -12,3 +12,35 @@
     padding-bottom: 15px;
     border-bottom: 1px solid #eee;
 }
+
+/* === CSS MỚI CHO THANH CÔNG CỤ === */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+
+.product-count {
+    font-weight: 500;
+    color: #555;
+}
+
+.sort-by {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-by select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+/* =================================== */

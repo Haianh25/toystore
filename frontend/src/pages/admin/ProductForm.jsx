@@ -16,7 +16,7 @@ const ProductForm = () => {
         importPrice: 0,
         sellPrice: 0,
         stockQuantity: 0,
-        category: '',
+        categories: [],
         brand: '',
         productCollection: '',
         ageGroups: [],
@@ -30,21 +30,31 @@ const ProductForm = () => {
     const isEditing = Boolean(id);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/v1/categories').then(res => setCategories(res.data.data.categories));
-        axios.get('http://localhost:5000/api/v1/brands').then(res => setBrands(res.data.data.brands));
-        axios.get('http://localhost:5000/api/v1/collections').then(res => setCollections(res.data.data.collections));
+        // Luôn tải danh sách các lựa chọn (categories, brands, collections)
+        const fetchOptions = async () => {
+            const catRes = await axios.get('http://localhost:5000/api/v1/categories');
+            setCategories(catRes.data.data.categories);
+            const brandRes = await axios.get('http://localhost:5000/api/v1/brands');
+            setBrands(brandRes.data.data.brands);
+            const colRes = await axios.get('http://localhost:5000/api/v1/collections');
+            setCollections(colRes.data.data.collections);
+        };
+        
+        fetchOptions();
 
+        // Nếu ở chế độ sửa, tải dữ liệu sản phẩm và điền vào form
         if (isEditing) {
             axios.get(`http://localhost:5000/api/v1/products/${id}`)
                 .then(res => {
                     const product = res.data.data.product;
                     setFormData({
-                        name: product.name,
-                        description: product.description,
-                        importPrice: product.importPrice,
-                        sellPrice: product.sellPrice,
-                        stockQuantity: product.stockQuantity,
-                        category: product.category._id,
+                        name: product.name || '',
+                        description: product.description || '',
+                        importPrice: product.importPrice || 0,
+                        sellPrice: product.sellPrice || 0,
+                        stockQuantity: product.stockQuantity || 0,
+                        // Đảm bảo lấy đúng mảng ID cho categories
+                        categories: product.categories?.map(c => c._id) || [],
                         brand: product.brand?._id || '',
                         productCollection: product.productCollection?._id || '',
                         ageGroups: product.ageGroups || [],
@@ -59,10 +69,14 @@ const ProductForm = () => {
 
     const handleAgeChange = (value) => {
         const currentAges = formData.ageGroups;
-        const newAges = currentAges.includes(value)
-            ? currentAges.filter(age => age !== value)
-            : [...currentAges, value];
+        const newAges = currentAges.includes(value) ? currentAges.filter(age => age !== value) : [...currentAges, value];
         setFormData({ ...formData, ageGroups: newAges });
+    };
+
+    const handleCategoryChange = (catId) => {
+        const currentCats = formData.categories;
+        const newCats = currentCats.includes(catId) ? currentCats.filter(id => id !== catId) : [...currentCats, catId];
+        setFormData({ ...formData, categories: newCats });
     };
 
     const handleFileChange = e => {
@@ -73,16 +87,19 @@ const ProductForm = () => {
         e.preventDefault();
         const data = new FormData();
         
-        for (const key in formData) {
-            if (key === 'ageGroups') {
-                if (formData.ageGroups.length > 0) {
-                    data.append('ageGroups', formData.ageGroups.join(','));
+        // Gửi dữ liệu form đi
+        Object.keys(formData).forEach(key => {
+            const value = formData[key];
+            if (Array.isArray(value)) {
+                if (value.length > 0) {
+                    data.append(key, value.join(','));
                 }
-            } else if (formData[key] !== null && formData[key] !== '') {
-                data.append(key, formData[key]);
+            } else if (value !== null && value !== '') {
+                data.append(key, value);
             }
-        }
+        });
         
+        // Gửi file
         if (files.mainImage) {
             data.append('mainImage', files.mainImage[0]);
         }
@@ -107,11 +124,11 @@ const ProductForm = () => {
     };
 
     return (
-        <div className="form-container">
+        <div className="form-container" style={{background: 'white', padding: '20px', borderRadius: '8px'}}>
             <h1>{isEditing ? 'Sửa Sản phẩm' : 'Thêm Sản phẩm mới'}</h1>
             <form onSubmit={handleSubmit}>
                 <div className="form-group"><label>Tên sản phẩm</label><input name="name" value={formData.name} onChange={handleChange} required /></div>
-                <div className="form-group"><label>Mô tả</label><textarea name="description" value={formData.description} onChange={handleChange} required /></div>
+                <div className="form-group"><label>Mô tả</label><textarea name="description" value={formData.description} onChange={handleChange} required rows="4"/></div>
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px'}}>
                     <div className="form-group"><label>Giá nhập</label><input type="number" name="importPrice" value={formData.importPrice} onChange={handleChange} required /></div>
                     <div className="form-group"><label>Giá bán</label><input type="number" name="sellPrice" value={formData.sellPrice} onChange={handleChange} required /></div>
@@ -123,24 +140,29 @@ const ProductForm = () => {
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', border: '1px solid #ddd', padding: '10px', borderRadius: '4px' }}>
                         {ageGroups.map(group => (
                             <label key={group.label} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                <input
-                                    type="checkbox"
-                                    name="ageGroup"
-                                    checked={formData.ageGroups.includes(group.value)}
-                                    onChange={() => handleAgeChange(group.value)}
-                                    style={{ marginRight: '5px' }}
-                                />
+                                <input type="checkbox" checked={formData.ageGroups.includes(group.value)} onChange={() => handleAgeChange(group.value)} style={{ marginRight: '5px' }} />
                                 {group.label}
                             </label>
                         ))}
                     </div>
                 </div>
                 
-                <div className="form-group"><label>Danh mục</label><select name="category" value={formData.category} onChange={handleChange} required><option value="">-- Chọn danh mục --</option>{categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}</select></div>
+                <div className="form-group">
+                    <label>Danh mục (Có thể chọn nhiều)</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', border: '1px solid #ddd', padding: '10px', borderRadius: '4px' }}>
+                        {categories.map(cat => (
+                            <label key={cat._id} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                <input type="checkbox" checked={formData.categories.includes(cat._id)} onChange={() => handleCategoryChange(cat._id)} style={{ marginRight: '5px' }} />
+                                {cat.name}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
                 <div className="form-group"><label>Thương hiệu (Tùy chọn)</label><select name="brand" value={formData.brand} onChange={handleChange}><option value="">-- Chọn thương hiệu --</option>{brands.map(b => <option key={b._id} value={b._id}>{b.name}</option>)}</select></div>
                 <div className="form-group"><label>Bộ sưu tập (Tùy chọn)</label><select name="productCollection" value={formData.productCollection} onChange={handleChange}><option value="">-- Chọn bộ sưu tập --</option>{collections.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}</select></div>
-                <div className="form-group"><label>Ảnh đại diện</label><input type="file" name="mainImage" onChange={handleFileChange} required={!isEditing} /></div>
-                <div className="form-group"><label>Album ảnh chi tiết (Tối đa 10)</label><input type="file" name="detailImages" onChange={handleFileChange} multiple /></div>
+                <div className="form-group"><label>Ảnh đại diện (Để trống nếu không muốn đổi)</label><input type="file" name="mainImage" onChange={handleFileChange} /></div>
+                <div className="form-group"><label>Album ảnh chi tiết (Để trống nếu không muốn đổi)</label><input type="file" name="detailImages" onChange={handleFileChange} multiple /></div>
                 <button type="submit" className="btn-primary">{isEditing ? 'Cập nhật' : 'Tạo sản phẩm'}</button>
             </form>
         </div>

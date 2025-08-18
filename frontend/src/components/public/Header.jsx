@@ -63,12 +63,11 @@ const Header = () => {
                                 </div>
                             )}
                         </li>
-                        
-                        {/* === SỬA LỖI Ở ĐÂY === */}
-                        {/* Đổi "/collection/lego" thành "/category/lego" */}
                         <li><Link to="/category/lego">LEGO</Link></li>
                         
-                        <li><Link to="/category/hang-moi">HÀNG MỚI</Link></li>
+                        {/* SỬA LẠI LINK HÀNG MỚI, THÊM THAM SỐ SORT */}
+                        <li><Link to="/category/hang-moi?sort=-createdAt">HÀNG MỚI</Link></li>
+                        
                         <li><Link to="/brands">THƯƠNG HIỆU</Link></li>
                         <li><Link to="/products">SẢN PHẨM</Link></li>
                         <li><Link to="/about">GIỚI THIỆU</Link></li>
