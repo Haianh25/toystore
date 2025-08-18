@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
 const Product = require('../models/productModel');
-const FlashSale = require('../models/flashSaleModel'); 
+const FlashSale = require('../models/flashSaleModel');
 const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
 
+// Sửa lại hàm createProduct để xử lý categories và ageGroups
 exports.createProduct = async (req, res) => {
     try {
         if (req.body.ageGroups && typeof req.body.ageGroups === 'string') {
             req.body.ageGroups = req.body.ageGroups.split(',');
         }
-        // Xử lý categories
         if (req.body.categories && typeof req.body.categories === 'string') {
             req.body.categories = req.body.categories.split(',');
         }
@@ -27,39 +27,25 @@ exports.createProduct = async (req, res) => {
     }
 };
 
+// Sửa lại toàn bộ hàm getAllProducts để hỗ trợ mọi tính năng
 exports.getAllProducts = async (req, res) => {
     try {
-        let { search, age, category, collection, brand, minPrice, maxPrice, sort, page = 1, limit = 18 } = req.query;
+        const { search, age, category, collection, brand, minPrice, maxPrice, sort, page = 1, limit = 10 } = req.query;
         
-        // --- XÂY DỰNG PIPELINE ---
-        const pipeline = [];
-
-        // --- STAGE 1: LỌC ($match) ---
         const matchStage = {};
         if (search) matchStage.name = new RegExp(search, 'i');
-        if (brand) matchStage.brand = new mongoose.Types.ObjectId(brand);
+        if (category) matchStage.categories = new mongoose.Types.ObjectId(category);
         if (collection) matchStage.productCollection = new mongoose.Types.ObjectId(collection);
+        if (brand) matchStage.brand = new mongoose.Types.ObjectId(brand);
         if (age) matchStage.ageGroups = { $in: age.split(',') };
         if (minPrice || maxPrice) {
             matchStage.sellPrice = {};
             if (minPrice) matchStage.sellPrice.$gte = Number(minPrice);
             if (maxPrice) matchStage.sellPrice.$lte = Number(maxPrice);
         }
-        
-        // Logic lọc "Hàng mới"
-        if (category) {
-            const categoryObj = await mongoose.model('Category').findById(category);
-            if (categoryObj && categoryObj.slug === 'hang-moi') {
-                const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-                matchStage.createdAt = { $gte: fiveDaysAgo };
-            } else {
-                matchStage.categories = new mongoose.Types.ObjectId(category);
-            }
-        }
-        
-        pipeline.push({ $match: matchStage });
 
-        // --- STAGE 2: SẮP XẾP ($sort) ---
+        const pipeline = [{ $match: matchStage }];
+
         if (sort === 'random') {
             pipeline.push({ $sample: { size: 100 } });
         } else {
@@ -68,7 +54,6 @@ exports.getAllProducts = async (req, res) => {
             pipeline.push({ $sort: { [sortField]: sortOrder } });
         }
         
-        // --- STAGE 3: PHÂN TRANG ($facet) ---
         const skip = (Number(page) - 1) * Number(limit);
         pipeline.push({
             $facet: {
@@ -113,7 +98,6 @@ exports.updateProduct = async (req, res) => {
         } else if (!req.body.ageGroups) {
             req.body.ageGroups = [];
         }
-        
         if (req.body.categories && typeof req.body.categories === 'string') {
             req.body.categories = req.body.categories === '' ? [] : req.body.categories.split(',');
         } else if (!req.body.categories) {

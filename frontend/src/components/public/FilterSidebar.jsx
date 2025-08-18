@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import './FilterSidebar.css';
 
 const ageGroups = [
@@ -24,7 +24,6 @@ const FilterSidebar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const params = new URLSearchParams(location.search);
-    const { slug } = useParams(); // Lấy slug hiện tại từ URL
 
     useEffect(() => {
         axios.get('http://localhost:5000/api/v1/categories').then(res => setCategories(res.data.data.categories || []));
@@ -41,51 +40,65 @@ const FilterSidebar = () => {
                 newParams.delete('maxPrice');
             } else {
                 newParams.set('minPrice', value.min);
-                if (value.max) {
-                    newParams.set('maxPrice', value.max);
-                } else {
-                    newParams.delete('maxPrice');
-                }
+                if (value.max) newParams.set('maxPrice', value.max);
+                else newParams.delete('maxPrice');
             }
         } else {
+            // Logic này giờ dùng chung cho age, brand, category, collection
             const currentValues = newParams.get(type) ? newParams.get(type).split(',') : [];
             if (currentValues.includes(value)) {
                 const nextValues = currentValues.filter(item => item !== value);
                 if (nextValues.length > 0) newParams.set(type, nextValues.join(','));
                 else newParams.delete(type);
             } else {
-                currentValues.push(value);
-                newParams.set(type, currentValues.join(','));
+                // Đối với category và collection, chúng ta chỉ cho chọn 1, nên sẽ ghi đè
+                if (type === 'category' || type === 'collection') {
+                    newParams.set(type, value);
+                } else { // Đối với các loại khác, cho chọn nhiều
+                    currentValues.push(value);
+                    newParams.set(type, currentValues.join(','));
+                }
             }
         }
         
         newParams.delete('page');
+        // Không thay đổi pathname, chỉ cập nhật search params
         navigate({ pathname: location.pathname, search: newParams.toString() });
     };
 
     return (
         <aside className="filter-sidebar">
+            {/* --- THAY ĐỔI LOGIC HIỂN THỊ COLLECTION --- */}
             <div className="filter-group">
                 <h4>Bộ sưu tập</h4>
-                {collections && collections.map(col => {
-                    if (!col.slug) return null;
-
-                    // Kiểm tra xem collection này có đang được active không
-                    const isActive = location.pathname.startsWith('/collection') && slug === col.slug;
-                    
-                    // Nếu đang active, link sẽ trỏ về trang products chung để xóa filter
-                    // Nếu không, link sẽ trỏ đến collection đó
-                    const destination = isActive ? '/products' : `/collection/${col.slug}`;
-
-                    return (
-                        <Link key={col._id} to={destination} className={`filter-link ${isActive ? 'active' : ''}`}>
-                            {col.name}
-                        </Link>
-                    )
-                })}
+                {collections && collections.map(col => (
+                    col.slug && 
+                    <label key={col._id}>
+                        <input 
+                            type="checkbox" 
+                            checked={params.get('collection') === col._id}
+                            onChange={() => handleFilterChange('collection', col._id)} 
+                        />
+                        {col.name}
+                    </label>
+                ))}
             </div>
-            
-            {/* Phần lọc Danh Mục có thể thêm lại logic tương tự nếu cần */}
+
+            {/* --- THAY ĐỔI LOGIC HIỂN THỊ CATEGORY --- */}
+            <div className="filter-group">
+                <h4>Danh Mục</h4>
+                {categories && categories.map(cat => (
+                    cat.slug && 
+                    <label key={cat._id}>
+                        <input 
+                            type="checkbox" 
+                            checked={params.get('category') === cat._id}
+                            onChange={() => handleFilterChange('category', cat._id)} 
+                        />
+                        {cat.name}
+                    </label>
+                ))}
+            </div>
 
             <div className="filter-group">
                 <h4>Tuổi</h4>
@@ -100,12 +113,7 @@ const FilterSidebar = () => {
                 <h4>Giá</h4>
                 {priceRanges.map(range => (
                     <label key={range.label}>
-                        <input 
-                            type="checkbox" 
-                            name="price" 
-                            checked={params.get('minPrice') === range.min} 
-                            onChange={() => handleFilterChange('price', range)} 
-                        />
+                        <input type="checkbox" checked={params.get('minPrice') === range.min} onChange={() => handleFilterChange('price', range)} />
                         {range.label}
                     </label>
                 ))}
