@@ -4,9 +4,10 @@ import axios from 'axios';
 import { FaUser, FaShoppingCart, FaChevronDown } from 'react-icons/fa';
 import './Header.css';
 import { useAuth } from '../../context/AuthContext';
-
+import { useCart } from '../../context/CartContext';
 const Header = () => {
     const { userToken, userLogout } = useAuth();
+    const { cartCount } = useCart();
     const navigate = useNavigate();
     
     const [activeSales, setActiveSales] = useState([]);

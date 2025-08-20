@@ -30,6 +30,9 @@ import BrandPage from '../pages/public/BrandPage';
 import BrandDetailPage from '../pages/public/BrandDetailPage';
 import AboutPage from '../pages/public/AboutPage.jsx';
 import ProductDetailPage from '../pages/public/ProductDetailPage.jsx';
+import CartPage from '../pages/public/CartPage.jsx';
+import CheckoutPage from '../pages/public/CheckoutPage.jsx'; // <-- Thêm import
+import OrderSuccessPage from '../pages/public/OrderSuccessPage.jsx';
 const ProtectedRoute = ({ children }) => {
     const { token } = useAuth();
     return token ? children : <Navigate to="/admin/login" replace />;
@@ -77,6 +80,9 @@ const AppRoutes = () => {
                   <Route path="brands/:slug" element={<BrandDetailPage />} />
                    <Route path="about" element={<AboutPage />} />
                     <Route path="products/:id" element={<ProductDetailPage />} />
+                    <Route path="cart" element={<CartPage />} />
+                    <Route path="checkout" element={<UserProtectedRoute><CheckoutPage /></UserProtectedRoute>} />
+                <Route path="order-success/:orderId" element={<UserProtectedRoute><OrderSuccessPage /></UserProtectedRoute>} />
             </Route>
         </Routes>
     );

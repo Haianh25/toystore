@@ -1,6 +1,65 @@
 const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
 
+exports.createOrder = async (req, res) => {
+    try {
+        const { products, shippingAddress } = req.body;
+
+        if (!products || products.length === 0) {
+            return res.status(400).json({ message: 'Giỏ hàng của bạn đang trống.' });
+        }
+
+        let totalAmount = 0;
+        const productDetails = [];
+
+        // Lặp qua từng sản phẩm trong giỏ hàng để kiểm tra và tính toán
+        for (const item of products) {
+            const product = await Product.findById(item.product);
+            if (!product) {
+                return res.status(404).json({ message: `Không tìm thấy sản phẩm với ID: ${item.product}` });
+            }
+            if (product.stockQuantity < item.quantity) {
+                return res.status(400).json({ message: `Sản phẩm "${product.name}" không đủ số lượng tồn kho.` });
+            }
+            // Tính tổng tiền ở backend để đảm bảo an toàn
+            totalAmount += product.sellPrice * item.quantity;
+            productDetails.push({
+                product: product._id,
+                quantity: item.quantity,
+                price: product.sellPrice // Luôn lấy giá mới nhất từ DB
+            });
+        }
+        
+        // Tạo đơn hàng mới
+        const newOrder = await Order.create({
+            user: req.user.id, // Lấy từ middleware protect
+            products: productDetails,
+            shippingAddress,
+            totalAmount,
+            paymentMethod: 'COD' // Theo yêu cầu
+        });
+
+        // Cập nhật lại số lượng tồn kho của sản phẩm
+        for (const item of productDetails) {
+            await Product.findByIdAndUpdate(item.product, {
+                $inc: { stockQuantity: -item.quantity }
+            });
+        }
+
+        res.status(201).json({
+            status: 'success',
+            data: {
+                order: newOrder
+            }
+        });
+
+    } catch (error) {
+        console.error("LỖI TẠO ĐƠN HÀNG:", error);
+        res.status(500).json({ status: 'fail', message: error.message });
+    }
+};
+
+
 exports.getAllOrders = async (req, res) => {
     try {
         const orders = await Order.find().populate('user', 'fullName email').sort('-createdAt');
