@@ -9,43 +9,28 @@ const Header = () => {
     const { userToken, userLogout } = useAuth();
     const navigate = useNavigate();
     
-    // State cho menu SALE
     const [activeSales, setActiveSales] = useState([]);
-    const [isSaleMenuOpen, setIsSaleMenuOpen] = useState(false);
-
-    // --- STATE MỚI CHO MENU SẢN PHẨM ---
     const [collections, setCollections] = useState([]);
+    const [isSaleMenuOpen, setIsSaleMenuOpen] = useState(false);
     const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
 
     useEffect(() => {
-        // Lấy danh sách sale đang hoạt động
-        const fetchActiveSales = async () => {
-            try {
-                const res = await axios.get('http://localhost:5000/api/v1/flash-sales/active');
-                setActiveSales(res.data.data.flashSales);
-            } catch (error) {
-                console.error("Lỗi khi tải active sales:", error);
-            }
-        };
-
-        // --- LẤY DANH SÁCH BỘ SƯU TẬP ---
-        const fetchCollections = async () => {
-            try {
-                const res = await axios.get('http://localhost:5000/api/v1/collections');
-                setCollections(res.data.data.collections);
-            } catch (error) {
-                console.error("Lỗi khi tải collections:", error);
-            }
-        };
-
-        fetchActiveSales();
-        fetchCollections(); // Gọi hàm mới
+        axios.get('http://localhost:5000/api/v1/flash-sales/active').then(res => setActiveSales(res.data.data.flashSales || [])).catch(err => console.error("Lỗi khi tải active sales:", err));
+        axios.get('http://localhost:5000/api/v1/collections').then(res => setCollections(res.data.data.collections || [])).catch(err => console.error("Lỗi khi tải collections:", err));
     }, []);
 
     const handleLogout = () => {
         userLogout();
         navigate('/');
     };
+
+    const numberOfColumns = 4;
+    const itemsPerColumn = Math.ceil(collections.length / numberOfColumns);
+    const collectionColumns = Array.from({ length: numberOfColumns }, (_, i) => {
+        const start = i * itemsPerColumn;
+        const end = start + itemsPerColumn;
+        return collections.slice(start, end);
+    });
 
     return (
         <header className="main-header">
@@ -72,7 +57,12 @@ const Header = () => {
                 <div className="header-container">
                     <ul className="nav-list">
                         <li className="nav-item-dropdown" onMouseEnter={() => setIsSaleMenuOpen(true)} onMouseLeave={() => setIsSaleMenuOpen(false)}>
-                            <Link to="/sale" className="nav-link-with-arrow">SALE <FaChevronDown size={12} /></Link>
+                            
+                            {/* === THAY ĐỔI Ở ĐÂY: Bỏ Link, dùng thẻ a và ngăn click === */}
+                            <a href="#" onClick={(e) => e.preventDefault()} className="nav-link-with-arrow" style={{cursor: 'default'}}>
+                                SALE <FaChevronDown size={12} />
+                            </a>
+
                             {isSaleMenuOpen && activeSales.length > 0 && (
                                 <div className="dropdown-menu">
                                     {activeSales.map(sale => (
@@ -85,15 +75,20 @@ const Header = () => {
                         <li><Link to="/category/hang-moi?sort=-createdAt">HÀNG MỚI</Link></li>
                         <li><Link to="/brands">THƯƠNG HIỆU</Link></li>
                         
-                        {/* --- CẬP NHẬT MỤC SẢN PHẨM --- */}
                         <li className="nav-item-dropdown" onMouseEnter={() => setIsProductMenuOpen(true)} onMouseLeave={() => setIsProductMenuOpen(false)}>
                             <Link to="/products" className="nav-link-with-arrow">SẢN PHẨM <FaChevronDown size={12} /></Link>
                             {isProductMenuOpen && collections.length > 0 && (
-                                <div className="dropdown-menu dropdown-menu-right">
-                                    {collections.map(collection => (
-                                        <Link key={collection._id} to={`/collection/${collection.slug}`} className="dropdown-item">
-                                            {collection.name}
-                                        </Link>
+                                <div className="mega-menu">
+                                    {collectionColumns.map((column, index) => (
+                                        <div key={index} className="mega-menu-column">
+                                            <ul>
+                                                {column.map(collection => (
+                                                    <li key={collection._id}>
+                                                        <Link to={`/collection/${collection.slug}`}>{collection.name}</Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     ))}
                                 </div>
                             )}
