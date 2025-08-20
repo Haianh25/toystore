@@ -74,3 +74,16 @@ exports.deleteBrand = async (req, res) => {
         res.status(500).json({ status: 'fail', message: err.message });
     }
 };
+
+exports.getBrandBySlug = async (req, res) => {
+    try {
+        const brand = await Brand.findOne({ slug: req.params.slug });
+        if (!brand) {
+            return res.status(404).json({ message: 'Không tìm thấy thương hiệu' });
+        }
+        res.status(200).json({ status: 'success', data: { brand } });
+    } catch (err) {
+        res.status(500).json({ status: 'fail', message: err.message });
+    }
+};
+

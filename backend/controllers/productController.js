@@ -140,3 +140,18 @@ exports.deleteProduct = async (req, res) => {
         res.status(500).json({ status: 'fail', message: err.message });
     }
 };
+
+exports.getProduct = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id)
+            .populate('categories', 'name slug') // Lấy tên và slug từ collection Category
+            .populate('brand', 'name slug');     // Lấy tên và slug từ collection Brand
+
+        if (!product) {
+            return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+        }
+        res.status(200).json({ status: 'success', data: { product } });
+    } catch (error) {
+        res.status(500).json({ status: 'fail', message: error.message });
+    }
+};

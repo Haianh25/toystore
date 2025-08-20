@@ -94,7 +94,7 @@ const Header = () => {
                             )}
                         </li>
                         
-                        <li><Link to="/about">GIỚI THIỆU</Link></li>
+                        <li><Link to="/about">Giới thiệu</Link></li>
                     </ul>
                 </div>
             </nav>

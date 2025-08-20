@@ -26,7 +26,10 @@ import Register from '../pages/public/Register';
 import Login from '../pages/public/Login';
 import MyAccount from '../pages/public/MyAccount';
 import ProductListPage from '../pages/public/ProductListPage';
-
+import BrandPage from '../pages/public/BrandPage';
+import BrandDetailPage from '../pages/public/BrandDetailPage';
+import AboutPage from '../pages/public/AboutPage.jsx';
+import ProductDetailPage from '../pages/public/ProductDetailPage.jsx';
 const ProtectedRoute = ({ children }) => {
     const { token } = useAuth();
     return token ? children : <Navigate to="/admin/login" replace />;
@@ -70,6 +73,10 @@ const AppRoutes = () => {
                 <Route path="register" element={<Register />} />
                 <Route path="login" element={<Login />} />
                 <Route path="my-account" element={<UserProtectedRoute><MyAccount /></UserProtectedRoute>} />
+                 <Route path="brands" element={<BrandPage />} />
+                  <Route path="brands/:slug" element={<BrandDetailPage />} />
+                   <Route path="about" element={<AboutPage />} />
+                    <Route path="products/:id" element={<ProductDetailPage />} />
             </Route>
         </Routes>
     );

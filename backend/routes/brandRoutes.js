@@ -4,6 +4,8 @@ const { brandUpload } = require('../middleware/uploadMiddleware');
 
 const router = express.Router();
 
+router.get('/slug/:slug', brandController.getBrandBySlug);
+
 router.route('/')
     .get(brandController.getAllBrands)
     .post(brandUpload.single('logo'), brandController.createBrand);
