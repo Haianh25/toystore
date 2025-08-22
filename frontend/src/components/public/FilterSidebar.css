@@ -2,35 +2,39 @@
     margin-bottom: 30px;
 }
 .filter-sidebar h4 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-bottom: 15px;
-    color: #e53935;
+    color: var(--accent-primary);
     text-transform: uppercase;
+    font-weight: 700;
 }
 .filter-sidebar label {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
     cursor: pointer;
+    font-weight: 500;
+    color: var(--text-dark);
 }
-.filter-sidebar input {
+.filter-sidebar input[type="checkbox"] {
     margin-right: 10px;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-primary);
 }
 .filter-sidebar .filter-link {
     display: block;
-    padding: 5px 0;
-    color: #333;
+    padding: 8px 0;
+    color: var(--text-dark);
     text-decoration: none;
     transition: color 0.2s;
+    font-weight: 500;
 }
 .filter-sidebar .filter-link:hover {
-    color: #e53935;
+    color: var(--accent-primary);
 }
 
-/* Thêm style cho link đang active */
 .filter-sidebar .filter-link.active {
-    color: #e53935; /* Màu đỏ */
+    color: var(--accent-primary);
     font-weight: bold;
 }

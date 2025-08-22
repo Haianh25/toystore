@@ -4,16 +4,45 @@
   padding: 0;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.6;
-  background-color: #ffffff; /* Đặt lại màu nền trắng cho trang user */
+/* Bảng màu Strawberry Pink Pastel */
+:root {
+  --bg-main: #FADADD;             /* Strawberry Light - Background chính */
+  --bg-card-button: #F9C5D5;      /* Strawberry Milk - Card, button bg */
+  --accent-primary: #F7A8B8;      /* Strawberry Soft - Accent màu nổi */
+  --accent-hover: #FFE4E1;        /* Pink Glow - Hover, highlight */
+  --border-color: #FBC3BC;        /* Rose Pastel - Text nhạt, border */
+  
+  --text-dark: #5D4037;           /* Màu chữ nâu đậm cho dễ đọc và mềm mại */
+  --card-bg: #FFFFFF;             /* Giữ nền card màu trắng để nội dung nổi bật */
+  
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Đảm bảo không có các quy tắc về height: 100% hoặc display: flex 
-   cho các thẻ html, body, #root ở đây */
+body {
+  line-height: 1.6;
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+}
 
 a {
     text-decoration: none;
     color: inherit;
+    transition: color 0.2s ease;
+}
+
+button, .btn-primary {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 25px; 
+    background-color: var(--bg-card-button);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(249, 197, 213, 0.4);
+}
+
+button:hover, .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(247, 168, 184, 0.6);
 }

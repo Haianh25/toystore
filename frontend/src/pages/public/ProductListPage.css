@@ -7,27 +7,28 @@
     padding: 0 20px;
 }
 .product-list-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid var(--secondary-color);
+    color: var(--primary-color);
 }
 
-/* === CSS MỚI CHO THANH CÔNG CỤ === */
 .toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
     padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    border: 1px solid #eee;
+    background-color: #fff;
+    border-radius: 25px;
+    border: 1px solid var(--border-color);
 }
 
 .product-count {
     font-weight: 500;
-    color: #555;
+    color: var(--text-color);
+    padding-left: 10px;
 }
 
 .sort-by {
@@ -38,9 +39,9 @@
 
 .sort-by select {
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
     background-color: #fff;
     cursor: pointer;
+    font-weight: 500;
 }
-/* =================================== */
