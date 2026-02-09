@@ -26,7 +26,7 @@ const OrderTable = ({ orders }) => {
                 </tr>
             </thead>
             <tbody>
-                {orders.length > 0 ? orders.map(order => (
+                {orders && orders.length > 0 ? orders.map(order => (
                     <tr key={order._id}>
                         <td style={{ padding: '12px', border: '1px solid #ddd' }}>#{order._id.slice(-6)}</td>
                         <td style={{ padding: '12px', border: '1px solid #ddd' }}>{order.user?.fullName || 'N/A'}</td>

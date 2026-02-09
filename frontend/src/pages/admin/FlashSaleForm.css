@@ -1,8 +1,10 @@
 .form-container {
     background-color: #fff;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 0;
+    /* Luxury style usually uses sharp edges */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    font-family: var(--font-sans);
 }
 
 .form-grid {
@@ -36,13 +38,15 @@
     padding-top: 20px;
 }
 
-.product-list ul, .search-results ul {
+.product-list ul,
+.search-results ul {
     list-style: none;
     padding: 0;
     margin-top: 10px;
 }
 
-.product-list-item, .search-result-item {
+.product-list-item,
+.search-result-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -55,6 +59,7 @@
 .product-info {
     font-size: 0.9rem;
 }
+
 .product-info strong {
     font-size: 1rem;
 }

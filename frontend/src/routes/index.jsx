@@ -13,9 +13,9 @@ import CategoryManagement from '../pages/admin/CategoryManagement';
 import OrderManagement from '../pages/admin/OrderManagement';
 import ProductForm from '../pages/admin/ProductForm';
 import OrderDetail from '../pages/admin/OrderDetail';
-import VoucherManagement from '../pages/admin/VoucherManagement';
-import FlashSaleManagement from '../pages/admin/FlashSaleManagement';
-import FlashSaleForm from '../pages/admin/FlashSaleForm';
+// import VoucherManagement from '../pages/admin/VoucherManagement';
+// import FlashSaleManagement from '../pages/admin/FlashSaleManagement';
+// import FlashSaleForm from '../pages/admin/FlashSaleForm';
 import BrandManagement from '../pages/admin/BrandManagement';
 import CollectionManagement from '../pages/admin/CollectionManagement';
 import BannerManagement from '../pages/admin/BannerManagement';
@@ -34,8 +34,8 @@ import CartPage from '../pages/public/CartPage.jsx';
 import CheckoutPage from '../pages/public/CheckoutPage.jsx'; // <-- Thêm import
 import OrderSuccessPage from '../pages/public/OrderSuccessPage.jsx';
 const ProtectedRoute = ({ children }) => {
-    const { token } = useAuth();
-    return token ? children : <Navigate to="/admin/login" replace />;
+    const { adminToken } = useAuth();
+    return adminToken ? children : <Navigate to="/admin/login" replace />;
 };
 const UserProtectedRoute = ({ children }) => {
     const { userToken } = useAuth();
@@ -56,10 +56,10 @@ const AppRoutes = () => {
                 <Route path="categories" element={<CategoryManagement />} />
                 <Route path="orders" element={<OrderManagement />} />
                 <Route path="orders/:id" element={<OrderDetail />} />
-                <Route path="vouchers" element={<VoucherManagement />} />
+                {/* <Route path="vouchers" element={<VoucherManagement />} />
                 <Route path="flash-sales" element={<FlashSaleManagement />} />
                 <Route path="flash-sales/new" element={<FlashSaleForm />} />
-                <Route path="flash-sales/edit/:id" element={<FlashSaleForm />} />
+                <Route path="flash-sales/edit/:id" element={<FlashSaleForm />} /> */}
                 <Route path="brands" element={<BrandManagement />} />
                 <Route path="collections" element={<CollectionManagement />} />
                 <Route path="banners" element={<BannerManagement />} />
@@ -76,12 +76,12 @@ const AppRoutes = () => {
                 <Route path="register" element={<Register />} />
                 <Route path="login" element={<Login />} />
                 <Route path="my-account" element={<UserProtectedRoute><MyAccount /></UserProtectedRoute>} />
-                 <Route path="brands" element={<BrandPage />} />
-                  <Route path="brands/:slug" element={<BrandDetailPage />} />
-                   <Route path="about" element={<AboutPage />} />
-                    <Route path="products/:id" element={<ProductDetailPage />} />
-                    <Route path="cart" element={<CartPage />} />
-                    <Route path="checkout" element={<UserProtectedRoute><CheckoutPage /></UserProtectedRoute>} />
+                <Route path="brands" element={<BrandPage />} />
+                <Route path="brands/:slug" element={<BrandDetailPage />} />
+                <Route path="about" element={<AboutPage />} />
+                <Route path="products/:id" element={<ProductDetailPage />} />
+                <Route path="cart" element={<CartPage />} />
+                <Route path="checkout" element={<UserProtectedRoute><CheckoutPage /></UserProtectedRoute>} />
                 <Route path="order-success/:orderId" element={<UserProtectedRoute><OrderSuccessPage /></UserProtectedRoute>} />
             </Route>
         </Routes>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import './OrderDetail.css';
 
 const OrderDetail = () => {
@@ -8,7 +9,7 @@ const OrderDetail = () => {
     const [loading, setLoading] = useState(true);
     const [newStatus, setNewStatus] = useState('');
     const { id } = useParams();
-    const serverUrl = 'http://localhost:5000';
+    const serverUrl = API_URL;
 
     const [isEditing, setIsEditing] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -22,7 +23,7 @@ const OrderDetail = () => {
     const fetchOrder = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:5000/api/v1/orders/${id}`, apiConfig);
+            const response = await axios.get(`${API_URL}/api/v1/orders/${id}`, apiConfig);
             const orderData = response.data.data.order;
             setOrder(orderData);
             setNewStatus(orderData.status);
@@ -38,7 +39,7 @@ const OrderDetail = () => {
         const fetchOrder = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:5000/api/v1/orders/${id}`, apiConfig);
+                const response = await axios.get(`${API_URL}/api/v1/orders/${id}`, apiConfig);
                 const orderData = response.data.data.order;
                 setOrder(orderData);
                 setNewStatus(orderData.status);
@@ -53,30 +54,30 @@ const OrderDetail = () => {
     }, [id, apiConfig]);
 
     const handleStatusUpdate = async () => {
-    // Thêm dòng kiểm tra này
-    if (newStatus === order.status) {
-        alert('Bạn chưa chọn trạng thái mới để cập nhật.');
-        return;
-    }
-
-    if (window.confirm(`Bạn có chắc muốn cập nhật trạng thái thành "${newStatus}"?`)) {
-        try {
-            await axios.patch(`http://localhost:5000/api/v1/orders/${id}`, { status: newStatus }, apiConfig);
-            alert('Cập nhật trạng thái thành công!');
-            fetchOrder(); // Tải lại để thấy trạng thái mới
-        } catch (error) {
-            alert(`Cập nhật thất bại: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
-            console.error("Lỗi cập nhật:", error);
+        // Thêm dòng kiểm tra này
+        if (newStatus === order.status) {
+            alert('Bạn chưa chọn trạng thái mới để cập nhật.');
+            return;
         }
-    }
-};
+
+        if (window.confirm(`Bạn có chắc muốn cập nhật trạng thái thành "${newStatus}"?`)) {
+            try {
+                await axios.patch(`${API_URL}/api/v1/orders/${id}`, { status: newStatus }, apiConfig);
+                alert('Cập nhật trạng thái thành công!');
+                fetchOrder(); // Tải lại để thấy trạng thái mới
+            } catch (error) {
+                alert(`Cập nhật thất bại: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
+                console.error("Lỗi cập nhật:", error);
+            }
+        }
+    };
 
     const handleToggleEdit = () => setIsEditing(!isEditing);
 
     const handleSearchProducts = async () => {
         if (searchQuery.length < 2) return;
         try {
-            const res = await axios.get(`http://localhost:5000/api/v1/products?search=${searchQuery}`, apiConfig);
+            const res = await axios.get(`${API_URL}/api/v1/products?search=${searchQuery}`, apiConfig);
             setSearchResults(res.data.data.products);
         } catch (error) {
             console.error("Lỗi tìm kiếm sản phẩm:", error);
@@ -87,7 +88,7 @@ const OrderDetail = () => {
         const quantity = parseInt(prompt(`Nhập số lượng cho sản phẩm "${product.name}":`, 1));
         if (isNaN(quantity) || quantity <= 0) return;
         try {
-            const res = await axios.post(`http://localhost:5000/api/v1/orders/${id}/products`, {
+            const res = await axios.post(`${API_URL}/api/v1/orders/${id}/products`, {
                 productId: product._id, quantity, price: product.sellPrice
             }, apiConfig);
             setProductsInOrder(res.data.data.order.products);
@@ -100,8 +101,8 @@ const OrderDetail = () => {
     const handleUpdateQuantity = async (productId, newQuantity) => {
         const quantity = Math.max(0, parseInt(newQuantity));
         try {
-            const res = await axios.patch(`http://localhost:5000/api/v1/orders/${id}/products/${productId}`, 
-            { quantity }, apiConfig);
+            const res = await axios.patch(`${API_URL}/api/v1/orders/${id}/products/${productId}`,
+                { quantity }, apiConfig);
             setProductsInOrder(res.data.data.order.products);
             setOrder(res.data.data.order);
         } catch (error) {
@@ -132,15 +133,15 @@ const OrderDetail = () => {
         <div className="order-detail-container">
             <Link to="/admin/orders" style={{ marginBottom: '20px', display: 'inline-block' }}>&larr; Quay lại danh sách</Link>
             <h1>Chi tiết Đơn hàng #{order._id.slice(-6)}</h1>
-            
+
             {isCancelled && (
                 <div style={{ padding: '15px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '20px' }}>
                     <strong>Đơn hàng này đã bị hủy và không thể chỉnh sửa.</strong>
                 </div>
             )}
-            
+
             {!isEditable && !isCancelled && !isCompleted && (
-                 <div style={{ padding: '15px', backgroundColor: '#fff3cd', color: '#856404', border: '1px solid #ffeeba', borderRadius: '4px', marginBottom: '20px' }}>
+                <div style={{ padding: '15px', backgroundColor: '#fff3cd', color: '#856404', border: '1px solid #ffeeba', borderRadius: '4px', marginBottom: '20px' }}>
                     <strong>Đơn hàng chỉ có thể được sửa ở trạng thái "Processing".</strong>
                 </div>
             )}
@@ -151,8 +152,8 @@ const OrderDetail = () => {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h3>Sản phẩm trong đơn hàng</h3>
                             {!isCancelled && !isCompleted && (
-                                <button 
-                                    onClick={handleToggleEdit} 
+                                <button
+                                    onClick={handleToggleEdit}
                                     disabled={!isEditable}
                                     title={!isEditable ? 'Chỉ có thể sửa đơn hàng ở trạng thái Processing' : 'Sửa đơn hàng'}
                                 >
@@ -174,9 +175,9 @@ const OrderDetail = () => {
                                             {isEditing && isEditable ? (
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                                     <button onClick={() => handleUpdateQuantity(item.product._id, item.quantity - 1)}>-</button>
-                                                    <input 
-                                                        type="number" 
-                                                        value={item.quantity} 
+                                                    <input
+                                                        type="number"
+                                                        value={item.quantity}
                                                         onChange={(e) => handleUpdateQuantity(item.product._id, e.target.value)}
                                                         style={{ width: '50px', textAlign: 'center' }}
                                                     />
@@ -189,19 +190,19 @@ const OrderDetail = () => {
                                         <td>{(item.price * item.quantity).toLocaleString('vi-VN')} VND</td>
                                         {isEditing && isEditable && (
                                             <td>
-                                                <button onClick={() => handleUpdateQuantity(item.product._id, 0)} style={{backgroundColor: 'red', color: 'white'}}>Xóa</button>
+                                                <button onClick={() => handleUpdateQuantity(item.product._id, 0)} style={{ backgroundColor: 'red', color: 'white' }}>Xóa</button>
                                             </td>
                                         )}
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        
+
                         {isEditing && isEditable && (
                             <div style={{ marginTop: '30px', borderTop: '1px solid #eee', paddingTop: '20px' }}>
                                 <h4>Thêm sản phẩm vào đơn</h4>
                                 <div style={{ display: 'flex', gap: '10px' }}>
-                                    <input type="text" placeholder="Tìm tên sản phẩm..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex: 1, padding: '8px' }}/>
+                                    <input type="text" placeholder="Tìm tên sản phẩm..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{ flex: 1, padding: '8px' }} />
                                     <button onClick={handleSearchProducts}>Tìm</button>
                                 </div>
                                 <ul style={{ listStyle: 'none', padding: 0, marginTop: '10px', maxHeight: '150px', overflowY: 'auto' }}>
@@ -214,7 +215,7 @@ const OrderDetail = () => {
                                 </ul>
                             </div>
                         )}
-                        
+
                         <h3 style={{ textAlign: 'right', marginTop: '20px' }}>Tổng cộng: {order.totalAmount.toLocaleString('vi-VN')} VND</h3>
                     </div>
                 </div>
@@ -231,7 +232,7 @@ const OrderDetail = () => {
                     <div className="card status-update" style={{ marginTop: '20px' }}>
                         <h3>Cập nhật trạng thái</h3>
                         <p>Trạng thái hiện tại: <strong>{order.status}</strong></p>
-                        
+
                         {!isCompleted && !isCancelled ? (
                             <>
                                 <select value={newStatus} onChange={e => setNewStatus(e.target.value)}>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { API_URL } from '../../config/api';
 import './FlashSaleForm.css';
 
 const FlashSaleForm = () => {
@@ -8,19 +9,19 @@ const FlashSaleForm = () => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [products, setProducts] = useState([]);
-    
+
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
     const navigate = useNavigate();
     const { id } = useParams();
     const isEditing = Boolean(id);
-    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }};
+    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
 
     useEffect(() => {
         if (isEditing) {
             const fetchFlashSale = async () => {
-                const res = await axios.get(`http://localhost:5000/api/v1/flash-sales/${id}`, apiConfig);
+                const res = await axios.get(`${API_URL}/api/v1/flash-sales/${id}`, apiConfig);
                 const { title, startTime, endTime, products } = res.data.data.flashSale;
                 setTitle(title);
                 setStartTime(new Date(startTime).toISOString().slice(0, 16));
@@ -35,7 +36,7 @@ const FlashSaleForm = () => {
         if (searchQuery.length < 2) return;
         try {
             // Thêm tham số excludeActiveSale=true
-            const res = await axios.get(`http://localhost:5000/api/v1/products?search=${searchQuery}&excludeActiveSale=true`);
+            const res = await axios.get(`${API_URL}/api/v1/products?search=${searchQuery}&excludeActiveSale=true`);
             setSearchResults(res.data.data.products);
         } catch (error) {
             console.error("Lỗi tìm kiếm sản phẩm:", error);
@@ -46,7 +47,7 @@ const FlashSaleForm = () => {
         // Logic mới: Tự động lấy số lượng tồn kho
         const flashSaleStock = product.stockQuantity;
         const flashSalePrice = prompt(`Nhập giá sale cho ${product.name} (Giá gốc: ${product.sellPrice.toLocaleString('vi-VN')} VND):`, product.sellPrice);
-        
+
         if (flashSalePrice === null) return; // Người dùng nhấn Hủy
 
         // Logic mới: Kiểm tra giá sale
@@ -69,7 +70,7 @@ const FlashSaleForm = () => {
         if (!productToEdit) return;
 
         const newPrice = prompt(`Sửa giá sale cho ${productToEdit.product.name} (Giá gốc: ${productToEdit.product.sellPrice.toLocaleString('vi-VN')} VND):`, productToEdit.flashSalePrice);
-        
+
         if (newPrice === null) return; // Người dùng nhấn Hủy
 
         // Logic mới: Kiểm tra giá sale
@@ -77,14 +78,14 @@ const FlashSaleForm = () => {
             alert('Lỗi: Giá sale không được cao hơn giá gốc!');
             return;
         }
-        
+
         const newStock = prompt(`Sửa số lượng sale cho ${productToEdit.product.name}:`, productToEdit.flashSaleStock);
         if (newStock === null) return;
 
-        const updatedProducts = products.map(p => 
-            p.product._id === productId 
-            ? { ...p, flashSalePrice: Number(newPrice), flashSaleStock: Number(newStock) } 
-            : p
+        const updatedProducts = products.map(p =>
+            p.product._id === productId
+                ? { ...p, flashSalePrice: Number(newPrice), flashSaleStock: Number(newStock) }
+                : p
         );
         setProducts(updatedProducts);
     };
@@ -101,9 +102,9 @@ const FlashSaleForm = () => {
         };
         try {
             if (isEditing) {
-                await axios.patch(`http://localhost:5000/api/v1/flash-sales/${id}`, payload, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/flash-sales/${id}`, payload, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/flash-sales', payload, apiConfig);
+                await axios.post(`${API_URL}/api/v1/flash-sales`, payload, apiConfig);
             }
             alert('Lưu chương trình Flash Sale thành công!');
             navigate('/admin/flash-sales');
@@ -114,7 +115,7 @@ const FlashSaleForm = () => {
 
     return (
         <div className="page-container">
-            <h1 style={{marginBottom: '20px'}}>{isEditing ? 'Sửa chương trình Flash Sale' : 'Tạo chương trình Flash Sale mới'}</h1>
+            <h1 style={{ marginBottom: '20px' }}>{isEditing ? 'Sửa chương trình Flash Sale' : 'Tạo chương trình Flash Sale mới'}</h1>
             <form onSubmit={handleSubmit} className="form-container">
                 <div className="form-grid">
                     <div className="form-group">
@@ -149,7 +150,7 @@ const FlashSaleForm = () => {
                             ))}
                         </ul>
                     </div>
-                    
+
                     <div className="search-container">
                         <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Tìm sản phẩm để thêm..." />
                         <button type="button" onClick={handleSearchProducts}>Tìm</button>
@@ -166,7 +167,7 @@ const FlashSaleForm = () => {
                     </div>
                 </div>
 
-                <button type="submit" className="btn-primary" style={{marginTop: '20px'}}>{isEditing ? 'Cập nhật' : 'Tạo mới'}</button>
+                <button type="submit" className="btn-primary" style={{ marginTop: '20px' }}>{isEditing ? 'Cập nhật' : 'Tạo mới'}</button>
             </form>
         </div>
     );

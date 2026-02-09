@@ -1,0 +1,204 @@
+:root {
+    --luxury-gold: #c5a059;
+    --luxury-black: #1a1a1a;
+    --luxury-gray: #f8f8f8;
+    --luxury-border: #e0e0e0;
+    --luxury-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    --serif-font: 'Playfair Display', serif;
+    --sans-font: 'Inter', sans-serif;
+}
+
+.product-form-container {
+    max-width: 1100px;
+    margin: 10px auto;
+    padding: 30px 40px;
+    background: #fff;
+    border: 1px solid var(--luxury-border);
+    box-shadow: var(--luxury-shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-header {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.form-header h1 {
+    font-family: var(--serif-font);
+    font-size: 1.6rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--luxury-black);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.form-body-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.form-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--luxury-gray);
+}
+
+.section-title {
+    font-family: var(--sans-font);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--luxury-gold);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.input-group {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-family: var(--sans-font);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #888;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.luxury-input,
+.luxury-select,
+.luxury-textarea {
+    padding: 8px 12px;
+    border: 1px solid var(--luxury-border);
+    background: var(--luxury-gray);
+    font-family: var(--sans-font);
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.luxury-input:focus,
+.luxury-select:focus,
+.luxury-textarea:focus {
+    outline: none;
+    border-color: var(--luxury-gold);
+    background: #fff;
+}
+
+.luxury-textarea {
+    resize: none;
+    min-height: 80px;
+}
+
+/* Custom Multi-select Tags */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-item {
+    padding: 6px 12px;
+    border: 1px solid var(--luxury-border);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.tag-item.active {
+    background: var(--luxury-black);
+    color: white;
+    border-color: var(--luxury-black);
+}
+
+.tag-item:hover:not(.active) {
+    border-color: var(--luxury-gold);
+    color: var(--luxury-gold);
+}
+
+/* File Upload Area */
+.file-upload-wrapper {
+    position: relative;
+    border: 1px dashed var(--luxury-border);
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-upload-wrapper:hover {
+    border-color: var(--luxury-gold);
+    background: rgba(197, 160, 89, 0.02);
+}
+
+.file-upload-label {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.file-upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Buttons */
+.form-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--luxury-black);
+    color: white;
+    border: none;
+    font-family: var(--sans-font);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.submit-btn:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cancel-btn {
+    display: block;
+    text-align: center;
+    font-size: 0.7rem;
+    color: #bbb;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.cancel-btn:hover {
+    color: var(--luxury-gold);
+}

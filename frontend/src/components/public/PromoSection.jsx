@@ -6,12 +6,12 @@ import ProductCard from './ProductCard';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import './PromoSection.css'; // Sẽ tạo file này ngay sau đây
+import './PromoSection.css';
+import { API_URL } from '../../config/api';
 
 const PromoSection = ({ section }) => {
     const { title, content } = section;
     const { bannerImage, link, products } = content;
-    const serverUrl = 'http://localhost:5000';
 
     return (
         <section className="promo-section">
@@ -22,7 +22,7 @@ const PromoSection = ({ section }) => {
             <div className="promo-content">
                 <div className="promo-banner">
                     <Link to={link || '#'}>
-                        <img src={`${serverUrl}${bannerImage}`} alt={title} />
+                        <img src={`${API_URL}${bannerImage}`} alt={title} />
                     </Link>
                 </div>
                 <div className="promo-products">

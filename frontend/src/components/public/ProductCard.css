@@ -28,28 +28,29 @@
 .product-image-container {
     width: 100%;
     padding-top: 125%;
-    /* Aspect ratio for fashion */
     position: relative;
-    background-color: var(--dior-light-gray);
+    background-color: #fff;
     overflow: hidden;
+    border: 1px solid var(--dior-color-beige-subtle);
 }
 
 .product-image-container img {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
     transition: var(--dior-transition);
 }
 
 .product-card:hover .product-image-container img {
-    transform: scale(1.05);
+    transform: translate(-50%, -50%) scale(1.05);
 }
 
 .product-info {
-    padding: var(--dior-spacing-md) 0;
+    padding: var(--dior-spacing-lg) 0;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -58,24 +59,24 @@
 .product-name {
     font-family: var(--dior-font-serif);
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--dior-black);
     margin-bottom: var(--dior-spacing-sm);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.15em;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     line-clamp: 2;
     overflow: hidden;
+    line-height: 1.4;
 }
 
 .product-price {
     font-family: var(--dior-font-sans);
-    color: var(--dior-brown);
-    /* Signature brown */
-    font-weight: 600;
-    font-size: 0.95rem;
+    color: var(--dior-black);
+    font-weight: 500;
+    font-size: 1rem;
     margin-top: auto;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
 }

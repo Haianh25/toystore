@@ -1,8 +1,9 @@
 import React from 'react';
+import { API_URL } from '../../config/api';
 import './Table.css';
 
 const BrandTable = ({ brands, onEdit, onDelete }) => {
-    const serverUrl = 'http://localhost:5000';
+    const serverUrl = API_URL;
     return (
         <table className="admin-table">
             <thead>

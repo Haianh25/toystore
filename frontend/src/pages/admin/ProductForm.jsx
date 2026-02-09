@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { API_URL } from '../../config/api';
+import './ProductForm.css';
 
 const ageGroups = [
-    { label: '1 - 3 tuổi', value: '1-3' },
-    { label: '3 - 6 tuổi', value: '3-6' },
-    { label: '6 - 12 tuổi', value: '6-12' },
-    { label: '12 tuổi trở lên', value: '12+' },
+    { label: '1 - 3 Tuổi', value: '1-3' },
+    { label: '3 - 6 Tuổi', value: '3-6' },
+    { label: '6 - 12 Tuổi', value: '6-12' },
+    { label: '12 Tuổi +', value: '12+' },
 ];
 
 const ProductForm = () => {
@@ -25,58 +27,70 @@ const ProductForm = () => {
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
     const [collections, setCollections] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
     const { id } = useParams();
     const isEditing = Boolean(id);
 
     useEffect(() => {
-        // Luôn tải danh sách các lựa chọn (categories, brands, collections)
         const fetchOptions = async () => {
-            const catRes = await axios.get('http://localhost:5000/api/v1/categories');
-            setCategories(catRes.data.data.categories);
-            const brandRes = await axios.get('http://localhost:5000/api/v1/brands');
-            setBrands(brandRes.data.data.brands);
-            const colRes = await axios.get('http://localhost:5000/api/v1/collections');
-            setCollections(colRes.data.data.collections);
+            try {
+                const [catRes, brandRes, colRes] = await Promise.all([
+                    axios.get(`${API_URL}/api/v1/categories`),
+                    axios.get(`${API_URL}/api/v1/brands`),
+                    axios.get(`${API_URL}/api/v1/collections`)
+                ]);
+                setCategories(catRes.data?.data?.categories || []);
+                setBrands(brandRes.data?.data?.brands || []);
+                setCollections(colRes.data?.data?.collections || []);
+            } catch (err) {
+                console.error("Lỗi tải tùy chọn:", err);
+            }
         };
-        
+
         fetchOptions();
 
-        // Nếu ở chế độ sửa, tải dữ liệu sản phẩm và điền vào form
         if (isEditing) {
-            axios.get(`http://localhost:5000/api/v1/products/${id}`)
-                .then(res => {
-                    const product = res.data.data.product;
+            const fetchProduct = async () => {
+                try {
+                    const { data } = await axios.get(`${API_URL}/api/v1/products/${id}`);
+                    const product = data?.data?.data || data?.data?.product || data?.data || {};
+                    console.log("Dữ liệu sản phẩm thực tế:", product);
+
                     setFormData({
                         name: product.name || '',
                         description: product.description || '',
                         importPrice: product.importPrice || 0,
                         sellPrice: product.sellPrice || 0,
                         stockQuantity: product.stockQuantity || 0,
-                        // Đảm bảo lấy đúng mảng ID cho categories
-                        categories: product.categories?.map(c => c._id) || [],
-                        brand: product.brand?._id || '',
-                        productCollection: product.productCollection?._id || '',
+                        categories: product.categories?.map(c => typeof c === 'object' ? c._id : c) || [],
+                        brand: typeof product.brand === 'object' ? product.brand?._id : product.brand || '',
+                        productCollection: typeof product.productCollection === 'object' ? product.productCollection?._id : product.productCollection || '',
                         ageGroups: product.ageGroups || [],
                     });
-                });
+                } catch (err) {
+                    console.error("Lỗi tải chi tiết sản phẩm:", err);
+                }
+            };
+            fetchProduct();
         }
     }, [id, isEditing]);
 
     const handleChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
-    const handleAgeChange = (value) => {
-        const currentAges = formData.ageGroups;
-        const newAges = currentAges.includes(value) ? currentAges.filter(age => age !== value) : [...currentAges, value];
-        setFormData({ ...formData, ageGroups: newAges });
-    };
-
-    const handleCategoryChange = (catId) => {
-        const currentCats = formData.categories;
-        const newCats = currentCats.includes(catId) ? currentCats.filter(id => id !== catId) : [...currentCats, catId];
-        setFormData({ ...formData, categories: newCats });
+    const toggleItem = (list, item, field) => {
+        const currentList = [...formData[field]];
+        const index = currentList.indexOf(item);
+        if (index > -1) {
+            currentList.splice(index, 1);
+        } else {
+            currentList.push(item);
+        }
+        setFormData({ ...formData, [field]: currentList });
     };
 
     const handleFileChange = e => {
@@ -85,9 +99,9 @@ const ProductForm = () => {
 
     const handleSubmit = async e => {
         e.preventDefault();
+        setLoading(true);
         const data = new FormData();
-        
-        // Gửi dữ liệu form đi
+
         Object.keys(formData).forEach(key => {
             const value = formData[key];
             if (Array.isArray(value)) {
@@ -98,12 +112,11 @@ const ProductForm = () => {
                 data.append(key, value);
             }
         });
-        
-        // Gửi file
-        if (files.mainImage) {
+
+        if (files.mainImage && files.mainImage[0]) {
             data.append('mainImage', files.mainImage[0]);
         }
-        if (files.detailImages) {
+        if (files.detailImages && files.detailImages.length > 0) {
             for (let i = 0; i < files.detailImages.length; i++) {
                 data.append('detailImages', files.detailImages[i]);
             }
@@ -112,58 +125,141 @@ const ProductForm = () => {
         try {
             const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
             if (isEditing) {
-                await axios.patch(`http://localhost:5000/api/v1/products/${id}`, data, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/products/${id}`, data, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/products', data, apiConfig);
+                await axios.post(`${API_URL}/api/v1/products`, data, apiConfig);
             }
             navigate('/admin/products');
         } catch (error) {
             console.error("Lỗi lưu sản phẩm:", error);
             alert(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="form-container" style={{background: 'white', padding: '20px', borderRadius: '8px'}}>
-            <h1>{isEditing ? 'Sửa Sản phẩm' : 'Thêm Sản phẩm mới'}</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group"><label>Tên sản phẩm</label><input name="name" value={formData.name} onChange={handleChange} required /></div>
-                <div className="form-group"><label>Mô tả</label><textarea name="description" value={formData.description} onChange={handleChange} required rows="4"/></div>
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px'}}>
-                    <div className="form-group"><label>Giá nhập</label><input type="number" name="importPrice" value={formData.importPrice} onChange={handleChange} required /></div>
-                    <div className="form-group"><label>Giá bán</label><input type="number" name="sellPrice" value={formData.sellPrice} onChange={handleChange} required /></div>
-                    <div className="form-group"><label>Số lượng tồn kho</label><input type="number" name="stockQuantity" value={formData.stockQuantity} onChange={handleChange} required /></div>
-                </div>
-                
-                <div className="form-group">
-                    <label>Độ tuổi (Có thể chọn nhiều)</label>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', border: '1px solid #ddd', padding: '10px', borderRadius: '4px' }}>
-                        {ageGroups.map(group => (
-                            <label key={group.label} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                <input type="checkbox" checked={formData.ageGroups.includes(group.value)} onChange={() => handleAgeChange(group.value)} style={{ marginRight: '5px' }} />
-                                {group.label}
-                            </label>
-                        ))}
-                    </div>
-                </div>
-                
-                <div className="form-group">
-                    <label>Danh mục (Có thể chọn nhiều)</label>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', border: '1px solid #ddd', padding: '10px', borderRadius: '4px' }}>
-                        {categories.map(cat => (
-                            <label key={cat._id} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                <input type="checkbox" checked={formData.categories.includes(cat._id)} onChange={() => handleCategoryChange(cat._id)} style={{ marginRight: '5px' }} />
-                                {cat.name}
-                            </label>
-                        ))}
-                    </div>
-                </div>
+        <div className="product-form-container">
+            <div className="form-header">
+                <h1>{isEditing ? 'Biên Tập Sản Phẩm' : 'Sáng Tạo Sản Phẩm Mới'}</h1>
+                <p style={{ color: '#999', fontSize: '0.7rem', letterSpacing: '0.1em' }}>THEDEVILPLAYZ MAISON ADMIN</p>
+            </div>
 
-                <div className="form-group"><label>Thương hiệu (Tùy chọn)</label><select name="brand" value={formData.brand} onChange={handleChange}><option value="">-- Chọn thương hiệu --</option>{brands.map(b => <option key={b._id} value={b._id}>{b.name}</option>)}</select></div>
-                <div className="form-group"><label>Bộ sưu tập (Tùy chọn)</label><select name="productCollection" value={formData.productCollection} onChange={handleChange}><option value="">-- Chọn bộ sưu tập --</option>{collections.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}</select></div>
-                <div className="form-group"><label>Ảnh đại diện (Để trống nếu không muốn đổi)</label><input type="file" name="mainImage" onChange={handleFileChange} /></div>
-                <div className="form-group"><label>Album ảnh chi tiết (Để trống nếu không muốn đổi)</label><input type="file" name="detailImages" onChange={handleFileChange} multiple /></div>
-                <button type="submit" className="btn-primary">{isEditing ? 'Cập nhật' : 'Tạo sản phẩm'}</button>
+            <form onSubmit={handleSubmit}>
+                <div className="form-body-grid">
+                    {/* Cột trái: Thông tin chính */}
+                    <div className="form-column">
+                        <section className="form-section">
+                            <span className="section-title">01 Thông tin chung</span>
+                            <div className="input-group">
+                                <label>Tên Tuyệt Tác</label>
+                                <input name="name" className="luxury-input" value={formData.name} onChange={handleChange} required placeholder="Nhập tên..." />
+                            </div>
+                            <div className="input-group">
+                                <label>Câu Chuyện Sản Phẩm</label>
+                                <textarea name="description" className="luxury-textarea" value={formData.description} onChange={handleChange} required placeholder="Mô tả tinh tế..." />
+                            </div>
+                        </section>
+
+                        <section className="form-section">
+                            <span className="section-title">02 Thương mại & Kho</span>
+                            <div className="input-grid">
+                                <div className="input-group">
+                                    <label>Giá Nhập (VND)</label>
+                                    <input type="number" name="importPrice" className="luxury-input" value={formData.importPrice} onChange={handleChange} required />
+                                </div>
+                                <div className="input-group">
+                                    <label>Giá Niêm Yết (VND)</label>
+                                    <input type="number" name="sellPrice" className="luxury-input" value={formData.sellPrice} onChange={handleChange} required />
+                                </div>
+                            </div>
+                            <div className="input-group" style={{ marginTop: '10px' }}>
+                                <label>Số Lượng Khả Dụng</label>
+                                <input type="number" name="stockQuantity" className="luxury-input" value={formData.stockQuantity} onChange={handleChange} required />
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* Cột phải: Phân loại & Ảnh */}
+                    <div className="form-column">
+                        <section className="form-section">
+                            <span className="section-title">03 Phân loại</span>
+                            <div className="input-grid">
+                                <div className="input-group">
+                                    <label>Thương Hiệu</label>
+                                    <select name="brand" className="luxury-select" value={formData.brand} onChange={handleChange}>
+                                        <option value="">-- Chọn --</option>
+                                        {brands.map(b => <option key={b._id} value={b._id}>{b.name}</option>)}
+                                    </select>
+                                </div>
+                                <div className="input-group">
+                                    <label>Bộ Sưu Tập</label>
+                                    <select name="productCollection" className="luxury-select" value={formData.productCollection} onChange={handleChange}>
+                                        <option value="">-- Chọn --</option>
+                                        {collections.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="input-group" style={{ marginTop: '15px' }}>
+                                <label>Độ Tuổi</label>
+                                <div className="tags-container">
+                                    {ageGroups.map(group => (
+                                        <div
+                                            key={group.value}
+                                            className={`tag-item ${formData.ageGroups.includes(group.value) ? 'active' : ''}`}
+                                            onClick={() => toggleItem(formData.ageGroups, group.value, 'ageGroups')}
+                                        >
+                                            {group.label}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="input-group" style={{ marginTop: '15px' }}>
+                                <label>Danh Mục</label>
+                                <div className="tags-container">
+                                    {categories.map(cat => (
+                                        <div
+                                            key={cat._id}
+                                            className={`tag-item ${formData.categories.includes(cat._id) ? 'active' : ''}`}
+                                            onClick={() => toggleItem(formData.categories, cat._id, 'categories')}
+                                        >
+                                            {cat.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="form-section" style={{ borderBottom: 'none' }}>
+                            <span className="section-title">04 Media</span>
+                            <div className="input-grid">
+                                <div className="input-group">
+                                    <label>Ảnh Chính</label>
+                                    <div className="file-upload-wrapper">
+                                        <span className="file-upload-label">{files.mainImage ? 'Sẵn sàng' : 'Chọn ảnh'}</span>
+                                        <input type="file" name="mainImage" className="file-upload-input" onChange={handleFileChange} />
+                                    </div>
+                                </div>
+                                <div className="input-group">
+                                    <label>Album Ảnh</label>
+                                    <div className="file-upload-wrapper">
+                                        <span className="file-upload-label">{files.detailImages?.length || 0} ảnh</span>
+                                        <input type="file" name="detailImages" className="file-upload-input" onChange={handleFileChange} multiple />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div className="form-footer">
+                            <button type="submit" className="submit-btn" disabled={loading}>
+                                {loading ? 'Đang Xử Lý...' : (isEditing ? 'Cập Nhật' : 'Khởi Tạo')}
+                            </button>
+                            <Link to="/admin/products" className="cancel-btn">Hủy bỏ</Link>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     );

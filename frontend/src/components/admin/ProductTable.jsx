@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../../config/api';
 
 const ageGroupLabels = {
     '1-3': '1 - 3 tuổi',
@@ -9,7 +10,7 @@ const ageGroupLabels = {
 };
 
 const ProductTable = ({ products, onDelete }) => {
-    const serverUrl = 'http://localhost:5000';
+    const serverUrl = API_URL;
 
     const formatAgeGroups = (groups) => {
         if (!groups || groups.length === 0) return 'Chưa gán';
@@ -41,10 +42,10 @@ const ProductTable = ({ products, onDelete }) => {
                     <tr key={product._id}>
                         <td><img src={`${serverUrl}${product.mainImage}`} alt={product.name} style={{ width: '60px', height: '60px', objectFit: 'cover' }} /></td>
                         <td>{product.name}</td>
-                        
+
                         {/* === SỬA LẠI LOGIC HIỂN THỊ Ở ĐÂY === */}
                         <td>{formatCategories(product.categories)}</td>
-                        
+
                         <td>{product.sellPrice.toLocaleString('vi-VN')} VND</td>
                         <td>{product.stockQuantity}</td>
                         <td>{formatAgeGroups(product.ageGroups)}</td>

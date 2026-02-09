@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import './UserFormModal.css';
 
 const DESIRED_BANNER_WIDTH = 277.5;
@@ -20,7 +21,7 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
 
     useEffect(() => {
         if (isOpen) {
-            axios.get('http://localhost:5000/api/v1/products').then(res => setAllProducts(res.data.data.products));
+            axios.get(`${API_URL}/api/v1/products`).then(res => setAllProducts(res.data.data.products));
             if (isEditing && section) {
                 setTitle(section.title);
                 setType(section.type);
@@ -51,7 +52,7 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
                     const resizedFile = new File([blob], file.name, { type: file.type, lastModified: Date.now() });
                     // SỬA LẠI: Dùng functional update để đảm bảo state luôn mới nhất
                     setSliderBanners(currentBanners => {
-                        return currentBanners.map(banner => 
+                        return currentBanners.map(banner =>
                             banner.tempId === tempId ? { ...banner, file: resizedFile } : banner
                         );
                     });
@@ -67,25 +68,25 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
             processAndSetBannerFile(value, tempId);
         } else if (field === 'link') {
             setSliderBanners(currentBanners => {
-                return currentBanners.map(banner => 
+                return currentBanners.map(banner =>
                     banner.tempId === tempId ? { ...banner, link: value } : banner
                 );
             });
         }
     };
-    
+
     // SỬA LẠI: Thêm một ID tạm thời, duy nhất cho mỗi banner mới
     const handleAddBanner = () => {
-        const newBanner = { 
-            image: null, 
-            link: '', 
-            file: null, 
-            isNew: true, 
+        const newBanner = {
+            image: null,
+            link: '',
+            file: null,
+            isNew: true,
             tempId: `new_${Date.now()}` // ID tạm thời
         };
         setSliderBanners(prev => [...prev, newBanner]);
     };
-    
+
     const handleRemoveBanner = (tempId) => {
         setSliderBanners(prev => prev.filter(banner => banner.tempId !== tempId));
     };
@@ -110,7 +111,7 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
                 isNew: banner.isNew,
             }));
             formData.append('bannerGroup', JSON.stringify(bannerStructure));
-            
+
             sliderBanners.forEach(banner => {
                 if (banner.file) {
                     formData.append('bannerImages', banner.file);
@@ -131,11 +132,11 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
                     {/* ... các input khác ... */}
                     <div className="form-group"><label>Tiêu đề Section</label><input value={title} onChange={e => setTitle(e.target.value)} /></div>
                     <div className="form-group"><label>Loại Section</label><select value={type} onChange={e => setType(e.target.value)}><option value="promo_with_products">Banner và Sản phẩm</option><option value="banner_slider">Slider Banner</option></select></div>
-                    
+
                     {type === 'promo_with_products' && (
                         <>
                             <div className="form-group"><label>Ảnh Banner {isEditing ? '(Để trống nếu không đổi)' : ''}</label><input type="file" onChange={e => setBannerImageFile(e.target.files[0])} /></div>
-                            <div className="form-group"><label>Chọn sản phẩm</label><div className="searchable-list-container"><input type="text" placeholder="Tìm kiếm sản phẩm..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="searchable-list-input"/><ul className="searchable-list">{filteredProducts.map(p => (<li key={p._id} onClick={() => handleProductSelect(p._id)}><input type="checkbox" readOnly checked={selectedProducts.includes(p._id)} /><label>{p.name}</label></li>))}</ul></div></div>
+                            <div className="form-group"><label>Chọn sản phẩm</label><div className="searchable-list-container"><input type="text" placeholder="Tìm kiếm sản phẩm..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="searchable-list-input" /><ul className="searchable-list">{filteredProducts.map(p => (<li key={p._id} onClick={() => handleProductSelect(p._id)}><input type="checkbox" readOnly checked={selectedProducts.includes(p._id)} /><label>{p.name}</label></li>))}</ul></div></div>
                         </>
                     )}
                     {type === 'banner_slider' && (
@@ -147,8 +148,8 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
                                     <label>Banner</label>
                                     {banner.image && !banner.isNew && <p><small>Ảnh hiện tại: {banner.image.split('/').pop()}</small></p>}
                                     <input type="file" onChange={e => handleBannerChange(banner.tempId, 'file', e.target.files[0])} />
-                                    <input type="text" value={banner.link} onChange={e => handleBannerChange(banner.tempId, 'link', e.target.value)} placeholder="Đường dẫn (VD: /sale)" style={{marginTop: '5px'}}/>
-                                    <button type="button" onClick={() => handleRemoveBanner(banner.tempId)} style={{marginTop: '5px'}}>Xóa Banner</button>
+                                    <input type="text" value={banner.link} onChange={e => handleBannerChange(banner.tempId, 'link', e.target.value)} placeholder="Đường dẫn (VD: /sale)" style={{ marginTop: '5px' }} />
+                                    <button type="button" onClick={() => handleRemoveBanner(banner.tempId)} style={{ marginTop: '5px' }}>Xóa Banner</button>
                                 </div>
                             ))}
                             <button type="button" onClick={handleAddBanner}>Thêm Banner</button>
@@ -157,7 +158,7 @@ const SectionFormModal = ({ isOpen, onClose, onSubmit, section }) => {
 
                     <div className="form-group"><label>Đường dẫn chung (nút "Xem thêm")</label><input value={link} onChange={e => setLink(e.target.value)} placeholder="/lego-city" /></div>
                     <div className="form-group"><label>Thứ tự hiển thị</label><input type="number" value={sortOrder} onChange={e => setSortOrder(e.target.value)} /></div>
-                    <div className="form-group"><label style={{display: 'flex', alignItems: 'center'}}><input type="checkbox" checked={isActive} onChange={e => setIsActive(e.target.checked)} style={{width: 'auto', marginRight: '10px'}}/> Kích hoạt</label></div>
+                    <div className="form-group"><label style={{ display: 'flex', alignItems: 'center' }}><input type="checkbox" checked={isActive} onChange={e => setIsActive(e.target.checked)} style={{ width: 'auto', marginRight: '10px' }} /> Kích hoạt</label></div>
                     <div className="modal-actions"><button type="button" onClick={onClose}>Hủy</button><button type="submit">{isEditing ? 'Cập nhật' : 'Tạo mới'}</button></div>
                 </form>
             </div>

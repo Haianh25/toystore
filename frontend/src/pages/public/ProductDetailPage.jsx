@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../context/CartContext'; // <-- 1. Import useCart
+import { API_URL } from '../../config/api';
 import './ProductDetailPage.css';
 
 const ProductDetailPage = () => {
@@ -10,17 +11,21 @@ const ProductDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const [mainImageUrl, setMainImageUrl] = useState('');
-    const serverUrl = 'http://localhost:5000';
-    const { addToCart } = useCart(); // <-- 2. Lấy hàm addToCart từ context
+    const { addToCart } = useCart();
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/v1/products/${id}`);
-                setProduct(data.data.product);
-                // Sửa lại: Dùng detailImages nếu có, không thì dùng mainImage
-                const images = [data.data.product.mainImage, ...(data.data.product.detailImages || [])];
-                setMainImageUrl(`${serverUrl}${images[0]}`);
+                const { data } = await axios.get(`${API_URL}/api/v1/products/${id}`);
+                // Hỗ trợ cả 2 định dạng: logic cũ (data.product) và factory logic (data.data)
+                const productData = data?.data?.data || data?.data?.product;
+
+                if (productData) {
+                    setProduct(productData);
+                    // Standardize image pathing
+                    const mainImg = productData.mainImage ? `${API_URL}${productData.mainImage}` : '';
+                    setMainImageUrl(mainImg);
+                }
             } catch (error) {
                 console.error("Lỗi khi tải sản phẩm:", error);
             } finally {
@@ -30,8 +35,9 @@ const ProductDetailPage = () => {
         fetchProduct();
     }, [id]);
 
+
     const handleThumbnailClick = (imageUrl) => {
-        setMainImageUrl(`${serverUrl}${imageUrl}`);
+        setMainImageUrl(`${API_URL}${imageUrl}`);
     };
 
     // 3. Hàm xử lý khi nhấn nút "Thêm vào giỏ"
@@ -41,13 +47,13 @@ const ProductDetailPage = () => {
             alert(`Đã thêm ${quantity} sản phẩm "${product.name}" vào giỏ hàng!`);
         }
     };
-    
+
     // Sửa lại logic render ảnh
     const allImages = product ? [product.mainImage, ...(product.detailImages || [])] : [];
 
     if (loading) return <p>Đang tải sản phẩm...</p>;
     if (!product) return <p>Không tìm thấy sản phẩm.</p>;
-    
+
     return (
         <div className="product-detail-container">
             <div className="product-detail-layout">
@@ -55,15 +61,18 @@ const ProductDetailPage = () => {
                     <img src={mainImageUrl} alt={product.name} className="main-image" />
                     {allImages.length > 1 && (
                         <div className="thumbnail-gallery">
-                            {allImages.map((imgUrl, index) => (
-                                <img
-                                    key={index}
-                                    src={`${serverUrl}${imgUrl}`}
-                                    alt={`${product.name} - thumbnail ${index + 1}`}
-                                    className={`thumbnail ${`${serverUrl}${imgUrl}` === mainImageUrl ? 'active' : ''}`}
-                                    onClick={() => handleThumbnailClick(imgUrl)}
-                                />
-                            ))}
+                            {allImages.map((imgUrl, index) => {
+                                const fullUrl = `${API_URL}${imgUrl}`;
+                                return (
+                                    <img
+                                        key={index}
+                                        src={fullUrl}
+                                        alt={`${product.name} - thumbnail ${index + 1}`}
+                                        className={`thumbnail ${fullUrl === mainImageUrl ? 'active' : ''}`}
+                                        onClick={() => handleThumbnailClick(imgUrl)}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
                 </div>
@@ -81,8 +90,8 @@ const ProductDetailPage = () => {
                             <button onClick={() => setQuantity(q => Math.min(product.stockQuantity, q + 1))}>+</button>
                         </div>
                         {/* 4. Gắn sự kiện onClick vào nút */}
-                        <button 
-                            className="add-to-cart-btn" 
+                        <button
+                            className="add-to-cart-btn"
                             disabled={product.stockQuantity === 0}
                             onClick={handleAddToCart}
                         >

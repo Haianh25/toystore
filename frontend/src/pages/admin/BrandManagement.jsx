@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import BrandTable from '../../components/admin/BrandTable';
 import BrandFormModal from '../../components/admin/BrandFormModal';
 import './BrandManagement.css';
@@ -11,8 +12,13 @@ const BrandManagement = () => {
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
 
     const fetchBrands = async () => {
-        const res = await axios.get('http://localhost:5000/api/v1/brands', apiConfig);
-        setBrands(res.data.data.brands);
+        try {
+            const res = await axios.get(`${API_URL}/api/v1/brands`, apiConfig);
+            const brandsData = res.data?.data?.brands || res.data?.data?.data || res.data?.data || [];
+            setBrands(Array.isArray(brandsData) ? brandsData : []);
+        } catch (error) {
+            console.error("Lỗi tải thương hiệu:", error);
+        }
     };
 
     useEffect(() => { fetchBrands(); }, []);
@@ -31,9 +37,9 @@ const BrandManagement = () => {
         try {
             if (editingBrand) {
                 // Hoàn thiện logic Sửa
-                await axios.patch(`http://localhost:5000/api/v1/brands/${editingBrand._id}`, formData, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/brands/${editingBrand._id}`, formData, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/brands', formData, apiConfig);
+                await axios.post(`${API_URL}/api/v1/brands`, formData, apiConfig);
             }
             fetchBrands();
             setIsModalOpen(false);
@@ -41,12 +47,12 @@ const BrandManagement = () => {
             alert(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
         }
     };
-    
+
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa thương hiệu này?')) {
             try {
                 // Hoàn thiện logic Xóa
-                await axios.delete(`http://localhost:5000/api/v1/brands/${id}`, apiConfig);
+                await axios.delete(`${API_URL}/api/v1/brands/${id}`, apiConfig);
                 fetchBrands();
             } catch (error) {
                 alert('Xóa thương hiệu thất bại!');

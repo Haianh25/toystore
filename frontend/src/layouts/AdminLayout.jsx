@@ -17,8 +17,8 @@ const AdminLayout = () => {
         <div className="admin-layout">
             <Sidebar />
             <main className="admin-content">
-                <div style={{ textAlign: 'right', marginBottom: '20px' }}>
-                    <button onClick={handleLogout} style={{ padding: '8px 16px', cursor: 'pointer' }}>
+                <div className="admin-header">
+                    <button className="btn-logout" onClick={handleLogout}>
                         Đăng xuất
                     </button>
                 </div>

@@ -1,0 +1,84 @@
+.admin-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--dior-black);
+    color: var(--dior-white);
+    font-family: var(--font-sans);
+}
+
+.login-form-box {
+    padding: 60px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-form-box h2 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    color: var(--dior-white);
+}
+
+.input-group {
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--dior-white);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.login-input:focus {
+    border-bottom: 1px solid var(--dior-white);
+}
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 25px;
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+}
+
+.btn-signin {
+    width: 100%;
+    padding: 18px;
+    border: 1px solid var(--dior-white);
+    background: transparent;
+    color: var(--dior-white);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    transition: all 0.4s ease;
+}
+
+.btn-signin:hover {
+    background: var(--dior-white);
+    color: var(--dior-black);
+}
+
+.btn-signin:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

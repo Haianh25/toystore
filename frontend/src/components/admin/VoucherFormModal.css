@@ -15,18 +15,20 @@
 /* Style cho khung modal */
 .modal-content {
     background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 40px;
+    border-radius: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     width: 500px;
     max-width: 95%;
+    font-family: var(--font-sans);
 }
 
 .modal-content h2 {
+    font-family: var(--font-serif);
     margin-top: 0;
     margin-bottom: 25px;
-    color: #333;
-    font-size: 1.5rem;
+    color: var(--dior-black);
+    font-size: 2rem;
     text-align: center;
 }
 

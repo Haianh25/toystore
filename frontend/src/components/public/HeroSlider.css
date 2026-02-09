@@ -1,8 +1,9 @@
 @import '../../assets/global.css';
 
-.hero-slider-container {
+.hero-slider-container,
+.hero {
+    min-height: 60vh;
     height: 85vh;
-    min-height: auto;
     width: 100%;
     position: relative;
     overflow: hidden;

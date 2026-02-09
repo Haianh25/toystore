@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import BannerTable from '../../components/admin/BannerTable';
 import BannerFormModal from '../../components/admin/BannerFormModal';
 import './BannerManagement.css';
@@ -11,12 +12,17 @@ const BannerManagement = () => {
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
 
     const fetchBanners = async () => {
-        const res = await axios.get('http://localhost:5000/api/v1/banners', apiConfig);
-        setBanners(res.data.data.banners);
+        try {
+            const res = await axios.get(`${API_URL}/api/v1/banners`, apiConfig);
+            const bannersData = res.data?.data?.banners || res.data?.data?.data || res.data?.data || [];
+            setBanners(Array.isArray(bannersData) ? bannersData : []);
+        } catch (error) {
+            console.error("Lỗi tải banner:", error);
+        }
     };
 
     useEffect(() => { fetchBanners(); }, []);
-    
+
     const handleOpenCreate = () => {
         setEditingBanner(null);
         setIsModalOpen(true);
@@ -30,9 +36,9 @@ const BannerManagement = () => {
     const handleSubmit = async (formData) => {
         try {
             if (editingBanner) {
-                await axios.patch(`http://localhost:5000/api/v1/banners/${editingBanner._id}`, formData, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/banners/${editingBanner._id}`, formData, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/banners', formData, apiConfig);
+                await axios.post(`${API_URL}/api/v1/banners`, formData, apiConfig);
             }
             fetchBanners();
             setIsModalOpen(false);
@@ -40,11 +46,11 @@ const BannerManagement = () => {
             alert(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
         }
     };
-    
+
     const handleDelete = async (id) => {
-         if (window.confirm('Bạn có chắc muốn xóa banner này?')) {
+        if (window.confirm('Bạn có chắc muốn xóa banner này?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/v1/banners/${id}`, apiConfig);
+                await axios.delete(`${API_URL}/api/v1/banners/${id}`, apiConfig);
                 fetchBanners();
             } catch (error) {
                 alert('Xóa thất bại!');

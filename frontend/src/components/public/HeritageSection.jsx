@@ -16,7 +16,7 @@ const HeritageSection = () => {
                         Just as we embrace the elegance of fashion, we believe in the magic of childhood.
                         Our curated collection represents the pinnacle of craftsmanship and imagination.
                     </p>
-                    <span className="heritage-signature">TOYSTORE HERITAGE</span>
+                    <span className="heritage-signature">THEDEVILPLAYZ HERITAGE</span>
                 </div>
 
                 <div className="heritage-image-wrapper">

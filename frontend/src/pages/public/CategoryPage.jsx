@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import { useParams, useSearchParams } from 'react-router-dom';
 import FilterSidebar from '../../components/public/FilterSidebar';
 import ProductGrid from '../../components/public/ProductGrid';
@@ -25,7 +26,7 @@ const CategoryPage = () => {
             setLoading(true);
             try {
                 // Thêm category=slug vào API call
-                const response = await axios.get(`http://localhost:5000/api/v1/products`, {
+                const response = await axios.get(`${API_URL}/api/v1/products`, {
                     params: {
                         category: slug,
                         page: currentPage,
@@ -55,13 +56,13 @@ const CategoryPage = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
-    
+
     const handleSortChange = (e) => {
         setSortBy(e.target.value);
         setCurrentPage(1); // Reset về trang 1 khi đổi sắp xếp
     };
 
-    if (error) return <p style={{ color: 'red' }}>{error}</p>;
+    if (error) return <div className="product-error-message">{error}</div>;
 
     return (
         <div className="product-list-page-container">
@@ -70,7 +71,7 @@ const CategoryPage = () => {
             </aside>
             <main className="product-list-main">
                 {loading ? (
-                     <h1 className="product-list-title">Đang tải...</h1>
+                    <h1 className="product-list-title">Đang tải...</h1>
                 ) : (
                     <h1 className="product-list-title">
                         {categoryInfo ? categoryInfo.name : 'Danh mục'}
@@ -94,8 +95,8 @@ const CategoryPage = () => {
                 ) : (
                     <ProductGrid products={products} />
                 )}
-                
-                <Pagination 
+
+                <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={handlePageChange}

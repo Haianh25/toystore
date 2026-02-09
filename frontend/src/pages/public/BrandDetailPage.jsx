@@ -2,21 +2,22 @@ import React, { useState, useEffect } from 'react';
 // Bước 1: Import useNavigate cùng với useParams
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import './BrandPage.css';
 
 const BrandDetailPage = () => {
     const { slug } = useParams();
     const [brand, setBrand] = useState(null);
     const [loading, setLoading] = useState(true);
-    const serverUrl = 'http://localhost:5000';
-    
+    const serverUrl = API_URL;
+
     // Bước 2: Khởi tạo hook navigate
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBrandDetail = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/v1/brands/slug/${slug}`);
+                const { data } = await axios.get(`${API_URL}/api/v1/brands/slug/${slug}`);
                 setBrand(data.data.brand);
             } catch (error) {
                 console.error("Lỗi khi tải chi tiết thương hiệu:", error);

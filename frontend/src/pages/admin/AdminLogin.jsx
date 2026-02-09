@@ -2,77 +2,82 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../config/api';
+import './AdminLogin.css';
 
 const AdminLogin = () => {
-    const [email, setEmail] = useState('admin@gmail.com');
-    const [password, setPassword] = useState('password123');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { adminLogin } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/v1/auth/login', {
+            const response = await axios.post(`${API_URL}/api/v1/auth/login`, {
                 email,
                 password,
             });
-            
-            // Kiểm tra dữ liệu trả về có đúng cấu trúc và user có phải admin không
+
             if (response.data.status === 'success' && response.data.data.user.role === 'admin') {
-                // Đăng nhập thành công
-                login(response.data.token);
+                adminLogin(response.data.token);
                 navigate('/admin/dashboard');
             } else {
-                // Trường hợp đăng nhập thành công nhưng không phải admin
-                setError('Tài khoản của bạn không có quyền truy cập trang quản trị.');
+                setError('UNAUTHORIZED ACCESS. ADMIN PRIVILEGES REQUIRED.');
             }
         } catch (err) {
-            const errorMessage = err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
-            setError(errorMessage);
+            const errorMessage = err.response?.data?.message || 'AUTHENTICATION FAILED.';
+            setError(errorMessage.toUpperCase());
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Giao diện JSX của bạn
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f7f7f7' }}>
-            <form onSubmit={handleSubmit} style={{ padding: '40px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', width: '350px' }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Đăng Nhập Admin</h2>
-                
-                <div style={{ marginBottom: '16px' }}>
-                    <label htmlFor="email">Email</label>
+        <div className="admin-login-container">
+            <form onSubmit={handleSubmit} className="login-form-box">
+                <h2>Maison Admin</h2>
+
+                <div className="input-group">
                     <input
                         type="email"
-                        id="email"
+                        placeholder="EMAIL ADDRESS"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '10px', marginTop: '4px', borderRadius: '4px', border: '1px solid #ccc' }}
+                        className="login-input"
                     />
                 </div>
 
-                <div style={{ marginBottom: '24px' }}>
-                    <label htmlFor="password">Mật khẩu</label>
+                <div className="input-group">
                     <input
                         type="password"
-                        id="password"
+                        placeholder="PASSWORD"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '10px', marginTop: '4px', borderRadius: '4px', border: '1px solid #ccc' }}
+                        className="login-input"
                     />
                 </div>
 
-                {error && <p style={{ color: 'red', textAlign: 'center', marginBottom: '16px' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
 
-                <button type="submit" style={{ width: '100%', padding: '12px', border: 'none', borderRadius: '4px', backgroundColor: '#007bff', color: 'white', cursor: 'pointer', fontSize: '16px' }}>
-                    Đăng Nhập
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn-signin"
+                >
+                    {loading ? 'AUTHENTICATING...' : 'SIGN IN'}
                 </button>
             </form>
         </div>
     );
 };
+
 
 export default AdminLogin;

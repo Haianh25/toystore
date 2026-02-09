@@ -1,20 +1,23 @@
 .brand-page-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    max-width: 1400px;
+    margin: var(--spacing-xxl) auto;
+    padding: 0 var(--spacing-lg);
 }
 
 .brand-page-title {
     text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: #333;
+    font-family: var(--dior-font-serif);
+    font-size: 2.8rem;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--spacing-xl);
+    text-transform: uppercase;
+    color: var(--dior-black);
 }
 
 .brand-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-lg);
 }
 
 .brand-card {
@@ -22,75 +25,90 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    padding: var(--spacing-xl);
+    border: 1px solid var(--dior-color-beige-subtle);
     background-color: #fff;
     text-decoration: none;
-    color: #333;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    color: var(--dior-black);
+    transition: var(--dior-transition);
 }
 
 .brand-card:hover {
+    border-color: var(--dior-black);
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .brand-card img {
-    height: 80px;
-    max-width: 120px;
+    height: 100px;
+    max-width: 160px;
     object-fit: contain;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
+    transition: transform 0.5s ease;
+}
+
+.brand-card:hover img {
+    transform: scale(1.05);
 }
 
 .brand-card h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-family: var(--dior-font-serif);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
 }
 
 .brand-detail-header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--dior-color-beige-subtle);
 }
 
 .brand-detail-header img {
-    height: 120px;
-    max-width: 200px;
+    height: 150px;
+    max-width: 250px;
     object-fit: contain;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
 }
 
 .brand-detail-header h1 {
-    font-size: 3rem;
+    font-family: var(--dior-font-serif);
+    font-size: 3.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     margin: 0;
 }
 
 .brand-description {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #555;
+    font-size: 1rem;
+    line-height: 2;
+    color: #333;
     max-width: 800px;
     margin: 0 auto;
-    text-align: justify;
+    text-align: center;
 }
 
 .back-button {
-    display: inline-block;
-    margin-bottom: 2rem;
-    padding: 0.5rem 1rem;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--spacing-xl);
+    padding: 10px 20px;
+    background-color: transparent;
+    border: 1px solid var(--dior-black);
     cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.2s;
+    font-size: 0.75rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    font-family: var(--dior-font-sans);
+    transition: var(--dior-transition);
 }
 
 .back-button:hover {
-    background-color: #e0e0e0;
+    background-color: var(--dior-black);
+    color: #fff;
 }

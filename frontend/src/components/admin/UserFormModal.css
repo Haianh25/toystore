@@ -12,15 +12,22 @@
 
 .modal-content {
     background: white;
-    padding: 30px;
-    border-radius: 8px;
+    padding: 40px;
+    border-radius: 0;
+    /* Sharp edges for luxury look */
     width: 500px;
     max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-sans);
 }
 
 .modal-content h2 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    color: var(--dior-black);
+    text-align: center;
 }
 
 .modal-content form div {
@@ -61,7 +68,8 @@
 }
 
 .searchable-list {
-    max-height: 200px; /* Giới hạn chiều cao và cho phép cuộn */
+    max-height: 200px;
+    /* Giới hạn chiều cao và cho phép cuộn */
     overflow-y: auto;
     list-style: none;
     padding: 0;

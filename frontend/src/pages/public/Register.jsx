@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../../config/api';
+import './Register.css';
 
 const Register = () => {
     const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', password: '' });
@@ -14,29 +16,43 @@ const Register = () => {
         setError('');
         setMessage('');
         try {
-            const res = await axios.post('http://localhost:5000/api/v1/auth/signup', formData);
+            const res = await axios.post(`${API_URL}/api/v1/auth/signup`, formData);
             setMessage(res.data.message);
         } catch (err) {
             setError(err.response?.data?.message || 'Có lỗi xảy ra.');
         }
     };
-    
+
     return (
-        <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', textAlign: 'center' }}>
-            <h2>Đăng ký tài khoản</h2>
-            {message && <p style={{ color: 'green', padding: '10px', border: '1px solid green', borderRadius: '4px' }}>{message}</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            
-            {!message && (
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <input name="fullName" placeholder="Họ và Tên" onChange={handleChange} required style={{padding: '10px'}} />
-                    <input type="email" name="email" placeholder="Email" onChange={handleChange} required style={{padding: '10px'}} />
-                    <input type="tel" name="phone" placeholder="Số điện thoại" onChange={handleChange} required style={{padding: '10px'}} />
-                    <input type="password" name="password" placeholder="Mật khẩu" onChange={handleChange} required style={{padding: '10px'}} />
-                    <button type="submit" style={{padding: '10px', cursor: 'pointer'}}>Đăng ký</button>
-                </form>
-            )}
-            <p style={{marginTop: '20px'}}>Đã có tài khoản? <Link to="/login">Đăng nhập</Link></p>
+        <div className="register-page-container">
+            <div className="auth-card">
+                <h2>Create Account</h2>
+
+                {message && <p className="auth-message success">{message}</p>}
+                {error && <p className="auth-message error">{error}</p>}
+
+                {!message && (
+                    <form onSubmit={handleSubmit} className="dior-form">
+                        <div className="dior-input-group">
+                            <input name="fullName" placeholder="FULL NAME" onChange={handleChange} required className="dior-input" />
+                        </div>
+                        <div className="dior-input-group">
+                            <input type="email" name="email" placeholder="EMAIL ADDRESS" onChange={handleChange} required className="dior-input" />
+                        </div>
+                        <div className="dior-input-group">
+                            <input type="tel" name="phone" placeholder="PHONE NUMBER" onChange={handleChange} required className="dior-input" />
+                        </div>
+                        <div className="dior-input-group">
+                            <input type="password" name="password" placeholder="PASSWORD" onChange={handleChange} required className="dior-input" />
+                        </div>
+                        <button type="submit" className="btn-dior-primary">Create Account</button>
+                    </form>
+                )}
+
+                <p className="auth-footer">
+                    Already have an account? <Link to="/login">Sign In</Link>
+                </p>
+            </div>
         </div>
     );
 };

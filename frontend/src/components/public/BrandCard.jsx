@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../../config/api';
 import './BrandCard.css';
 
 const BrandCard = ({ brand }) => {
-    const serverUrl = 'http://localhost:5000';
+    const serverUrl = API_URL;
 
     return (
         <Link to={`/products?brand=${brand._id}`} className="brand-card">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CategoryTable from '../../components/admin/CategoryTable';
+import { API_URL } from '../../config/api';
 import CategoryFormModal from '../../components/admin/CategoryFormModal';
 import './CategoryManagement.css'; // <-- 1. Import file CSS mới
 
@@ -19,8 +20,9 @@ const CategoryManagement = () => {
     const fetchCategories = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/v1/categories', apiConfig);
-            setCategories(response.data.data.categories);
+            const response = await axios.get(`${API_URL}/api/v1/categories`, apiConfig);
+            const categoriesData = response.data?.data?.categories || response.data?.data?.data || response.data?.data || [];
+            setCategories(Array.isArray(categoriesData) ? categoriesData : []);
         } catch (error) {
             console.error("Lỗi tải danh mục:", error);
         } finally {
@@ -41,15 +43,15 @@ const CategoryManagement = () => {
         setEditingCategory(category);
         setIsModalOpen(true);
     };
-    
+
     const handleCloseModal = () => setIsModalOpen(false);
 
     const handleSubmitForm = async (formData) => {
         try {
             if (editingCategory) {
-                await axios.patch(`http://localhost:5000/api/v1/categories/${editingCategory._id}`, formData, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/categories/${editingCategory._id}`, formData, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/categories', formData, apiConfig);
+                await axios.post(`${API_URL}/api/v1/categories`, formData, apiConfig);
             }
             handleCloseModal();
             fetchCategories();
@@ -61,7 +63,7 @@ const CategoryManagement = () => {
     const handleDelete = async (categoryId) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa danh mục này? Thao tác này không thể hoàn tác.')) {
             try {
-                await axios.delete(`http://localhost:5000/api/v1/categories/${categoryId}`, apiConfig);
+                await axios.delete(`${API_URL}/api/v1/categories/${categoryId}`, apiConfig);
                 fetchCategories();
             } catch (error) {
                 alert('Xóa danh mục thất bại!');

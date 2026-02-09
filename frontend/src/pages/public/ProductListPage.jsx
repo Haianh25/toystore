@@ -4,11 +4,12 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import ProductGrid from '../../components/public/ProductGrid';
 import FilterSidebar from '../../components/public/FilterSidebar';
 import Pagination from '../../components/public/Pagination';
+import { API_URL } from '../../config/api';
 import './ProductListPage.css';
 
 // --- CẬP NHẬT: "Mặc định" bây giờ có giá trị là "random" ---
 const sortOptions = [
-    { label: 'Mặc định (Ngẫu nhiên)', value: 'random' }, 
+    { label: 'Mặc định (Ngẫu nhiên)', value: 'random' },
     { label: 'Sản phẩm mới', value: '-createdAt' },
     { label: 'Tên sản phẩm A-Z', value: 'name' },
     { label: 'Tên sản phẩm Z-A', value: '-name' },
@@ -36,23 +37,23 @@ const ProductListPage = () => {
                 let title = 'Tất cả sản phẩm';
 
                 if (location.pathname.startsWith('/category/') && slug) {
-                    const res = await axios.get(`http://localhost:5000/api/v1/categories/slug/${slug}`);
+                    const res = await axios.get(`${API_URL}/api/v1/categories/slug/${slug}`);
                     params.set('category', res.data.data.category._id);
                     title = res.data.data.category.name;
                 } else if (location.pathname.startsWith('/collection/') && slug) {
-                    const res = await axios.get(`http://localhost:5000/api/v1/collections/slug/${slug}`);
+                    const res = await axios.get(`${API_URL}/api/v1/collections/slug/${slug}`);
                     params.set('collection', res.data.data.collection._id);
                     title = res.data.data.collection.name;
                 }
-                
+
                 // --- CẬP NHẬT LOGIC: Luôn mặc định sắp xếp ngẫu nhiên nếu không có tham số sort ---
                 if (!params.has('sort')) {
                     params.set('sort', 'random');
                 }
-                
+
                 setPageTitle(title);
-                
-                const productsRes = await axios.get(`http://localhost:5000/api/v1/products?${params.toString()}`);
+
+                const productsRes = await axios.get(`${API_URL}/api/v1/products?${params.toString()}`);
                 setProducts(productsRes.data.data.products);
                 setPagination(productsRes.data.pagination);
 
@@ -65,7 +66,7 @@ const ProductListPage = () => {
                 setLoading(false);
             }
         };
-        
+
         fetchProducts();
     }, [slug, location.pathname, location.search]);
 
@@ -80,7 +81,7 @@ const ProductListPage = () => {
         searchParams.delete('page');
         setSearchParams(searchParams);
     };
-    
+
     // Hàm để xác định giá trị hiện tại của dropdown
     const getCurrentSortValue = () => {
         return searchParams.get('sort') || 'random';
@@ -113,9 +114,9 @@ const ProductListPage = () => {
                 {!loading && !error && (
                     <>
                         <ProductGrid products={products} />
-                        <Pagination 
-                            currentPage={pagination.page} 
-                            totalPages={pagination.totalPages} 
+                        <Pagination
+                            currentPage={pagination.page}
+                            totalPages={pagination.totalPages}
                             onPageChange={handlePageChange}
                         />
                     </>

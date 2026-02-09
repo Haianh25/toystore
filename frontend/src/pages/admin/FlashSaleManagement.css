@@ -12,8 +12,9 @@
 }
 
 .page-header h1 {
-    font-size: 1.8rem;
-    color: #333;
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    color: var(--dior-black);
 }
 
 .btn-primary {
@@ -36,12 +37,13 @@
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
 }
 
-.admin-table th, .admin-table td {
+.admin-table th,
+.admin-table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
@@ -57,7 +59,8 @@
     background-color: #f1f1f1;
 }
 
-.action-buttons a, .action-buttons button {
+.action-buttons a,
+.action-buttons button {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
@@ -80,7 +83,8 @@
 
 .expanded-row td {
     padding: 0;
-    border-bottom: 2px solid #007bff; /* Tạo điểm nhấn cho dòng được mở */
+    border-bottom: 2px solid #007bff;
+    /* Tạo điểm nhấn cho dòng được mở */
 }
 
 .expanded-content {

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Import useAuth
+import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../config/api';
+import './Login.css';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -17,7 +19,7 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post('http://localhost:5000/api/v1/auth/login', formData);
+            const response = await axios.post(`${API_URL}/api/v1/auth/login`, formData);
             if (response.data.status === 'success' && response.data.token) {
                 userLogin(response.data.token); // Dùng hàm từ context để lưu token và cập nhật state
                 navigate('/');
@@ -30,16 +32,41 @@ const Login = () => {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', textAlign: 'center', border: '1px solid #ddd', borderRadius: '8px' }}>
-            <h2>Đăng nhập</h2>
-            {isVerified && <p style={{ color: 'green' }}>Xác thực email thành công! Bây giờ bạn có thể đăng nhập.</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
-                <input type="email" name="email" placeholder="Email" onChange={handleChange} required style={{padding: '12px', borderRadius: '4px', border: '1px solid #ccc'}} />
-                <input type="password" name="password" placeholder="Mật khẩu" onChange={handleChange} required style={{padding: '12px', borderRadius: '4px', border: '1px solid #ccc'}} />
-                <button type="submit" style={{padding: '12px', cursor: 'pointer', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', fontSize: '1rem' }}>Đăng nhập</button>
-            </form>
-            <p style={{marginTop: '20px'}}>Chưa có tài khoản? <Link to="/register">Đăng ký</Link></p>
+        <div className="login-page-container">
+            <div className="auth-card">
+                <h2>Sign In</h2>
+
+                {isVerified && <p className="auth-message success">Email verified successfully! You can now log in.</p>}
+                {error && <p className="auth-message error">{error}</p>}
+
+                <form onSubmit={handleSubmit} className="dior-form">
+                    <div className="dior-input-group">
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="EMAIL ADDRESS"
+                            onChange={handleChange}
+                            required
+                            className="dior-input"
+                        />
+                    </div>
+                    <div className="dior-input-group">
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="PASSWORD"
+                            onChange={handleChange}
+                            required
+                            className="dior-input"
+                        />
+                    </div>
+                    <button type="submit" className="btn-dior-primary">Sign In</button>
+                </form>
+
+                <p className="auth-footer">
+                    New to Maison? <Link to="/register">Create an Account</Link>
+                </p>
+            </div>
         </div>
     );
 };

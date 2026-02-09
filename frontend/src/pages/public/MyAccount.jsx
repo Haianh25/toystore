@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'; // Sửa lại dòng này
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import './MyAccount.css';
 import OrderHistory from './OrderHistory';
 
@@ -12,11 +13,11 @@ const MyAccount = () => {
     });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
-    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }};
+    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` } };
 
     const fetchUserData = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/v1/users/me', apiConfig);
+            const res = await axios.get(`${API_URL}/api/v1/users/me`, apiConfig);
             const userData = res.data.data.user;
             setUser(userData);
             setFormData({
@@ -55,7 +56,7 @@ const MyAccount = () => {
         setMessage('');
         setError('');
         try {
-            const res = await axios.patch('http://localhost:5000/api/v1/users/updateMe', formData, apiConfig);
+            const res = await axios.patch(`${API_URL}/api/v1/users/updateMe`, formData, apiConfig);
             setUser(res.data.data.user);
             setMessage('Cập nhật thông tin thành công!');
         } catch (err) {
@@ -70,7 +71,7 @@ const MyAccount = () => {
             <h1>Tài khoản của tôi</h1>
             {message && <p className="account-message message-success">{message}</p>}
             {error && <p className="account-message message-error">{error}</p>}
-            
+
             <form onSubmit={handleSubmit} className="account-form">
                 <div className="form-group">
                     <label>Email</label>
@@ -84,10 +85,10 @@ const MyAccount = () => {
                     <label htmlFor="phone">Số điện thoại</label>
                     <input id="phone" type="tel" name="phone" value={formData.phone} onChange={handleChange} />
                 </div>
-                
-                <hr style={{margin: '20px 0', border: 'none', borderTop: '1px solid #eee'}} />
+
+                <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid #eee' }} />
                 <h3>Địa chỉ giao hàng</h3>
-                
+
                 <div className="form-group">
                     <label htmlFor="street">Số nhà, tên đường</label>
                     <input id="street" type="text" name="street" value={formData.address.street} onChange={handleAddressChange} />
@@ -104,11 +105,11 @@ const MyAccount = () => {
                     <label htmlFor="city">Tỉnh / Thành phố</label>
                     <input id="city" type="text" name="city" value={formData.address.city} onChange={handleAddressChange} />
                 </div>
-                
+
                 <button type="submit">Lưu thay đổi</button>
             </form>
-            
-            <hr style={{margin: '40px 0', border: 'none', borderTop: '1px solid #eee'}} />
+
+            <hr style={{ margin: '40px 0', border: 'none', borderTop: '1px solid #eee' }} />
 
             <OrderHistory />
         </div>

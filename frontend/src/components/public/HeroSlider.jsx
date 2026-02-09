@@ -8,13 +8,14 @@ import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
 import './HeroSlider.css';
 
+import { API_URL } from '../../config/api';
+
 // Component này giờ sẽ nhận banners làm prop
 const HeroSlider = ({ banners }) => {
   if (!banners || banners.length === 0) return null;
-  const serverUrl = 'http://localhost:5000';
 
   return (
-    <div className="hero-slider-container">
+    <div className="hero-slider-container hero">
       <Swiper
         className="hero-slider"
         modules={[Autoplay, EffectFade, Pagination]}
@@ -32,7 +33,7 @@ const HeroSlider = ({ banners }) => {
         {banners.map((banner) => (
           <SwiperSlide key={banner._id}>
             <div className="hero-slide-content">
-              <img src={`${serverUrl}${banner.image}`} alt="Banner" className="hero-image" />
+              <img src={`${API_URL}/${banner.image}`} alt="Banner" className="hero-image" />
               <div className="hero-overlay">
                 <div className="hero-text-content">
                   <span className="hero-subtitle">NEW COLLECTIONS</span>

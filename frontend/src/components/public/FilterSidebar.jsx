@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { API_URL } from '../../config/api';
 import './FilterSidebar.css';
 
 const ageGroups = [
@@ -27,13 +28,13 @@ const FilterSidebar = () => {
 
     useEffect(() => {
         // Lấy danh sách collections và brands
-        axios.get('http://localhost:5000/api/v1/collections').then(res => setCollections(res.data.data.collections || []));
-        axios.get('http://localhost:5000/api/v1/brands').then(res => setBrands(res.data.data.brands || []));
+        axios.get(`${API_URL}/api/v1/collections`).then(res => setCollections(res.data.data.collections || []));
+        axios.get(`${API_URL}/api/v1/brands`).then(res => setBrands(res.data.data.brands || []));
     }, []);
 
     const handleFilterChange = (type, value) => {
         const newParams = new URLSearchParams(location.search);
-        
+
         if (type === 'price') {
             if (params.get('minPrice') === value.min) {
                 newParams.delete('minPrice');
@@ -54,7 +55,7 @@ const FilterSidebar = () => {
                 newParams.set(type, currentValues.join(','));
             }
         }
-        
+
         newParams.delete('page');
         navigate({ pathname: location.pathname, search: newParams.toString() });
     };
@@ -75,7 +76,7 @@ const FilterSidebar = () => {
                     )
                 })}
             </div>
-            
+
             <div className="filter-group">
                 <h4>Tuổi</h4>
                 {ageGroups.map(group => (
@@ -89,11 +90,11 @@ const FilterSidebar = () => {
                 <h4>Giá</h4>
                 {priceRanges.map(range => (
                     <label key={range.label}>
-                        <input 
-                            type="checkbox" 
-                            name="price" 
-                            checked={params.get('minPrice') === range.min} 
-                            onChange={() => handleFilterChange('price', range)} 
+                        <input
+                            type="checkbox"
+                            name="price"
+                            checked={params.get('minPrice') === range.min}
+                            onChange={() => handleFilterChange('price', range)}
                         />
                         {range.label}
                     </label>

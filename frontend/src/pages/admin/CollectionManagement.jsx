@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import CollectionTable from '../../components/admin/CollectionTable';
 import CollectionFormModal from '../../components/admin/CollectionFormModal';
 import './CollectionManagement.css'; // Sửa lại đường dẫn import
@@ -11,8 +12,13 @@ const CollectionManagement = () => {
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
 
     const fetchCollections = async () => {
-        const res = await axios.get('http://localhost:5000/api/v1/collections', apiConfig);
-        setCollections(res.data.data.collections);
+        try {
+            const res = await axios.get(`${API_URL}/api/v1/collections`, apiConfig);
+            const collectionsData = res.data?.data?.collections || res.data?.data?.data || res.data?.data || [];
+            setCollections(Array.isArray(collectionsData) ? collectionsData : []);
+        } catch (error) {
+            console.error("Lỗi tải bộ sưu tập:", error);
+        }
     };
 
     useEffect(() => { fetchCollections(); }, []);
@@ -21,7 +27,7 @@ const CollectionManagement = () => {
         setEditingCollection(null);
         setIsModalOpen(true);
     };
-    
+
     const handleOpenEdit = (collection) => {
         setEditingCollection(collection);
         setIsModalOpen(true);
@@ -30,9 +36,9 @@ const CollectionManagement = () => {
     const handleSubmit = async (formData) => {
         try {
             if (editingCollection) {
-                await axios.patch(`http://localhost:5000/api/v1/collections/${editingCollection._id}`, formData, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/collections/${editingCollection._id}`, formData, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/collections', formData, apiConfig);
+                await axios.post(`${API_URL}/api/v1/collections`, formData, apiConfig);
             }
             fetchCollections();
             setIsModalOpen(false);
@@ -40,11 +46,11 @@ const CollectionManagement = () => {
             alert(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
         }
     };
-    
+
     const handleDelete = async (id) => {
-         if (window.confirm('Bạn có chắc muốn xóa bộ sưu tập này?')) {
+        if (window.confirm('Bạn có chắc muốn xóa bộ sưu tập này?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/v1/collections/${id}`, apiConfig);
+                await axios.delete(`${API_URL}/api/v1/collections/${id}`, apiConfig);
                 fetchCollections();
             } catch (error) {
                 alert('Xóa thất bại!');

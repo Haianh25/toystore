@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import './BrandPage.css'; // Sẽ tạo file này ngay sau đây
+import './BrandPage.css';
+import { API_URL } from '../../config/api';
 
 const BrandPage = () => {
     const [brands, setBrands] = useState([]);
     const [loading, setLoading] = useState(true);
-    const serverUrl = 'http://localhost:5000';
 
     useEffect(() => {
         const fetchBrands = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5000/api/v1/brands');
+                const { data } = await axios.get(`${API_URL}/api/v1/brands`);
                 // Chấp nhận cả brands và data (từ factory) để tăng tính linh hoạt
                 setBrands(data.data.brands || data.data.data || []);
             } catch (error) {
@@ -34,7 +34,7 @@ const BrandPage = () => {
             <div className="brand-grid">
                 {brands.map((brand) => (
                     <Link to={`/brands/${brand.slug}`} key={brand._id} className="brand-card">
-                        <img src={`${serverUrl}${brand.logo}`} alt={`${brand.name} logo`} />
+                        <img src={`${API_URL}${brand.logo}`} alt={`${brand.name} logo`} />
                         <h3>{brand.name}</h3>
                     </Link>
                 ))}

@@ -1,0 +1,119 @@
+.category-showcase {
+    padding: var(--dior-spacing-xl) 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    /* Dior-style thin spacing */
+    background: var(--dior-border);
+    border: 1px solid var(--dior-border);
+}
+
+.category-card {
+    position: relative;
+    height: 600px;
+    background: #fff;
+    overflow: hidden;
+    display: block;
+}
+
+.card-image-wrapper {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    transition: transform 1.2s var(--dior-curve-smooth);
+}
+
+.card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.8) brightness(0.95);
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.3));
+}
+
+.card-content {
+    position: absolute;
+    bottom: var(--dior-spacing-xl);
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    z-index: 2;
+    padding: 0 var(--dior-spacing-lg);
+    transition: transform 0.8s var(--dior-curve-smooth);
+}
+
+.card-subtitle {
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    font-weight: 500;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.card-title {
+    font-family: var(--dior-font-serif);
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-explore {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    font-weight: 600;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.card-explore::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    background: #fff;
+    transition: all 0.4s ease;
+    transform: translateX(-50%);
+}
+
+/* Hover Effects */
+.category-card:hover .card-image-wrapper {
+    transform: scale(1.05);
+}
+
+.category-card:hover .card-content {
+    transform: translateY(-10px);
+}
+
+.category-card:hover .card-explore::after {
+    width: 40px;
+}
+
+@media (max-width: 1024px) {
+    .showcase-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-card {
+        height: 500px;
+    }
+}

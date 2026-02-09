@@ -1,70 +1,115 @@
 @import '../../assets/global.css';
 
-.homepage-fade-in {
-    opacity: 1;
-    animation: diorFadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.pure-luxury-homepage {
+    background-color: var(--dior-white);
+    color: var(--dior-black);
+    animation: luxuryEnter 1s forwards;
 }
 
-@keyframes diorFadeIn {
+@keyframes luxuryEnter {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        filter: grayscale(1);
     }
 
+    to {
+        opacity: 1;
+        filter: grayscale(0);
+    }
+}
+
+.homepage-hero-wrapper {
+    position: relative;
+    z-index: 10;
+}
+
+.main-content-flow {
+    display: flex;
+    flex-direction: column;
+}
+
+.flow-section {
+    padding: var(--dior-spacing-xxl) 0;
+}
+
+.flow-section.secondary-bg {
+    background: var(--dior-beige-subtle);
+}
+
+/* Section Headings */
+.section-intro {
+    text-align: center;
+    margin-bottom: var(--dior-spacing-xl);
+    padding: 0 var(--dior-spacing-lg);
+}
+
+.dior-dash-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.6em;
+    color: var(--dior-brown);
+    display: block;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.dior-desc {
+    max-width: 600px;
+    margin: 1.5rem auto 0;
+    font-size: 0.95rem;
+    color: var(--dior-gray);
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+}
+
+/* Spacers */
+.final-reveal-spacer {
+    height: 15vh;
+}
+
+/* Fallback Hero Refined */
+.hero-fallback-luxury {
+    height: 90vh;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+}
+
+.reveal-text {
+    display: block;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: revealSlide 1.5s var(--dior-curve-smooth) forwards;
+}
+
+.reveal-text.subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 1em;
+    margin-bottom: 3rem;
+}
+
+.reveal-text.title {
+    font-size: 5rem;
+    font-family: var(--dior-font-serif);
+    letter-spacing: 0.2rem;
+}
+
+@keyframes revealSlide {
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-.homepage-content-layer {
-    background-color: var(--dior-white);
-    position: relative;
-    z-index: 1;
-}
-
-.dynamic-sections {
-    display: flex;
-    flex-direction: column;
-    gap: var(--dior-spacing-xxxl);
-    margin-top: var(--dior-spacing-xxxl);
-}
-
-.homepage-footer-spacer {
-    height: 0;
-}
-
-/* Luxury Loader */
-.luxury-loader {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-}
-
-.loader-text {
-    font-family: var(--dior-font-serif);
-    font-size: 3rem;
-    letter-spacing: 1em;
-    animation: pulse 2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 0.3;
-        transform: scale(0.98);
+@media (max-width: 768px) {
+    .reveal-text.title {
+        font-size: 2.5rem;
     }
 
-    50% {
-        opacity: 1;
-        transform: scale(1);
+    .flow-section {
+        padding: var(--dior-spacing-xl) 0;
     }
-}
-
-/* Cleanup of any potential global spills from old classes */
-.homepage-content {
-    background: none !important;
 }

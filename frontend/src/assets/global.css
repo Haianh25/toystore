@@ -3,7 +3,9 @@
 :root {
   /* Dior Color Palette */
   --dior-white: #FFFFFF;
+  --dior-color-white: #FFFFFF;
   --dior-black: #000000;
+  --dior-color-black: #000000;
   --dior-gray: #8E9091;
   --dior-light-gray: #F5F5F5;
   --dior-border: #E0E0E0;
@@ -16,6 +18,14 @@
   --dior-beige-dark: #E5DFC8;
   --dior-color-beige-dark: #E5DFC8;
   --dior-champagne: #F3E5D8;
+
+  /* Theme Aliases */
+  --primary-color: var(--dior-black);
+  --secondary-color: var(--dior-brown);
+  --accent-primary: var(--dior-brown);
+  --text-dark: var(--dior-black);
+  --text-color: var(--dior-black);
+  --border-color: var(--dior-border);
 
   /* Typography */
   --dior-font-serif: 'Playfair Display', serif;
@@ -157,4 +167,37 @@ section {
 
 section:empty {
   display: none;
+}
+
+/* Admin Table Standardization */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+  font-family: var(--font-sans);
+}
+
+.admin-table th {
+  background-color: #fcfcfc;
+  padding: 15px;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--dior-gray);
+  border-bottom: 1px solid var(--dior-border);
+}
+
+.admin-table td {
+  padding: 20px 15px;
+  border-bottom: 1px solid #f9f9f9;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.admin-table tr:hover {
+  background-color: #fbfbfb;
 }

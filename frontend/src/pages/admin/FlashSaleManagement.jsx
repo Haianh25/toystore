@@ -1,17 +1,18 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../../config/api';
 import './FlashSaleManagement.css';
 
 const FlashSaleManagement = () => {
     const [flashSales, setFlashSales] = useState([]);
     const [expandedSaleId, setExpandedSaleId] = useState(null); // State để theo dõi dòng được mở rộng
-    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }};
-    const serverUrl = 'http://localhost:5000';
+    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
+    const serverUrl = API_URL;
 
     useEffect(() => {
         const fetchFlashSales = async () => {
-            const res = await axios.get('http://localhost:5000/api/v1/flash-sales', apiConfig);
+            const res = await axios.get(`${API_URL}/api/v1/flash-sales`, apiConfig);
             setFlashSales(res.data.data.flashSales);
         };
         fetchFlashSales();
@@ -19,16 +20,16 @@ const FlashSaleManagement = () => {
 
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc muốn xóa chương trình sale này?')) {
-            await axios.delete(`http://localhost:5000/api/v1/flash-sales/${id}`, apiConfig);
+            await axios.delete(`${API_URL}/api/v1/flash-sales/${id}`, apiConfig);
             setFlashSales(flashSales.filter(fs => fs._id !== id));
         }
     };
 
     const getStatus = (startTime, endTime) => {
         const now = new Date();
-        if (now < new Date(startTime)) return <span style={{color: 'blue'}}>Sắp diễn ra</span>;
-        if (now > new Date(endTime)) return <span style={{color: 'gray'}}>Đã kết thúc</span>;
-        return <span style={{color: 'green'}}>Đang diễn ra</span>;
+        if (now < new Date(startTime)) return <span style={{ color: 'blue' }}>Sắp diễn ra</span>;
+        if (now > new Date(endTime)) return <span style={{ color: 'gray' }}>Đã kết thúc</span>;
+        return <span style={{ color: 'green' }}>Đang diễn ra</span>;
     };
 
     const handleToggleExpand = (id) => {

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
+import { API_URL } from '../../config/api';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import './Dashboard.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -14,12 +16,12 @@ const Dashboard = () => {
         const fetchData = async () => {
             try {
                 // Lấy thống kê tổng quan
-                const statsRes = await axios.get('http://localhost:5000/api/v1/dashboard/stats', apiConfig);
-                setStats(statsRes.data.data);
+                const statsRes = await axios.get(`${API_URL}/api/v1/dashboard/stats`, apiConfig);
+                setStats(statsRes.data?.data || { totalOrders: 0, totalRevenue: 0, totalProductsSold: 0 });
 
                 // Lấy dữ liệu biểu đồ
-                const chartRes = await axios.get('http://localhost:5000/api/v1/dashboard/charts', apiConfig);
-                const dailyData = chartRes.data.data.dailyData;
+                const chartRes = await axios.get(`${API_URL}/api/v1/dashboard/charts`, apiConfig);
+                const dailyData = chartRes.data?.data?.dailyData || [];
 
                 // Xử lý dữ liệu cho biểu đồ
                 const labels = dailyData.map(d => new Date(d._id).toLocaleDateString('vi-VN'));
@@ -48,26 +50,27 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Dashboard</h1>
+        <div className="dashboard-container">
+            <h1 className="dashboard-title">Dashboard</h1>
+
             {/* Thống kê tổng quan */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '30px' }}>
-                <div style={{ padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            <div className="stats-grid">
+                <div className="stat-card">
                     <h2>Tổng Đơn hàng</h2>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{stats.totalOrders}</p>
+                    <p className="stat-value">{stats.totalOrders}</p>
                 </div>
-                <div style={{ padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <div className="stat-card">
                     <h2>Tổng Doanh thu</h2>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{stats.totalRevenue.toLocaleString('vi-VN')} VND</p>
+                    <p className="stat-value">{stats.totalRevenue.toLocaleString('vi-VN')} VND</p>
                 </div>
-                <div style={{ padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <div className="stat-card">
                     <h2>Sản phẩm đã bán</h2>
-                    <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>{stats.totalProductsSold}</p>
+                    <p className="stat-value">{stats.totalProductsSold}</p>
                 </div>
             </div>
 
             {/* Biểu đồ */}
-            <div style={{ padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            <div className="chart-container">
                 <h2>Phân tích 30 ngày gần nhất</h2>
                 {chartData.labels.length > 0 ? (
                     <Line options={{ responsive: true, plugins: { legend: { position: 'top' } } }} data={chartData} />

@@ -1,7 +1,8 @@
 import React from 'react';
+import { API_URL } from '../../config/api';
 
 const CategoryTable = ({ categories, onEdit, onDelete }) => {
-  const serverUrl = 'http://localhost:5000'; // Địa chỉ backend của bạn
+  const serverUrl = API_URL; // Địa chỉ backend của bạn
 
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white' }}>
@@ -19,15 +20,15 @@ const CategoryTable = ({ categories, onEdit, onDelete }) => {
           categories.map((category) => (
             <tr key={category._id}>
               <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                <img 
-                  src={`${serverUrl}${category.bannerImage}`} 
-                  alt={category.name} 
-                  style={{ width: '150px', height: 'auto', objectFit: 'cover' }} 
+                <img
+                  src={`${serverUrl}${category.bannerImage}`}
+                  alt={category.name}
+                  style={{ width: '150px', height: 'auto', objectFit: 'cover' }}
                 />
               </td>
               <td style={{ padding: '12px', border: '1px solid #ddd' }}>{category.name}</td>
               <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                <span style={{ 
+                <span style={{
                   color: category.status === 'Active' ? 'green' : 'red',
                   fontWeight: 'bold'
                 }}>

@@ -1,11 +1,13 @@
 .voucher-page-container {
     padding: 20px;
     background-color: #f9fafb;
+    font-family: var(--font-sans);
 }
 
 .voucher-page-header {
     display: flex;
-    justify-content: flex-end; /* Đẩy các phần tử sang phải */
+    justify-content: flex-end;
+    /* Đẩy các phần tử sang phải */
     align-items: center;
     margin-bottom: 25px;
     padding-bottom: 15px;
@@ -21,19 +23,23 @@
 .btn-create {
     padding: 10px 20px;
     font-size: 1rem;
-    background-color: #007bff; /* Đổi sang màu xanh dương */
+    background-color: #007bff;
+    /* Đổi sang màu xanh dương */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.2s;
-    margin-left: auto; /* Đẩy nút sang phải nếu có nhiều phần tử */
+    margin-left: auto;
+    /* Đẩy nút sang phải nếu có nhiều phần tử */
 }
 
 .btn-create:hover {
-    background-color: #0056b3; /* Đổi sang màu xanh dương đậm hơn */
+    background-color: #0056b3;
+    /* Đổi sang màu xanh dương đậm hơn */
 }
+
 /* ========================================= */
 
 /* Style cho bảng voucher */
@@ -41,12 +47,13 @@
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
 }
 
-.voucher-table th, .voucher-table td {
+.voucher-table th,
+.voucher-table td {
     padding: 16px;
     text-align: left;
     border-bottom: 1px solid #e9ecef;

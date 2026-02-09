@@ -24,12 +24,28 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-    const newUser = await User.create({
-        fullName: req.body.fullName,
-        email: req.body.email,
-        phone: req.body.phone,
-        password: req.body.password,
-    });
+    let newUser;
+    try {
+        newUser = await User.create({
+            fullName: req.body.fullName,
+            email: req.body.email,
+            phone: req.body.phone,
+            password: req.body.password,
+        });
+    } catch (err) {
+        // Robust duplicate key check
+        const isDuplicate = err.code === 11000 ||
+            (err.message && err.message.includes('duplicate key error')) ||
+            (err.name === 'MongoServerError' && err.code === 11000);
+
+        if (isDuplicate) {
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Email hoặc số điện thoại đã tồn tại. Vui lòng sử dụng thông tin khác.'
+            });
+        }
+        throw err;
+    }
 
     const verifyToken = newUser.createEmailVerifyToken();
     await newUser.save({ validateBeforeSave: false });
@@ -50,12 +66,14 @@ exports.signup = catchAsync(async (req, res, next) => {
             message: 'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.'
         });
     } catch (err) {
+        console.error('ERROR SENDING EMAIL:', err);
         newUser.emailVerificationToken = undefined;
         newUser.emailVerificationExpires = undefined;
         await newUser.save({ validateBeforeSave: false });
+
         return res.status(500).json({
             status: 'error',
-            message: 'Có lỗi khi gửi email. Vui lòng thử lại sau.'
+            message: 'Tài khoản đã được tạo nhưng có lỗi khi gửi email xác thực. Vui lòng liên hệ hỗ trợ hoặc thử lại sau.'
         });
     }
 });

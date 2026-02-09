@@ -2,7 +2,7 @@
 
 .product-grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--spacing-xl) var(--spacing-lg);
     padding: var(--spacing-lg) 0;
 }

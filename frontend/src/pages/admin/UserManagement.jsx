@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 import UserTable from '../../components/admin/UserTable';
 import UserFormModal from '../../components/admin/UserFormModal';
 import './UserManagement.css'; // <-- 1. Import file CSS
@@ -11,13 +12,14 @@ const UserManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
 
-    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }};
+    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
 
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/v1/users', apiConfig);
-            setUsers(response.data.data.users);
+            const response = await axios.get(`${API_URL}/api/v1/users`, apiConfig);
+            const usersData = response.data?.data?.users || response.data?.data?.data || response.data?.data || [];
+            setUsers(Array.isArray(usersData) ? usersData : []);
         } catch (err) {
             setError('Không thể tải dữ liệu người dùng.');
             console.error(err);
@@ -51,9 +53,9 @@ const UserManagement = () => {
                 const updatedData = Object.fromEntries(
                     Object.entries(formData).filter(([_, v]) => v !== '' && v !== null)
                 );
-                await axios.patch(`http://localhost:5000/api/v1/users/${editingUser._id}`, updatedData, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/users/${editingUser._id}`, updatedData, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/users', formData, apiConfig);
+                await axios.post(`${API_URL}/api/v1/users`, formData, apiConfig);
             }
             handleCloseModal();
             fetchUsers();
@@ -66,7 +68,7 @@ const UserManagement = () => {
     const handleDelete = async (userId) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này không?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/v1/users/${userId}`, apiConfig);
+                await axios.delete(`${API_URL}/api/v1/users/${userId}`, apiConfig);
                 fetchUsers();
             } catch (err) {
                 alert('Xóa người dùng thất bại!');
@@ -88,7 +90,7 @@ const UserManagement = () => {
                 </button>
             </div>
             <UserTable users={users} onEdit={handleOpenModalForEdit} onDelete={handleDelete} />
-            <UserFormModal 
+            <UserFormModal
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 onSubmit={handleSubmitForm}

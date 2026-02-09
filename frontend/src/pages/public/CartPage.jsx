@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { FaTrashAlt, FaLongArrowAltRight } from 'react-icons/fa';
+import { API_URL } from '../../config/api';
 import './CartPage.css';
 
 const CartPage = () => {
     const { cartItems, updateQuantity, removeFromCart, totalPrice, checkStockBeforeCheckout } = useCart();
-    const serverUrl = 'http://localhost:5000';
+    const serverUrl = API_URL;
 
     if (cartItems.length === 0) {
         return (
@@ -39,7 +40,12 @@ const CartPage = () => {
                                 <img src={`${serverUrl}${item.product.mainImage}`} alt={item.product.name} />
                             </div>
                             <div className="cart-item-info">
-                                <Link to={`/products/${item.product._id}`} className="cart-item-name">{item.product.name}</Link>
+                                <div className="cart-item-info-top">
+                                    <Link to={`/products/${item.product._id}`} className="cart-item-name">{item.product.name}</Link>
+                                    <div className="cart-item-subtotal">
+                                        {(item.product.sellPrice * item.quantity).toLocaleString('vi-VN')} VND
+                                    </div>
+                                </div>
                                 <p className="cart-item-price">{item.product.sellPrice.toLocaleString('vi-VN')} VND</p>
 
                                 {item.quantity > item.product.stockQuantity && (
@@ -56,9 +62,6 @@ const CartPage = () => {
                                         REMOVE
                                     </button>
                                 </div>
-                            </div>
-                            <div className="cart-item-subtotal">
-                                {(item.product.sellPrice * item.quantity).toLocaleString('vi-VN')} VND
                             </div>
                         </div>
                     ))}

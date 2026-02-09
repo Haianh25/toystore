@@ -12,14 +12,16 @@
 }
 
 .page-header h1 {
-    font-size: 1.8rem;
-    color: #333;
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    color: var(--dior-black);
 }
 
 .btn-primary {
     padding: 10px 20px;
     font-size: 1rem;
-    background-color: #007bff; /* Màu xanh dương */
+    background-color: #007bff;
+    /* Màu xanh dương */
     color: white;
     border: none;
     border-radius: 5px;

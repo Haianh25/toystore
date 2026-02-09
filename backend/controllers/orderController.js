@@ -40,6 +40,17 @@ exports.createOrder = catchAsync(async (req, res, next) => {
         paymentMethod: 'COD'
     });
 
+    // Notify connected clients (e.g., Admin Dashboard)
+    try {
+        const io = require('../socket').getIO();
+        io.emit('newOrder', {
+            order: newOrder,
+            message: `Don hang moi tu ${req.user.name} trị giá ${newOrder.totalAmount.toLocaleString('vi-VN')} VND`
+        });
+    } catch (err) {
+        console.error("Socket emit error:", err.message);
+    }
+
     res.status(201).json({
         status: 'success',
         data: {

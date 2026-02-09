@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import VoucherTable from '../../components/admin/VoucherTable';
 import VoucherFormModal from '../../components/admin/VoucherFormModal';
+import { API_URL } from '../../config/api';
 import './VoucherManagement.css'; // <-- Đảm bảo dòng này được import
 
 const VoucherManagement = () => {
@@ -10,12 +11,12 @@ const VoucherManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingVoucher, setEditingVoucher] = useState(null);
 
-    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }};
+    const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
 
     const fetchVouchers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/v1/vouchers', apiConfig);
+            const response = await axios.get(`${API_URL}/api/v1/vouchers`, apiConfig);
             setVouchers(response.data.data.vouchers);
         } catch (error) {
             console.error("Lỗi tải vouchers:", error);
@@ -41,9 +42,9 @@ const VoucherManagement = () => {
     const handleSubmit = async (formData) => {
         try {
             if (editingVoucher) {
-                await axios.patch(`http://localhost:5000/api/v1/vouchers/${editingVoucher._id}`, formData, apiConfig);
+                await axios.patch(`${API_URL}/api/v1/vouchers/${editingVoucher._id}`, formData, apiConfig);
             } else {
-                await axios.post('http://localhost:5000/api/v1/vouchers', formData, apiConfig);
+                await axios.post(`${API_URL}/api/v1/vouchers`, formData, apiConfig);
             }
             fetchVouchers();
             handleCloseModal();
@@ -55,7 +56,7 @@ const VoucherManagement = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc muốn xóa voucher này?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/v1/vouchers/${id}`, apiConfig);
+                await axios.delete(`${API_URL}/api/v1/vouchers/${id}`, apiConfig);
                 fetchVouchers();
             } catch (error) {
                 alert('Xóa voucher thất bại!');

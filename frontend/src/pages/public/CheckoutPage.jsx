@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { FaCheckCircle, FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaCheckCircle } from 'react-icons/fa';
+import { API_URL } from '../../config/api';
 import './CheckoutPage.css';
 
 const CheckoutPage = () => {
@@ -22,7 +23,7 @@ const CheckoutPage = () => {
         const fetchUserData = async () => {
             try {
                 const apiConfig = { headers: { Authorization: `Bearer ${userToken}` } };
-                const res = await axios.get('http://localhost:5000/api/v1/users/me', apiConfig);
+                const res = await axios.get(`${API_URL}/api/v1/users/me`, apiConfig);
                 const { fullName, phone, address } = res.data.data.user;
                 setShippingInfo({
                     fullName: fullName || '',
@@ -72,7 +73,7 @@ const CheckoutPage = () => {
 
         try {
             const apiConfig = { headers: { Authorization: `Bearer ${userToken}` } };
-            const res = await axios.post('http://localhost:5000/api/v1/orders', orderData, apiConfig);
+            const res = await axios.post(`${API_URL}/api/v1/orders`, orderData, apiConfig);
 
             if (res.data.status === 'success') {
                 const newOrderId = res.data.data.order._id;

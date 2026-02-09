@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config/api';
 
 const OrderHistory = () => {
     const [orders, setOrders] = useState([]);
@@ -9,7 +10,7 @@ const OrderHistory = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/v1/orders/my-orders', apiConfig);
+                const res = await axios.get(`${API_URL}/api/v1/orders/my-orders`, apiConfig);
                 setOrders(res.data.data.orders);
             } catch (error) {
                 console.error("Lỗi tải lịch sử đơn hàng:", error);

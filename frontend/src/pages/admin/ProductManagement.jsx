@@ -3,13 +3,14 @@ import axios from 'axios';
 import { Link, useSearchParams } from 'react-router-dom';
 import ProductTable from '../../components/admin/ProductTable';
 import Pagination from '../../components/public/Pagination'; // Tái sử dụng component Pagination
+import { API_URL } from '../../config/api';
 
 const ProductManagement = () => {
-    const [products, setProducts] =useState([]);
+    const [products, setProducts] = useState([]);
     const [pagination, setPagination] = useState({});
     const [loading, setLoading] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
-    
+
     // State cho ô tìm kiếm
     const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
 
@@ -18,9 +19,9 @@ const ProductManagement = () => {
             setLoading(true);
             try {
                 // Gửi các tham số page và search lên API
-                const response = await axios.get(`http://localhost:5000/api/v1/products?${searchParams.toString()}`);
-                setProducts(response.data.data.products);
-                setPagination(response.data.pagination);
+                const response = await axios.get(`${API_URL}/api/v1/products?${searchParams.toString()}`);
+                setProducts(response.data?.data?.products || []);
+                setPagination(response.data?.pagination || {});
             } catch (error) {
                 console.error("Lỗi tải sản phẩm:", error);
             } finally {
@@ -34,7 +35,7 @@ const ProductManagement = () => {
         if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
             try {
                 const token = localStorage.getItem('adminToken');
-                await axios.delete(`http://localhost:5000/api/v1/products/${id}`, {
+                await axios.delete(`${API_URL}/api/v1/products/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 // Tải lại trang hiện tại để cập nhật danh sách
@@ -46,7 +47,7 @@ const ProductManagement = () => {
             }
         }
     };
-    
+
     const handleSearch = (e) => {
         e.preventDefault();
         const newSearchParams = new URLSearchParams(searchParams);
@@ -71,10 +72,10 @@ const ProductManagement = () => {
                     Thêm sản phẩm mới
                 </Link>
             </div>
-            
+
             {/* THANH TÌM KIẾM MỚI */}
             <form onSubmit={handleSearch} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-                <input 
+                <input
                     type="text"
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
@@ -85,11 +86,11 @@ const ProductManagement = () => {
             </form>
 
             <ProductTable products={products} onDelete={handleDelete} />
-            
+
             {/* PHÂN TRANG MỚI */}
-            <Pagination 
-                currentPage={pagination.page} 
-                totalPages={pagination.totalPages} 
+            <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
                 onPageChange={handlePageChange}
             />
         </div>

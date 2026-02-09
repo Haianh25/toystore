@@ -1,47 +1,76 @@
 .product-list-page-container {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 40px;
-    max-width: 1400px;
-    margin: 40px auto;
-    padding: 0 20px;
+    grid-template-columns: 320px 1fr;
+    gap: 80px;
+    max-width: 1600px;
+    margin: var(--spacing-xxl) auto;
+    padding: 0 var(--spacing-lg);
 }
+
 .product-list-title {
-    font-size: 2.2rem;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--secondary-color);
-    color: var(--primary-color);
+    font-family: var(--dior-font-serif);
+    font-size: 2.8rem;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--spacing-xl);
+    text-transform: uppercase;
+    color: var(--dior-black);
+    text-align: center;
+}
+
+.product-list-main {
+    flex: 1;
 }
 
 .toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 25px;
-    border: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-xl);
+    padding: 15px 30px;
+    background-color: var(--dior-beige-subtle);
+    border: none;
+    border-radius: 0;
 }
 
 .product-count {
-    font-weight: 500;
-    color: var(--text-color);
-    padding-left: 10px;
+    font-size: 0.75rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: var(--dior-black);
+    opacity: 0.6;
 }
 
 .sort-by {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+}
+
+.sort-by label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    opacity: 0.6;
 }
 
 .sort-by select {
-    padding: 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    background-color: #fff;
+    padding: 8px 15px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid var(--dior-black);
     cursor: pointer;
-    font-weight: 500;
+    font-family: var(--dior-font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+}
+
+.product-error-message {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--dior-black);
+    font-family: var(--dior-font-serif);
+    letter-spacing: 0.1em;
+    font-size: 1.2rem;
+    opacity: 0.8;
 }
