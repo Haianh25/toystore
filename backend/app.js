@@ -14,6 +14,7 @@ const brandRouter = require('./routes/brandRoutes');
 const collectionRouter = require('./routes/collectionRoutes');
 const bannerRouter = require('./routes/bannerRoutes');
 const sectionRouter = require('./routes/sectionRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -22,6 +23,12 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use(cors());
 app.use(express.json());
+
+// DIAGNOSTIC LOGGER
+app.use((req, res, next) => {
+    console.log(`[REQUEST DEBUG] ${req.method} ${req.originalUrl}`);
+    next();
+});
 
 // ROUTES
 // Sử dụng các router

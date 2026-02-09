@@ -33,6 +33,7 @@ import ProductDetailPage from '../pages/public/ProductDetailPage.jsx';
 import CartPage from '../pages/public/CartPage.jsx';
 import CheckoutPage from '../pages/public/CheckoutPage.jsx'; // <-- Thêm import
 import OrderSuccessPage from '../pages/public/OrderSuccessPage.jsx';
+import WishlistPage from '../pages/public/WishlistPage.jsx';
 const ProtectedRoute = ({ children }) => {
     const { adminToken } = useAuth();
     return adminToken ? children : <Navigate to="/admin/login" replace />;
@@ -83,6 +84,7 @@ const AppRoutes = () => {
                 <Route path="cart" element={<CartPage />} />
                 <Route path="checkout" element={<UserProtectedRoute><CheckoutPage /></UserProtectedRoute>} />
                 <Route path="order-success/:orderId" element={<UserProtectedRoute><OrderSuccessPage /></UserProtectedRoute>} />
+                <Route path="wishlist" element={<UserProtectedRoute><WishlistPage /></UserProtectedRoute>} />
             </Route>
         </Routes>
     );

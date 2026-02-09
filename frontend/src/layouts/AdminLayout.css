@@ -10,7 +10,7 @@
 .admin-content {
     flex-grow: 1;
     padding: 30px;
-    background-color: var(--dior-white);
+    background-color: var(--tdp-white);
     font-family: var(--font-sans);
     overflow-y: auto;
     /* Content scrolls independently */
@@ -26,7 +26,7 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     position: sticky;
     top: 0;
-    background-color: var(--dior-white);
+    background-color: var(--tdp-white);
     z-index: 100;
 }
 
@@ -40,11 +40,11 @@
     border-bottom: 1px solid transparent;
     padding: 5px 0;
     cursor: pointer;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     transition: all 0.3s ease;
 }
 
 .btn-logout:hover {
-    border-bottom: 1px solid var(--dior-black);
+    border-bottom: 1px solid var(--tdp-black);
     opacity: 0.7;
 }

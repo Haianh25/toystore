@@ -13,7 +13,7 @@ export const SocketProvider = ({ children }) => {
         // Initialize socket connection
         const newSocket = io(API_URL, {
             withCredentials: true,
-            transports: ['websocket']
+            transports: ['polling', 'websocket']
         });
 
         newSocket.on('connect', () => {

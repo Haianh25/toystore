@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaUser, FaShoppingCart, FaChevronDown, FaSearch } from 'react-icons/fa';
+import { FaUser, FaShoppingCart, FaChevronDown, FaSearch, FaRegHeart } from 'react-icons/fa';
 import './Header.css';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -137,6 +137,7 @@ const Header = () => {
                     </Link>
 
                     <div className="header-icons">
+                        <Link to="/wishlist" className="icon-link"><FaRegHeart /></Link>
                         {userToken ? (
                             <>
                                 <Link to="/my-account" className="icon-link"><FaUser /></Link>
@@ -170,7 +171,7 @@ const Header = () => {
                         )}
                     </li>
                     <li><Link to="/brands">BRANDS</Link></li>
-                    <li><Link to="/about">MAISON</Link></li>
+                    <li><Link to="/about">THE BRAND</Link></li>
                 </ul>
             </nav>
         </header>

@@ -19,7 +19,47 @@ const CheckoutPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // Voucher States
+    const [voucherCode, setVoucherCode] = useState('');
+    const [appliedVoucher, setAppliedVoucher] = useState(null);
+    const [discount, setDiscount] = useState(0);
+    const [voucherError, setVoucherError] = useState('');
+
+    const handleApplyVoucher = async () => {
+        setVoucherError('');
+        if (!voucherCode) return;
+
+        try {
+            const apiConfig = { headers: { Authorization: `Bearer ${userToken}` } };
+            const res = await axios.get(`${API_URL}/api/v1/vouchers/code/${voucherCode}`, apiConfig);
+            const voucher = res.data.data.voucher;
+
+            setAppliedVoucher(voucher);
+
+            let calculatedDiscount = 0;
+            if (voucher.discountType === 'percentage') {
+                calculatedDiscount = (totalPrice * voucher.discountValue) / 100;
+            } else {
+                calculatedDiscount = voucher.discountValue;
+            }
+
+            setDiscount(calculatedDiscount);
+        } catch (err) {
+            setVoucherError(err.response?.data?.message || 'Lỗi áp dụng mã giảm giá');
+            setAppliedVoucher(null);
+            setDiscount(0);
+        }
+    };
+
+    const handleRemoveVoucher = () => {
+        setAppliedVoucher(null);
+        setVoucherCode('');
+        setDiscount(0);
+        setVoucherError('');
+    };
+
     useEffect(() => {
+        document.title = "Thanh toán | TheDevilPlayz";
         const fetchUserData = async () => {
             try {
                 const apiConfig = { headers: { Authorization: `Bearer ${userToken}` } };
@@ -87,7 +127,7 @@ const CheckoutPage = () => {
 
     if (loading) return (
         <div className="luxury-loader">
-            <span className="loader-text">DIOR</span>
+            <span className="loader-text">TheDevilPlayz</span>
         </div>
     );
 
@@ -108,44 +148,44 @@ const CheckoutPage = () => {
             <div className="checkout-main-grid">
                 {step === 1 ? (
                     <div className="checkout-form-container">
-                        <h2 className="dior-serif-title">SHIPPING DETAILS</h2>
-                        <form onSubmit={handleNextStep} className="dior-form">
+                        <h2 className="tdp-serif-title">SHIPPING DETAILS</h2>
+                        <form onSubmit={handleNextStep} className="tdp-form">
                             <div className="form-row">
-                                <div className="dior-input-group">
+                                <div className="tdp-input-group">
                                     <label>FULL NAME</label>
                                     <input type="text" name="fullName" value={shippingInfo.fullName} onChange={handleChange} required />
                                 </div>
-                                <div className="dior-input-group">
+                                <div className="tdp-input-group">
                                     <label>PHONE NUMBER</label>
                                     <input type="tel" name="phone" value={shippingInfo.phone} onChange={handleChange} required />
                                 </div>
                             </div>
-                            <div className="dior-input-group">
+                            <div className="tdp-input-group">
                                 <label>STREET ADDRESS</label>
                                 <input type="text" name="street" value={shippingInfo.street} onChange={handleChange} required />
                             </div>
                             <div className="form-row-tri">
-                                <div className="dior-input-group">
+                                <div className="tdp-input-group">
                                     <label>WARD</label>
                                     <input type="text" name="ward" value={shippingInfo.ward} onChange={handleChange} required />
                                 </div>
-                                <div className="dior-input-group">
+                                <div className="tdp-input-group">
                                     <label>DISTRICT</label>
                                     <input type="text" name="district" value={shippingInfo.district} onChange={handleChange} required />
                                 </div>
-                                <div className="dior-input-group">
+                                <div className="tdp-input-group">
                                     <label>CITY</label>
                                     <input type="text" name="city" value={shippingInfo.city} onChange={handleChange} required />
                                 </div>
                             </div>
-                            <button type="submit" className="dior-button-dark next-btn">
+                            <button type="submit" className="tdp-button-dark next-btn">
                                 CONTINUE TO REVIEW
                             </button>
                         </form>
                     </div>
                 ) : (
                     <div className="checkout-review-container">
-                        <h2 className="dior-serif-title">REVIEW YOUR ORDER</h2>
+                        <h2 className="tdp-serif-title">REVIEW YOUR ORDER</h2>
                         <div className="review-shipping-info">
                             <h3>SHIPPING TO:</h3>
                             <p>{shippingInfo.fullName} | {shippingInfo.phone}</p>
@@ -171,10 +211,10 @@ const CheckoutPage = () => {
                             <FaCheckCircle /> PAYMENT ON DELIVERY (COD)
                         </div>
 
-                        {error && <p className="dior-error-message">{error}</p>}
+                        {error && <p className="tdp-error-message">{error}</p>}
 
                         <div className="review-actions">
-                            <button onClick={handlePlaceOrder} className="dior-button-dark place-order-btn">
+                            <button onClick={handlePlaceOrder} className="tdp-button-dark place-order-btn">
                                 PLACE ORDER & COMPLETE
                             </button>
                         </div>
@@ -182,20 +222,55 @@ const CheckoutPage = () => {
                 )}
 
                 <div className="checkout-summary-column">
-                    <div className="dior-summary-card">
+                    <div className="tdp-summary-card">
                         <h2 className="summary-title">YOUR SELECTION</h2>
+
                         <div className="summary-row">
                             <span>SUBTOTAL</span>
                             <span>{totalPrice.toLocaleString('vi-VN')} VND</span>
                         </div>
+
+                        {/* Voucher Section */}
+                        <div className="voucher-section">
+                            <div className="voucher-input-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="PROMO CODE"
+                                    value={voucherCode}
+                                    onChange={(e) => setVoucherCode(e.target.value)}
+                                    disabled={appliedVoucher}
+                                />
+                                <button
+                                    onClick={appliedVoucher ? handleRemoveVoucher : handleApplyVoucher}
+                                    className="apply-btn"
+                                >
+                                    {appliedVoucher ? 'REMOVE' : 'APPLY'}
+                                </button>
+                            </div>
+                            {voucherError && <p className="voucher-error">{voucherError}</p>}
+                            {appliedVoucher && (
+                                <p className="voucher-success">
+                                    Code "{appliedVoucher.code}" applied!
+                                </p>
+                            )}
+                        </div>
+
                         <div className="summary-row">
                             <span>SHIPPING</span>
                             <span className="complimentary">COMPLIMENTARY</span>
                         </div>
+
+                        {discount > 0 && (
+                            <div className="summary-row discount">
+                                <span>DISCOUNT</span>
+                                <span>-{discount.toLocaleString('vi-VN')} VND</span>
+                            </div>
+                        )}
+
                         <div className="summary-divider"></div>
                         <div className="summary-row total">
                             <span>TOTAL</span>
-                            <span>{totalPrice.toLocaleString('vi-VN')} VND</span>
+                            <span>{(totalPrice - discount).toLocaleString('vi-VN')} VND</span>
                         </div>
                     </div>
                 </div>

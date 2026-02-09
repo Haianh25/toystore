@@ -39,32 +39,32 @@ const Login = () => {
                 {isVerified && <p className="auth-message success">Email verified successfully! You can now log in.</p>}
                 {error && <p className="auth-message error">{error}</p>}
 
-                <form onSubmit={handleSubmit} className="dior-form">
-                    <div className="dior-input-group">
+                <form onSubmit={handleSubmit} className="tdp-form">
+                    <div className="tdp-input-group">
                         <input
                             type="email"
                             name="email"
                             placeholder="EMAIL ADDRESS"
                             onChange={handleChange}
                             required
-                            className="dior-input"
+                            className="tdp-input"
                         />
                     </div>
-                    <div className="dior-input-group">
+                    <div className="tdp-input-group">
                         <input
                             type="password"
                             name="password"
                             placeholder="PASSWORD"
                             onChange={handleChange}
                             required
-                            className="dior-input"
+                            className="tdp-input"
                         />
                     </div>
-                    <button type="submit" className="btn-dior-primary">Sign In</button>
+                    <button type="submit" className="btn-tdp-primary">Sign In</button>
                 </form>
 
                 <p className="auth-footer">
-                    New to Maison? <Link to="/register">Create an Account</Link>
+                    New to TheDevilPlayz? <Link to="/register">Create an Account</Link>
                 </p>
             </div>
         </div>

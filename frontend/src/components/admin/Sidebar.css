@@ -1,7 +1,7 @@
 .sidebar {
     width: 250px;
-    background-color: var(--dior-black);
-    color: var(--dior-white);
+    background-color: var(--tdp-black);
+    color: var(--tdp-white);
     padding: 30px 20px;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     font-family: var(--font-sans);
@@ -44,14 +44,14 @@
 }
 
 .sidebar-nav li a:hover {
-    color: var(--dior-white);
+    color: var(--tdp-white);
     background-color: rgba(255, 255, 255, 0.05);
 }
 
 .sidebar-nav li a.active {
-    color: var(--dior-accent);
+    color: var(--tdp-accent);
     font-weight: 600;
-    border-left: 2px solid var(--dior-accent);
+    border-left: 2px solid var(--tdp-accent);
     padding-left: 13px;
     /* Compensate for border */
 }

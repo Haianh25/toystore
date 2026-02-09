@@ -32,20 +32,20 @@ const Register = () => {
                 {error && <p className="auth-message error">{error}</p>}
 
                 {!message && (
-                    <form onSubmit={handleSubmit} className="dior-form">
-                        <div className="dior-input-group">
-                            <input name="fullName" placeholder="FULL NAME" onChange={handleChange} required className="dior-input" />
+                    <form onSubmit={handleSubmit} className="tdp-form">
+                        <div className="tdp-input-group">
+                            <input name="fullName" placeholder="FULL NAME" onChange={handleChange} required className="tdp-input" />
                         </div>
-                        <div className="dior-input-group">
-                            <input type="email" name="email" placeholder="EMAIL ADDRESS" onChange={handleChange} required className="dior-input" />
+                        <div className="tdp-input-group">
+                            <input type="email" name="email" placeholder="EMAIL ADDRESS" onChange={handleChange} required className="tdp-input" />
                         </div>
-                        <div className="dior-input-group">
-                            <input type="tel" name="phone" placeholder="PHONE NUMBER" onChange={handleChange} required className="dior-input" />
+                        <div className="tdp-input-group">
+                            <input type="tel" name="phone" placeholder="PHONE NUMBER" onChange={handleChange} required className="tdp-input" />
                         </div>
-                        <div className="dior-input-group">
-                            <input type="password" name="password" placeholder="PASSWORD" onChange={handleChange} required className="dior-input" />
+                        <div className="tdp-input-group">
+                            <input type="password" name="password" placeholder="PASSWORD" onChange={handleChange} required className="tdp-input" />
                         </div>
-                        <button type="submit" className="btn-dior-primary">Create Account</button>
+                        <button type="submit" className="btn-tdp-primary">Create Account</button>
                     </form>
                 )}
 

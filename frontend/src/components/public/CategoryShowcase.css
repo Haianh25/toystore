@@ -1,5 +1,5 @@
 .category-showcase {
-    padding: var(--dior-spacing-xl) 0;
+    padding: var(--tdp-spacing-xl) 0;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -8,9 +8,9 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
-    /* Dior-style thin spacing */
-    background: var(--dior-border);
-    border: 1px solid var(--dior-border);
+    /* TDP-style thin spacing */
+    background: var(--tdp-border);
+    border: 1px solid var(--tdp-border);
 }
 
 .category-card {
@@ -25,7 +25,7 @@
     height: 100%;
     width: 100%;
     position: relative;
-    transition: transform 1.2s var(--dior-curve-smooth);
+    transition: transform 1.2s var(--tdp-curve-smooth);
 }
 
 .card-image-wrapper img {
@@ -46,14 +46,14 @@
 
 .card-content {
     position: absolute;
-    bottom: var(--dior-spacing-xl);
+    bottom: var(--tdp-spacing-xl);
     left: 0;
     width: 100%;
     text-align: center;
     color: #fff;
     z-index: 2;
-    padding: 0 var(--dior-spacing-lg);
-    transition: transform 0.8s var(--dior-curve-smooth);
+    padding: 0 var(--tdp-spacing-lg);
+    transition: transform 0.8s var(--tdp-curve-smooth);
 }
 
 .card-subtitle {
@@ -67,7 +67,7 @@
 }
 
 .card-title {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 1.8rem;
     letter-spacing: 0.1em;
     margin-bottom: 2rem;

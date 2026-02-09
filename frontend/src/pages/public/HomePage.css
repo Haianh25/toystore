@@ -1,8 +1,8 @@
 @import '../../assets/global.css';
 
 .pure-luxury-homepage {
-    background-color: var(--dior-white);
-    color: var(--dior-black);
+    background-color: var(--tdp-white);
+    color: var(--tdp-black);
     animation: luxuryEnter 1s forwards;
 }
 
@@ -29,34 +29,34 @@
 }
 
 .flow-section {
-    padding: var(--dior-spacing-xxl) 0;
+    padding: var(--tdp-spacing-xxl) 0;
 }
 
 .flow-section.secondary-bg {
-    background: var(--dior-beige-subtle);
+    background: var(--tdp-beige-subtle);
 }
 
 /* Section Headings */
 .section-intro {
     text-align: center;
-    margin-bottom: var(--dior-spacing-xl);
-    padding: 0 var(--dior-spacing-lg);
+    margin-bottom: var(--tdp-spacing-xl);
+    padding: 0 var(--tdp-spacing-lg);
 }
 
-.dior-dash-title {
+.tdp-dash-title {
     font-size: 0.7rem;
     letter-spacing: 0.6em;
-    color: var(--dior-brown);
+    color: var(--tdp-brown);
     display: block;
     margin-bottom: 2rem;
     text-transform: uppercase;
 }
 
-.dior-desc {
+.tdp-desc {
     max-width: 600px;
     margin: 1.5rem auto 0;
     font-size: 0.95rem;
-    color: var(--dior-gray);
+    color: var(--tdp-gray);
     letter-spacing: 0.05em;
     line-height: 1.8;
 }
@@ -82,7 +82,7 @@
     display: block;
     opacity: 0;
     transform: translateY(30px);
-    animation: revealSlide 1.5s var(--dior-curve-smooth) forwards;
+    animation: revealSlide 1.5s var(--tdp-curve-smooth) forwards;
 }
 
 .reveal-text.subtitle {
@@ -93,7 +93,7 @@
 
 .reveal-text.title {
     font-size: 5rem;
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     letter-spacing: 0.2rem;
 }
 
@@ -110,6 +110,6 @@
     }
 
     .flow-section {
-        padding: var(--dior-spacing-xl) 0;
+        padding: var(--tdp-spacing-xl) 0;
     }
 }

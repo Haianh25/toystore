@@ -60,7 +60,31 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllOrders = factory.getAll(Order);
-exports.getOrder = factory.getOne(Order, ['user', 'products.product']);
+
+exports.getOrder = catchAsync(async (req, res, next) => {
+    let query = Order.findById(req.params.id).populate('user').populate('products.product');
+    const doc = await query;
+
+    if (!doc) {
+        return res.status(404).json({ status: 'fail', message: 'Không tìm thấy đơn hàng với ID này' });
+    }
+
+    // Check ownership
+    // Ensure doc.user exists and has _id
+    const orderUserId = doc.user && doc.user._id ? doc.user._id.toString() : doc.user.toString();
+
+    if (req.user.role !== 'admin' && orderUserId !== req.user.id) {
+        console.log(`Access Denied: Order User ID (${orderUserId}) does not match Current User ID (${req.user.id})`);
+        return res.status(403).json({ status: 'fail', message: 'Bạn không có quyền xem đơn hàng này' });
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            data: doc
+        }
+    });
+});
 
 exports.updateOrderStatus = catchAsync(async (req, res, next) => {
     const { status: newStatus } = req.body;

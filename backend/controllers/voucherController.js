@@ -55,3 +55,28 @@ exports.deleteVoucher = async (req, res) => {
         res.status(500).json({ status: 'fail', message: error.message });
     }
 };
+
+exports.getVoucherByCode = async (req, res) => {
+    try {
+        const { code } = req.params;
+        const voucher = await Voucher.findOne({
+            code: code.toUpperCase(),
+            isActive: true,
+            expiresAt: { $gt: new Date() }
+        });
+
+        if (!voucher) {
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Mã giảm giá không hợp lệ hoặc đã hết hạn'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            data: { voucher }
+        });
+    } catch (error) {
+        res.status(500).json({ status: 'fail', message: error.message });
+    }
+};

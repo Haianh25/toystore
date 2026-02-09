@@ -17,8 +17,8 @@
 
 .checkout-page-wrapper {
     max-width: 1400px;
-    margin: var(--dior-spacing-xl) auto;
-    padding: 0 var(--dior-spacing-lg);
+    margin: var(--tdp-spacing-xl) auto;
+    padding: 0 var(--tdp-spacing-lg);
 }
 
 /* Stepper */
@@ -26,10 +26,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--dior-spacing-xl);
-    margin-bottom: var(--dior-spacing-xxl);
-    padding-bottom: var(--dior-spacing-lg);
-    border-bottom: 1px solid var(--dior-color-beige-dark);
+    gap: var(--tdp-spacing-xl);
+    margin-bottom: var(--tdp-spacing-xxl);
+    padding-bottom: var(--tdp-spacing-lg);
+    border-bottom: 1px solid var(--tdp-color-beige-dark);
 }
 
 .step {
@@ -45,9 +45,9 @@
 }
 
 .step-num {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 1.5rem;
-    border-bottom: 1px solid var(--dior-color-black);
+    border-bottom: 1px solid var(--tdp-color-black);
 }
 
 .step-label {
@@ -57,69 +57,69 @@
 }
 
 .step-divider {
-    color: var(--dior-color-beige-dark);
+    color: var(--tdp-color-beige-dark);
 }
 
 /* Layout */
 .checkout-main-grid {
     display: grid;
     grid-template-columns: 1.8fr 1fr;
-    gap: var(--dior-spacing-xxl);
+    gap: var(--tdp-spacing-xxl);
 }
 
-.dior-serif-title {
+.tdp-serif-title {
     font-size: 1.75rem;
     letter-spacing: 0.2em;
-    margin-bottom: var(--dior-spacing-xl);
+    margin-bottom: var(--tdp-spacing-xl);
 }
 
 /* Form */
-.dior-form {
+.tdp-form {
     display: flex;
     flex-direction: column;
-    gap: var(--dior-spacing-lg);
+    gap: var(--tdp-spacing-lg);
 }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--dior-spacing-lg);
+    gap: var(--tdp-spacing-lg);
 }
 
 .form-row-tri {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: var(--dior-spacing-lg);
+    gap: var(--tdp-spacing-lg);
 }
 
-.dior-input-group {
+.tdp-input-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.dior-input-group label {
+.tdp-input-group label {
     font-size: 0.7rem;
     letter-spacing: 0.2em;
-    color: var(--dior-color-brown);
+    color: var(--tdp-color-brown);
 }
 
-.dior-input-group input {
+.tdp-input-group input {
     border: none;
-    border-bottom: 1px solid var(--dior-color-beige-dark);
+    border-bottom: 1px solid var(--tdp-color-beige-dark);
     padding: 0.75rem 0;
     font-size: 1rem;
     background: transparent;
     transition: border-color 0.3s ease;
 }
 
-.dior-input-group input:focus {
+.tdp-input-group input:focus {
     outline: none;
-    border-bottom-color: var(--dior-color-black);
+    border-bottom-color: var(--tdp-color-black);
 }
 
-.dior-button-dark {
-    background: var(--dior-color-black);
+.tdp-button-dark {
+    background: var(--tdp-color-black);
     color: #fff;
     border: none;
     padding: 1rem 2rem;
@@ -129,28 +129,28 @@
     transition: all 0.3s ease;
 }
 
-.dior-button-dark:hover {
-    background: var(--dior-color-brown);
+.tdp-button-dark:hover {
+    background: var(--tdp-color-brown);
 }
 
 /* Review Step */
 .review-shipping-info {
-    background: var(--dior-color-beige-subtle);
-    padding: var(--dior-spacing-lg);
-    margin-bottom: var(--dior-spacing-xl);
+    background: var(--tdp-color-beige-subtle);
+    padding: var(--tdp-spacing-lg);
+    margin-bottom: var(--tdp-spacing-xl);
 }
 
 .review-shipping-info h3 {
     font-size: 0.7rem;
     letter-spacing: 0.2rem;
-    color: var(--dior-color-brown);
+    color: var(--tdp-color-brown);
     margin-bottom: 1rem;
 }
 
 .edit-step-btn {
     background: none;
     border: none;
-    color: var(--dior-color-black);
+    color: var(--tdp-color-black);
     text-decoration: underline;
     font-size: 0.7rem;
     letter-spacing: 0.1em;
@@ -159,25 +159,25 @@
 }
 
 .review-items-list {
-    margin-bottom: var(--dior-spacing-xl);
+    margin-bottom: var(--tdp-spacing-xl);
 }
 
 .review-item {
     display: flex;
     justify-content: space-between;
     padding: 1rem 0;
-    border-bottom: 1px solid var(--dior-color-beige-subtle);
+    border-bottom: 1px solid var(--tdp-color-beige-subtle);
 }
 
 .review-item-name {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 1.1rem;
 }
 
 .review-item-qty {
     display: block;
     font-size: 0.7rem;
-    color: var(--dior-color-brown);
+    color: var(--tdp-color-brown);
 }
 
 .payment-method-badge {
@@ -187,7 +187,7 @@
     color: #27ae60;
     font-size: 0.9rem;
     letter-spacing: 0.1em;
-    margin-bottom: var(--dior-spacing-xl);
+    margin-bottom: var(--tdp-spacing-xl);
 }
 
 @media (max-width: 1024px) {
@@ -212,4 +212,67 @@
     border-radius: 5px;
     margin-top: 15px;
     text-align: center;
+}
+
+/* Voucher Section */
+.voucher-section {
+    margin: 2rem 0;
+}
+
+.voucher-input-wrapper {
+    display: flex;
+    border-bottom: 1px solid var(--tdp-color-beige-dark);
+}
+
+.voucher-input-wrapper input {
+    flex-grow: 1;
+    border: none;
+    padding: 0.75rem 0;
+    background: transparent;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.voucher-input-wrapper input:focus {
+    outline: none;
+}
+
+.apply-btn {
+    background: none;
+    border: none;
+    color: var(--tdp-color-black);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0 1rem;
+    transition: color 0.3s ease;
+}
+
+.apply-btn:hover {
+    color: var(--tdp-color-brown);
+}
+
+.voucher-error {
+    color: #dc3545;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.voucher-success {
+    color: #27ae60;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.summary-row.discount {
+    color: #27ae60;
+}
+
+.summary-row.total {
+    margin-top: 1rem;
 }

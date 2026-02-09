@@ -142,7 +142,7 @@ const ProductForm = () => {
         <div className="product-form-container">
             <div className="form-header">
                 <h1>{isEditing ? 'Biên Tập Sản Phẩm' : 'Sáng Tạo Sản Phẩm Mới'}</h1>
-                <p style={{ color: '#999', fontSize: '0.7rem', letterSpacing: '0.1em' }}>THEDEVILPLAYZ MAISON ADMIN</p>
+                <p style={{ color: '#999', fontSize: '0.7rem', letterSpacing: '0.1em' }}>THEDEVILPLAYZ ADMIN</p>
             </div>
 
             <form onSubmit={handleSubmit}>

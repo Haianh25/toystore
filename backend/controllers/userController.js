@@ -10,7 +10,7 @@ exports.updateMe = async (req, res) => {
     try {
         const { fullName, phone, address } = req.body;
 
-        
+
         const updateData = {
             fullName,
             phone,
@@ -89,5 +89,56 @@ exports.deleteUser = async (req, res) => {
         res.status(204).json({ status: 'success', data: null });
     } catch (err) {
         res.status(500).json({ status: 'fail', message: err.message });
+    }
+};
+
+// === WISHLIST METHODS ===
+
+exports.getWishlist = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).populate('wishlist');
+        res.status(200).json({
+            status: 'success',
+            data: { wishlist: user.wishlist }
+        });
+    } catch (error) {
+        res.status(500).json({ status: 'fail', message: error.message });
+    }
+};
+
+exports.addToWishlist = async (req, res) => {
+    try {
+        const { productId } = req.body;
+        // Sử dụng $addToSet để tránh trùng lặp
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { $addToSet: { wishlist: productId } },
+            { new: true }
+        );
+
+        res.status(200).json({
+            status: 'success',
+            data: { wishlist: user.wishlist }
+        });
+    } catch (error) {
+        res.status(400).json({ status: 'fail', message: error.message });
+    }
+};
+
+exports.removeFromWishlist = async (req, res) => {
+    try {
+        const { productId } = req.body;
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { $pull: { wishlist: productId } },
+            { new: true }
+        );
+
+        res.status(200).json({
+            status: 'success',
+            data: { wishlist: user.wishlist }
+        });
+    } catch (error) {
+        res.status(400).json({ status: 'fail', message: error.message });
     }
 };

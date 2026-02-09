@@ -41,7 +41,7 @@ const AdminLogin = () => {
     return (
         <div className="admin-login-container">
             <form onSubmit={handleSubmit} className="login-form-box">
-                <h2>Maison Admin</h2>
+                <h2>TDP Admin</h2>
 
                 <div className="input-group">
                     <input

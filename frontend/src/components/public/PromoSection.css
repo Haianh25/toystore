@@ -1,73 +1,86 @@
 @import '../../assets/global.css';
 
 .promo-section {
-    max-width: 1600px;
-    margin: var(--dior-spacing-xl) auto;
-    padding: var(--dior-spacing-lg) var(--dior-spacing-lg);
+    max-width: 1400px;
+    margin: var(--tdp-spacing-xl) auto;
+    padding: var(--tdp-spacing-lg) var(--tdp-spacing-lg);
 }
 
 .promo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--dior-spacing-xl);
-    padding: 0 var(--dior-spacing-md) var(--dior-spacing-lg);
-    border-bottom: 1px solid var(--dior-color-beige-dark);
+    text-align: center;
+    margin-bottom: var(--tdp-spacing-xl);
+    padding: 0 var(--tdp-spacing-md) var(--tdp-spacing-lg);
+    border-bottom: 1px solid var(--tdp-color-beige-dark);
 }
 
 .promo-header h2 {
-    font-family: var(--dior-font-serif);
-    font-size: 2.5rem;
+    font-family: var(--tdp-font-serif);
+    font-size: 2.8rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    margin-bottom: 10px;
 }
 
-.see-more-btn {
-    font-size: 0.7rem;
+.promo-header .promo-subtitle {
+    font-size: 0.8rem;
     letter-spacing: 0.4em;
-    text-decoration: underline;
-    color: var(--dior-color-brown);
-    text-underline-offset: 5px;
-    transition: color 0.3s ease;
+    color: var(--tdp-color-brown);
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
-.see-more-btn:hover {
-    color: var(--dior-color-black);
+.promo-title-main {
+    font-size: 1.2rem;
+    color: var(--tdp-color-black);
+    letter-spacing: 0.2em;
+    margin-top: 15px;
 }
 
-.promo-content {
+.promo-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: var(--dior-spacing-xl);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--tdp-spacing-xl);
     align-items: center;
 }
 
-.promo-banner {
-    aspect-ratio: 4 / 5;
+.promo-card {
+    position: relative;
     overflow: hidden;
-    background: var(--dior-color-beige-subtle);
+    background: var(--tdp-color-beige-subtle);
 }
 
-.promo-banner img {
+.promo-image-box {
+    width: 100%;
+    overflow: hidden;
+}
+
+.promo-image-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: saturate(0.6);
-    transition: transform 1.2s var(--dior-transition-smooth);
+    transition: transform 1.2s var(--tdp-transition-smooth);
 }
 
-.promo-banner:hover img {
-    transform: scale(1.03);
-    filter: saturate(0.9);
+.promo-card:hover .promo-image-box img {
+    transform: scale(1.08);
 }
 
-.promo-products {
-    padding-left: var(--dior-spacing-lg);
+.promo-content {
+    padding: 40px;
+    text-align: left;
+    padding-left: var(--tdp-spacing-lg);
+}
+
+.promo-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--tdp-color-black);
+    letter-spacing: 0.1em;
 }
 
 .promo-product-slider .swiper-button-next,
 .promo-product-slider .swiper-button-prev {
-    color: var(--dior-color-black);
+    color: var(--tdp-color-black);
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(5px);
     width: 50px;

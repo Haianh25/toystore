@@ -1,83 +1,83 @@
 @import '../../assets/global.css';
 
 .heritage-section {
-    padding: var(--dior-spacing-md) 0;
-    background: #ffffff;
+    padding: var(--tdp-spacing-md) 0;
     overflow: hidden;
+    background-color: #fff;
 }
 
-.heritage-container {
-    max-width: 1200px;
-    margin: 0 auto;
+.heritage-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: var(--dior-spacing-xl);
-    padding: 0 var(--dior-spacing-lg);
+    gap: var(--tdp-spacing-xl);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--tdp-spacing-lg);
 }
 
-.heritage-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.heritage-text-content {
+    padding: 60px;
+    text-align: left;
 }
 
 .heritage-subtitle {
+    display: block;
     font-size: 0.8rem;
-    letter-spacing: 0.4em;
-    color: var(--dior-color-brown);
-    margin-bottom: var(--dior-spacing-md);
+    letter-spacing: 0.3em;
     text-transform: uppercase;
+    color: var(--tdp-color-brown);
+    margin-bottom: var(--tdp-spacing-md);
+    font-weight: 600;
 }
 
 .heritage-title {
-    font-family: var(--dior-font-serif);
-    font-size: 2.5rem;
-    font-weight: 400;
-    letter-spacing: 0.15em;
-    margin-bottom: var(--dior-spacing-lg);
-    color: var(--dior-color-black);
+    font-family: var(--tdp-font-serif);
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin-bottom: var(--tdp-spacing-lg);
+    color: var(--tdp-color-black);
     text-transform: uppercase;
-    line-height: 1.2;
 }
 
-.heritage-text {
-    font-size: 1rem;
+.heritage-description {
+    font-size: 1.1rem;
     line-height: 1.8;
-    color: #555;
-    margin-bottom: var(--dior-spacing-lg);
-    max-width: 90%;
-    font-style: italic;
+    color: #444;
+    margin-bottom: var(--tdp-spacing-lg);
+    font-weight: 300;
 }
 
-.heritage-divider {
+.heritage-accent {
     width: 60px;
     height: 1px;
-    background: var(--dior-color-brown);
-    margin-bottom: var(--dior-spacing-md);
+    background: var(--tdp-color-brown);
+    margin-bottom: var(--tdp-spacing-md);
 }
 
 .heritage-signature {
-    font-family: var(--dior-font-serif);
-    letter-spacing: 0.3em;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: var(--dior-color-black);
+    font-family: var(--tdp-font-serif);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--tdp-color-black);
 }
 
 .heritage-image-wrapper {
     position: relative;
-    height: 400px;
-    overflow: hidden;
-    box-shadow: 20px 20px 0px var(--dior-color-beige-subtle);
+    padding: 40px;
 }
 
-.heritage-image {
+.heritage-image-wrapper img {
     width: 100%;
-    height: 100%;
+    height: auto;
+    box-shadow: 20px 20px 0px var(--tdp-color-beige-subtle);
+    transition: transform 0.8s var(--tdp-transition-smooth);
     object-fit: cover;
     filter: saturate(0.2) contrast(1.1) brightness(0.9);
-    transition: transform 0.8s var(--dior-transition-smooth);
+}
+
+.heritage-image-wrapper:hover img {
+    transform: scale(1.02);
 }
 
 .heritage-image-overlay {

@@ -2,11 +2,11 @@
 
 .product-card {
     border: none;
-    border-bottom: var(--dior-border-thin);
+    border-bottom: var(--tdp-border-thin);
     overflow: hidden;
     text-align: left;
-    transition: var(--dior-transition);
-    background-color: var(--dior-white);
+    transition: var(--tdp-transition);
+    background-color: var(--tdp-white);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -14,7 +14,7 @@
 
 .product-card:hover {
     opacity: 0.9;
-    border-bottom-color: var(--dior-brown);
+    border-bottom-color: var(--tdp-brown);
 }
 
 .product-card a {
@@ -31,7 +31,7 @@
     position: relative;
     background-color: #fff;
     overflow: hidden;
-    border: 1px solid var(--dior-color-beige-subtle);
+    border: 1px solid var(--tdp-color-beige-subtle);
 }
 
 .product-image-container img {
@@ -42,26 +42,74 @@
     width: 90%;
     height: 90%;
     object-fit: contain;
-    transition: var(--dior-transition);
+    transition: var(--tdp-transition);
 }
 
 .product-card:hover .product-image-container img {
     transform: translate(-50%, -50%) scale(1.05);
 }
 
+.wishlist-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: var(--tdp-transition);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.wishlist-toggle:hover {
+    background: #fff;
+    transform: scale(1.1);
+}
+
+.heart-icon {
+    font-size: 1.1rem;
+    color: var(--tdp-black);
+    transition: all 0.3s ease;
+}
+
+.heart-icon.active {
+    color: #e74c3c;
+    animation: heartBeat 0.4s ease-out;
+}
+
+@keyframes heartBeat {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 .product-info {
-    padding: var(--dior-spacing-lg) 0;
+    padding: var(--tdp-spacing-lg) 0;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 .product-name {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-weight: 500;
     font-size: 0.9rem;
-    color: var(--dior-black);
-    margin-bottom: var(--dior-spacing-sm);
+    color: var(--tdp-black);
+    margin-bottom: var(--tdp-spacing-sm);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     display: -webkit-box;
@@ -73,8 +121,8 @@
 }
 
 .product-price {
-    font-family: var(--dior-font-sans);
-    color: var(--dior-black);
+    font-family: var(--tdp-font-sans);
+    color: var(--tdp-black);
     font-weight: 500;
     font-size: 1rem;
     margin-top: auto;

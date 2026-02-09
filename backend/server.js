@@ -13,6 +13,8 @@ mongoose.connect(DB).then(() => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
+const server = require('./server-http'); // Import HTTP server
+
+server.listen(port, () => {
     console.log(`🚀 Backend đang chạy trên cổng ${port}...`);
 });

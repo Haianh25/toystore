@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
+import OrderDetailModal from '../../components/public/OrderDetailModal'; // Import modal
 
 const OrderHistory = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedOrderId, setSelectedOrderId] = useState(null); // State for modal
+
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` } };
 
     useEffect(() => {
@@ -21,34 +24,52 @@ const OrderHistory = () => {
         fetchOrders();
     }, []);
 
+    const handleViewDetail = (orderId) => {
+        setSelectedOrderId(orderId);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedOrderId(null);
+    };
+
     if (loading) return <p>Đang tải lịch sử đơn hàng...</p>;
 
     return (
-        <div>
-            <h3>Lịch sử đơn hàng</h3>
+        <div className="order-history-section">
+            <h3 className="section-title">Lịch sử đơn hàng</h3>
             {orders.length === 0 ? (
-                <p>Bạn chưa có đơn hàng nào.</p>
+                <p className="no-orders">Bạn chưa có đơn hàng nào.</p>
             ) : (
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                        <tr>
-                            <th>Mã Đơn</th>
-                            <th>Ngày Đặt</th>
-                            <th>Tổng Tiền</th>
-                            <th>Trạng Thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map(order => (
-                            <tr key={order._id}>
-                                <td>#{order._id.slice(-6)}</td>
-                                <td>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
-                                <td>{order.totalAmount.toLocaleString('vi-VN')} VND</td>
-                                <td>{order.status}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="orders-grid">
+                    <div className="orders-header">
+                        <span>Mã đơn</span>
+                        <span>Ngày đặt</span>
+                        <span>Tổng tiền</span>
+                        <span>Trạng thái</span>
+                        <span>Hành động</span>
+                    </div>
+                    {orders.map(order => (
+                        <div key={order._id} className="order-row">
+                            <span className="order-id">#{order._id.slice(-6).toUpperCase()}</span>
+                            <span>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</span>
+                            <span className="order-total">{order.totalAmount.toLocaleString('vi-VN')} VND</span>
+                            <span>
+                                <span className={`status-badge ${order.status.toLowerCase()}`}>
+                                    {order.status}
+                                </span>
+                            </span>
+                            <span>
+                                <button className="btn-detail" onClick={() => handleViewDetail(order._id)}>
+                                    Chi tiết
+                                </button>
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {selectedOrderId && (
+                <OrderDetailModal orderId={selectedOrderId} onClose={handleCloseModal} />
             )}
         </div>
     );

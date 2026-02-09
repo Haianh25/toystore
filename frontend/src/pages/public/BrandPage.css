@@ -6,12 +6,12 @@
 
 .brand-page-title {
     text-align: center;
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 2.8rem;
     letter-spacing: 0.15em;
     margin-bottom: var(--spacing-xl);
     text-transform: uppercase;
-    color: var(--dior-black);
+    color: var(--tdp-black);
 }
 
 .brand-grid {
@@ -26,15 +26,15 @@
     align-items: center;
     justify-content: center;
     padding: var(--spacing-xl);
-    border: 1px solid var(--dior-color-beige-subtle);
+    border: 1px solid var(--tdp-color-beige-subtle);
     background-color: #fff;
     text-decoration: none;
-    color: var(--dior-black);
-    transition: var(--dior-transition);
+    color: var(--tdp-black);
+    transition: var(--tdp-transition);
 }
 
 .brand-card:hover {
-    border-color: var(--dior-black);
+    border-color: var(--tdp-black);
     transform: translateY(-5px);
 }
 
@@ -52,7 +52,7 @@
 
 .brand-card h3 {
     margin: 0;
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 0.9rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -65,7 +65,7 @@
     align-items: center;
     margin-bottom: var(--spacing-xl);
     padding-bottom: var(--spacing-xl);
-    border-bottom: 1px solid var(--dior-color-beige-subtle);
+    border-bottom: 1px solid var(--tdp-color-beige-subtle);
 }
 
 .brand-detail-header img {
@@ -76,7 +76,7 @@
 }
 
 .brand-detail-header h1 {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 3.5rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -99,16 +99,16 @@
     margin-bottom: var(--spacing-xl);
     padding: 10px 20px;
     background-color: transparent;
-    border: 1px solid var(--dior-black);
+    border: 1px solid var(--tdp-black);
     cursor: pointer;
     font-size: 0.75rem;
     letter-spacing: 0.2rem;
     text-transform: uppercase;
-    font-family: var(--dior-font-sans);
-    transition: var(--dior-transition);
+    font-family: var(--tdp-font-sans);
+    transition: var(--tdp-transition);
 }
 
 .back-button:hover {
-    background-color: var(--dior-black);
+    background-color: var(--tdp-black);
     color: #fff;
 }

@@ -14,7 +14,7 @@ router.route('/')
 
 // This route is for ADMINS to manage a specific order
 router.route('/:id')
-    .get(authMiddleware.protect, authMiddleware.restrictTo('admin'), orderController.getOrder)
+    .get(authMiddleware.protect, orderController.getOrder)
     .patch(authMiddleware.protect, authMiddleware.restrictTo('admin'), orderController.updateOrderStatus);
 
 // These routes are for ADMINS to edit products within an order

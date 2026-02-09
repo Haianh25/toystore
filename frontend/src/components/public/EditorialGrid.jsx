@@ -16,7 +16,7 @@ const EditorialGrid = ({ section }) => {
             <div className="editorial-lookbook-container">
                 <div className="lookbook-header">
                     <span className="lookbook-subtitle">{subtitle || "CURATED SELECTION"}</span>
-                    <h2 className="lookbook-title dior-serif">{title}</h2>
+                    <h2 className="lookbook-title tdp-serif">{title}</h2>
                 </div>
 
                 <div className="lookbook-main-grid">

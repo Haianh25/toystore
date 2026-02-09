@@ -1,70 +1,70 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-  /* Dior Color Palette */
-  --dior-white: #FFFFFF;
-  --dior-color-white: #FFFFFF;
-  --dior-black: #000000;
-  --dior-color-black: #000000;
-  --dior-gray: #8E9091;
-  --dior-light-gray: #F5F5F5;
-  --dior-border: #E0E0E0;
-  --dior-brown: #4A3728;
-  --dior-color-brown: #4A3728;
-  --dior-beige: #D4BE8D;
-  --dior-color-beige: #D4BE8D;
-  --dior-beige-subtle: #F9F7F2;
-  --dior-color-beige-subtle: #F9F7F2;
-  --dior-beige-dark: #E5DFC8;
-  --dior-color-beige-dark: #E5DFC8;
-  --dior-champagne: #F3E5D8;
+  /* TDP Color Palette */
+  --tdp-white: #FFFFFF;
+  --tdp-color-white: #FFFFFF;
+  --tdp-black: #000000;
+  --tdp-color-black: #000000;
+  --tdp-gray: #8E9091;
+  --tdp-light-gray: #F5F5F5;
+  --tdp-border: #E0E0E0;
+  --tdp-brown: #4A3728;
+  --tdp-color-brown: #4A3728;
+  --tdp-beige: #D4BE8D;
+  --tdp-color-beige: #D4BE8D;
+  --tdp-beige-subtle: #F9F7F2;
+  --tdp-color-beige-subtle: #F9F7F2;
+  --tdp-beige-dark: #E5DFC8;
+  --tdp-color-beige-dark: #E5DFC8;
+  --tdp-champagne: #F3E5D8;
 
   /* Theme Aliases */
-  --primary-color: var(--dior-black);
-  --secondary-color: var(--dior-brown);
-  --accent-primary: var(--dior-brown);
-  --text-dark: var(--dior-black);
-  --text-color: var(--dior-black);
-  --border-color: var(--dior-border);
+  --primary-color: var(--tdp-black);
+  --secondary-color: var(--tdp-brown);
+  --accent-primary: var(--tdp-brown);
+  --text-dark: var(--tdp-black);
+  --text-color: var(--tdp-black);
+  --border-color: var(--tdp-border);
 
   /* Typography */
-  --dior-font-serif: 'Playfair Display', serif;
-  --dior-font-sans: 'Montserrat', sans-serif;
-  --font-serif: var(--dior-font-serif);
-  --font-sans: var(--dior-font-sans);
+  --tdp-font-serif: 'Playfair Display', serif;
+  --tdp-font-sans: 'Montserrat', sans-serif;
+  --font-serif: var(--tdp-font-serif);
+  --font-sans: var(--tdp-font-sans);
 
   /* Spacing */
-  --dior-spacing-xs: 4px;
-  --dior-spacing-sm: 8px;
-  --dior-spacing-md: 16px;
-  --dior-spacing-lg: 32px;
-  --dior-spacing-xl: 64px;
-  --dior-spacing-xxl: 128px;
-  --dior-spacing-xxxl: 160px;
-  --spacing-xs: var(--dior-spacing-xs);
-  --spacing-sm: var(--dior-spacing-sm);
-  --spacing-md: var(--dior-spacing-md);
-  --spacing-lg: var(--dior-spacing-lg);
-  --spacing-xl: var(--dior-spacing-xl);
-  --spacing-xxl: var(--dior-spacing-xxl);
-  --spacing-xxxl: var(--dior-spacing-xxxl);
+  --tdp-spacing-xs: 4px;
+  --tdp-spacing-sm: 8px;
+  --tdp-spacing-md: 16px;
+  --tdp-spacing-lg: 32px;
+  --tdp-spacing-xl: 64px;
+  --tdp-spacing-xxl: 128px;
+  --tdp-spacing-xxxl: 160px;
+  --spacing-xs: var(--tdp-spacing-xs);
+  --spacing-sm: var(--tdp-spacing-sm);
+  --spacing-md: var(--tdp-spacing-md);
+  --spacing-lg: var(--tdp-spacing-lg);
+  --spacing-xl: var(--tdp-spacing-xl);
+  --spacing-xxl: var(--tdp-spacing-xxl);
+  --spacing-xxxl: var(--tdp-spacing-xxxl);
 
   /* Curves (Timing Functions) */
-  --dior-curve-default: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --dior-curve-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --tdp-curve-default: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --tdp-curve-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Transitions */
-  --dior-transition: all 0.4s var(--dior-curve-default);
-  --dior-transition-smooth: all 0.8s var(--dior-curve-smooth);
+  --tdp-transition: all 0.4s var(--tdp-curve-default);
+  --tdp-transition-smooth: all 0.8s var(--tdp-curve-smooth);
 
-  /* Dior Oblique Pattern */
-  --dior-pattern: radial-gradient(circle at 0% 0.5%, var(--dior-beige) 2px, transparent 0),
-    radial-gradient(circle at 100% 0.5%, var(--dior-beige) 2px, transparent 0),
-    linear-gradient(45deg, var(--dior-champagne) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--dior-champagne) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--dior-champagne) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--dior-champagne) 75%);
-  --dior-pattern-size: 60px 60px;
+  /* TDP Oblique Pattern */
+  --tdp-pattern: radial-gradient(circle at 0% 0.5%, var(--tdp-beige) 2px, transparent 0),
+    radial-gradient(circle at 100% 0.5%, var(--tdp-beige) 2px, transparent 0),
+    linear-gradient(45deg, var(--tdp-champagne) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--tdp-champagne) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--tdp-champagne) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--tdp-champagne) 75%);
+  --tdp-pattern-size: 60px 60px;
 }
 
 * {
@@ -74,9 +74,9 @@
 }
 
 body {
-  font-family: var(--dior-font-sans);
-  background-color: var(--dior-white);
-  color: var(--dior-black);
+  font-family: var(--tdp-font-sans);
+  background-color: var(--tdp-white);
+  color: var(--tdp-black);
   line-height: 1.8;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -86,8 +86,8 @@ h1,
 h2,
 h3,
 h4,
-.dior-serif {
-  font-family: var(--dior-font-serif);
+.tdp-serif {
+  font-family: var(--tdp-font-serif);
   font-weight: 400;
   letter-spacing: 0.1em;
 }
@@ -115,7 +115,7 @@ h4 {
 a {
   text-decoration: none;
   color: inherit;
-  transition: var(--dior-transition);
+  transition: var(--tdp-transition);
 }
 
 ul {
@@ -124,27 +124,27 @@ ul {
 
 button {
   cursor: pointer;
-  font-family: var(--dior-font-sans);
+  font-family: var(--tdp-font-sans);
   border: none;
   background: none;
 }
 
 /* Global Utility Classes */
-.dior-button-outline {
+.tdp-button-outline {
   display: inline-block;
   padding: 1rem 3rem;
-  border: 1px solid var(--dior-black);
-  color: var(--dior-black);
+  border: 1px solid var(--tdp-black);
+  color: var(--tdp-black);
   text-transform: uppercase;
   letter-spacing: 0.3em;
   font-size: 0.75rem;
   font-weight: 500;
-  transition: var(--dior-transition);
+  transition: var(--tdp-transition);
 }
 
-.dior-button-outline:hover {
-  background: var(--dior-black);
-  color: var(--dior-white);
+.tdp-button-outline:hover {
+  background: var(--tdp-black);
+  color: var(--tdp-white);
 }
 
 .luxury-pattern-overlay {
@@ -153,8 +153,8 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: var(--dior-pattern);
-  background-size: var(--dior-pattern-size);
+  background-image: var(--tdp-pattern);
+  background-size: var(--tdp-pattern-size);
   opacity: 0.03;
   pointer-events: none;
   z-index: 0;
@@ -187,8 +187,8 @@ section:empty {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: var(--dior-gray);
-  border-bottom: 1px solid var(--dior-border);
+  color: var(--tdp-gray);
+  border-bottom: 1px solid var(--tdp-border);
 }
 
 .admin-table td {

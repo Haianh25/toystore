@@ -6,8 +6,8 @@
   font-weight: 400;
 
   color-scheme: light;
-  color: var(--dior-black);
-  background-color: var(--dior-white);
+  color: var(--tdp-black);
+  background-color: var(--tdp-white);
 
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,7 +18,7 @@ body {
   margin: 0;
   min-width: 320px;
   height: auto;
-  background-color: var(--dior-white);
+  background-color: var(--tdp-white);
   overflow-x: hidden;
 }
 
@@ -38,7 +38,7 @@ h6 {
 a {
   color: inherit;
   text-decoration: none;
-  transition: var(--dior-transition);
+  transition: var(--tdp-transition);
 }
 
 a:hover {
@@ -51,26 +51,26 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 12px 24px;
-  border: 1px solid var(--dior-black);
+  border: 1px solid var(--tdp-black);
   background-color: transparent;
-  color: var(--dior-black);
+  color: var(--tdp-black);
   cursor: pointer;
-  transition: var(--dior-transition);
+  transition: var(--tdp-transition);
 }
 
 button:hover {
-  background-color: var(--dior-black);
-  color: var(--dior-white);
+  background-color: var(--tdp-black);
+  color: var(--tdp-white);
 }
 
 button.primary {
-  background-color: var(--dior-black);
-  color: var(--dior-white);
+  background-color: var(--tdp-black);
+  color: var(--tdp-white);
 }
 
 button.primary:hover {
   background-color: transparent;
-  color: var(--dior-black);
+  color: var(--tdp-black);
 }
 
 .luxury-container {
@@ -85,13 +85,13 @@ button.primary:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--dior-white);
+  background: var(--tdp-white);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--dior-gray);
+  background: var(--tdp-gray);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--dior-black);
+  background: var(--tdp-black);
 }

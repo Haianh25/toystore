@@ -12,4 +12,6 @@ router.route('/:id')
     .patch(voucherController.updateVoucher)
     .delete(voucherController.deleteVoucher);
 
+router.get('/code/:code', voucherController.getVoucherByCode);
+
 module.exports = router;

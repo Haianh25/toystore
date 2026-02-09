@@ -32,6 +32,7 @@ const MyAccount = () => {
     };
 
     useEffect(() => {
+        document.title = "Tài khoản của tôi | TheDevilPlayz";
         fetchUserData();
     }, []);
 
@@ -73,7 +74,7 @@ const MyAccount = () => {
             {error && <p className="account-message message-error">{error}</p>}
 
             <form onSubmit={handleSubmit} className="account-form">
-                <div className="form-group">
+                <div className="form-group full-width">
                     <label>Email</label>
                     <input type="email" value={user.email} disabled />
                 </div>
@@ -86,24 +87,25 @@ const MyAccount = () => {
                     <input id="phone" type="tel" name="phone" value={formData.phone} onChange={handleChange} />
                 </div>
 
-                <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid #eee' }} />
-                <h3>Địa chỉ giao hàng</h3>
+                <div className="address-section">
+                    <h3 className="full-width">Địa chỉ giao hàng</h3>
 
-                <div className="form-group">
-                    <label htmlFor="street">Số nhà, tên đường</label>
-                    <input id="street" type="text" name="street" value={formData.address.street} onChange={handleAddressChange} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="ward">Phường / Xã</label>
-                    <input id="ward" type="text" name="ward" value={formData.address.ward} onChange={handleAddressChange} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="district">Quận / Huyện</label>
-                    <input id="district" type="text" name="district" value={formData.address.district} onChange={handleAddressChange} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="city">Tỉnh / Thành phố</label>
-                    <input id="city" type="text" name="city" value={formData.address.city} onChange={handleAddressChange} />
+                    <div className="form-group full-width">
+                        <label htmlFor="street">Số nhà, tên đường</label>
+                        <input id="street" type="text" name="street" value={formData.address.street} onChange={handleAddressChange} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="ward">Phường / Xã</label>
+                        <input id="ward" type="text" name="ward" value={formData.address.ward} onChange={handleAddressChange} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="district">Quận / Huyện</label>
+                        <input id="district" type="text" name="district" value={formData.address.district} onChange={handleAddressChange} />
+                    </div>
+                    <div className="form-group full-width">
+                        <label htmlFor="city">Tỉnh / Thành phố</label>
+                        <input id="city" type="text" name="city" value={formData.address.city} onChange={handleAddressChange} />
+                    </div>
                 </div>
 
                 <button type="submit">Lưu thay đổi</button>

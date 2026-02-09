@@ -1,62 +1,218 @@
 .account-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 60px;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: var(--tdp-font-sans);
 }
 
-.account-container h1, .account-container h3 {
+.account-container h1 {
+    font-family: var(--tdp-font-serif);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 40px;
+    color: var(--tdp-black);
     text-align: center;
-    margin-bottom: 25px;
+}
+
+.account-container h3 {
+    font-family: var(--tdp-font-serif);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 40px 0 25px;
+    color: var(--tdp-black);
+}
+
+.account-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
 }
 
 .account-form .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .account-form label {
     display: block;
-    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     margin-bottom: 8px;
-    color: #333;
+    color: #666;
+    font-weight: 600;
 }
 
 .account-form input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
+    padding: 15px;
+    border: 1px solid var(--tdp-color-beige-subtle);
+    font-size: 0.95rem;
+    transition: var(--tdp-transition);
+    font-family: var(--tdp-font-sans);
+}
+
+.account-form input:focus {
+    border-color: var(--tdp-black);
+    outline: none;
 }
 
 .account-form input:disabled {
-    background-color: #e9ecef;
+    background-color: #f9f9f9;
+    color: #999;
     cursor: not-allowed;
 }
 
-.account-form button {
-    width: 100%;
-    padding: 12px;
+.account-form .address-section {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.account-form .full-width {
+    grid-column: 1 / -1;
+}
+
+.account-form button[type="submit"] {
+    grid-column: 1 / -1;
+    padding: 18px;
     border: none;
-    border-radius: 5px;
-    background-color: #007bff;
+    background-color: var(--tdp-black);
     color: white;
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 600;
     cursor: pointer;
-    margin-top: 10px;
+    transition: var(--tdp-transition);
+    margin-top: 20px;
+}
+
+.account-form button[type="submit"]:hover {
+    letter-spacing: 0.4em;
+    background-color: #333;
 }
 
 .account-message {
     text-align: center;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
 }
 
 .message-success {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #f4f9f4;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.message-error {
+    background-color: #fff8f8;
+    color: #d32f2f;
+    border: 1px solid #ffcdd2;
+}
+
+/* Order History Styles */
+.order-history-section {
+    margin-top: 60px;
+    border-top: 1px solid var(--tdp-color-beige-subtle);
+    padding-top: 60px;
+}
+
+.orders-grid {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.orders-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr 1fr 1fr;
+    padding: 15px;
+    background-color: #f9f9f9;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #666;
+    border-bottom: 1px solid #eee;
+}
+
+.order-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr 1fr 1fr;
+    padding: 20px 15px;
+    align-items: center;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 0.9rem;
+    color: var(--tdp-black);
+}
+
+.order-id {
+    font-weight: 500;
+}
+
+.order-total {
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-block;
+}
+
+.status-badge.pending {
+    background-color: #fff8e1;
+    color: #f57f17;
+}
+
+.status-badge.processing {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-badge.shipped {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.status-badge.completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.cancelled {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.btn-detail {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--tdp-black);
+    color: var(--tdp-black);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: var(--tdp-transition);
+}
+
+.btn-detail:hover {
+    background: var(--tdp-black);
+    color: white;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-style: italic;
 }

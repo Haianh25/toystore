@@ -26,7 +26,7 @@ const Footer = () => {
 
                     {/* Column 2: Customer Care */}
                     <div className="footer-column">
-                        <h4 className="footer-heading">MAISON SERVICES</h4>
+                        <h4 className="footer-heading">BRAND SERVICES</h4>
                         <ul className="footer-links">
                             <li><Link to="/about">About Us</Link></li>
                             <li><Link to="/contact">Contact</Link></li>

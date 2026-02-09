@@ -6,16 +6,29 @@
     font-family: var(--font-serif);
     font-size: 3rem;
     margin-bottom: 40px;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     text-transform: none;
     /* Dior often mixed caps and lowercase skillfully */
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     margin-bottom: 50px;
+}
+
+.stat-card.alert {
+    border: 1px solid #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.02);
+}
+
+.stat-card.alert h2 {
+    color: #ff4d4d;
+}
+
+.stat-card.alert .stat-value {
+    color: #ff4d4d;
 }
 
 .stat-card {
@@ -37,7 +50,7 @@
     font-size: 0.8rem;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--dior-gray);
+    color: var(--tdp-gray);
     margin-bottom: 15px;
     font-weight: 500;
 }
@@ -45,8 +58,15 @@
 .stat-value {
     font-family: var(--font-serif);
     font-size: 2.5rem;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     margin: 0;
+}
+
+.dashboard-charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: start;
 }
 
 .chart-container {
@@ -54,12 +74,20 @@
     background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    min-height: 450px;
+}
+
+.chart-container.stock-chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .chart-container h2 {
     font-family: var(--font-serif);
     font-size: 1.8rem;
     margin-bottom: 30px;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     text-transform: none;
+    text-align: center;
 }

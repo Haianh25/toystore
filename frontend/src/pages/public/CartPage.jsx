@@ -13,9 +13,9 @@ const CartPage = () => {
         return (
             <div className="cart-empty-container">
                 <div className="cart-empty-content">
-                    <h2 className="dior-serif-title">YOUR SHOPPING BAG IS EMPTY</h2>
-                    <p className="dior-body-text">Explore our collections and find something extraordinary.</p>
-                    <Link to="/products" className="dior-button-outline">
+                    <h2 className="tdp-serif-title">YOUR SHOPPING BAG IS EMPTY</h2>
+                    <p className="tdp-body-text">Explore our collections and find something extraordinary.</p>
+                    <Link to="/products" className="tdp-button-outline">
                         CONTINUE EXPLORING
                     </Link>
                 </div>
@@ -28,14 +28,14 @@ const CartPage = () => {
     return (
         <div className="cart-page-wrapper">
             <header className="cart-page-header">
-                <h1 className="dior-serif-title">MY SHOPPING BAG</h1>
+                <h1 className="tdp-serif-title">MY SHOPPING BAG</h1>
                 <p className="cart-count">({cartItems.length} ITEMS)</p>
             </header>
 
             <div className="cart-content-grid">
                 <div className="cart-items-column">
                     {cartItems.map(item => (
-                        <div key={item.product._id} className="dior-cart-item">
+                        <div key={item.product._id} className="tdp-cart-item">
                             <div className="cart-item-image-box">
                                 <img src={`${serverUrl}${item.product.mainImage}`} alt={item.product.name} />
                             </div>
@@ -53,12 +53,12 @@ const CartPage = () => {
                                 )}
 
                                 <div className="cart-item-controls">
-                                    <div className="dior-quantity-selector">
+                                    <div className="tdp-quantity-selector">
                                         <button onClick={() => updateQuantity(item.product._id, item.quantity - 1)}>-</button>
                                         <span>{item.quantity}</span>
                                         <button onClick={() => updateQuantity(item.product._id, item.quantity + 1)}>+</button>
                                     </div>
-                                    <button onClick={() => removeFromCart(item.product._id)} className="dior-remove-btn">
+                                    <button onClick={() => removeFromCart(item.product._id)} className="tdp-remove-btn">
                                         REMOVE
                                     </button>
                                 </div>
@@ -68,7 +68,7 @@ const CartPage = () => {
                 </div>
 
                 <div className="cart-summary-column">
-                    <div className="dior-summary-card">
+                    <div className="tdp-summary-card">
                         <h2 className="summary-title">ORDER SUMMARY</h2>
                         <div className="summary-row">
                             <span>SUBTOTAL</span>
@@ -90,7 +90,7 @@ const CartPage = () => {
 
                         <Link
                             to={isStockValid ? "/checkout" : "#"}
-                            className={`dior-checkout-btn ${!isStockValid ? 'disabled' : ''}`}
+                            className={`tdp-checkout-btn ${!isStockValid ? 'disabled' : ''}`}
                         >
                             PROCEED TO CHECKOUT <FaLongArrowAltRight />
                         </Link>

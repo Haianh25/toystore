@@ -1,6 +1,6 @@
 .filter-sidebar .filter-group {
     margin-bottom: 40px;
-    border-bottom: 1px solid var(--dior-color-beige-subtle);
+    border-bottom: 1px solid var(--tdp-color-beige-subtle);
     padding-bottom: 20px;
 }
 
@@ -9,11 +9,11 @@
 }
 
 .filter-sidebar h4 {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 0.75rem;
     letter-spacing: 0.3em;
     margin-bottom: 25px;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     text-transform: uppercase;
     font-weight: 600;
 }
@@ -26,7 +26,7 @@
     font-weight: 400;
     font-size: 0.8rem;
     letter-spacing: 0.1em;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     opacity: 0.7;
     transition: opacity 0.3s ease;
 }
@@ -39,13 +39,13 @@
     margin-right: 12px;
     width: 16px;
     height: 16px;
-    accent-color: var(--dior-black);
+    accent-color: var(--tdp-black);
 }
 
 .filter-sidebar .filter-link {
     display: block;
     padding: 10px 0;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     opacity: 0.7;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -57,6 +57,6 @@
 .filter-sidebar .filter-link:hover,
 .filter-sidebar .filter-link.active {
     opacity: 1;
-    color: var(--dior-brown);
+    color: var(--tdp-brown);
     padding-left: 5px;
 }

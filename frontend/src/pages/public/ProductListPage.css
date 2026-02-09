@@ -8,12 +8,12 @@
 }
 
 .product-list-title {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 2.8rem;
     letter-spacing: 0.1em;
     margin-bottom: var(--spacing-xl);
     text-transform: uppercase;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     text-align: center;
 }
 
@@ -27,7 +27,7 @@
     align-items: center;
     margin-bottom: var(--spacing-xl);
     padding: 15px 30px;
-    background-color: var(--dior-beige-subtle);
+    background-color: var(--tdp-beige-subtle);
     border: none;
     border-radius: 0;
 }
@@ -36,7 +36,7 @@
     font-size: 0.75rem;
     letter-spacing: 0.2rem;
     text-transform: uppercase;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     opacity: 0.6;
 }
 
@@ -57,9 +57,9 @@
     padding: 8px 15px;
     border: none;
     background-color: transparent;
-    border-bottom: 1px solid var(--dior-black);
+    border-bottom: 1px solid var(--tdp-black);
     cursor: pointer;
-    font-family: var(--dior-font-sans);
+    font-family: var(--tdp-font-sans);
     font-size: 0.75rem;
     letter-spacing: 0.1rem;
     text-transform: uppercase;
@@ -68,8 +68,8 @@
 .product-error-message {
     text-align: center;
     padding: var(--spacing-xl);
-    color: var(--dior-black);
-    font-family: var(--dior-font-serif);
+    color: var(--tdp-black);
+    font-family: var(--tdp-font-serif);
     letter-spacing: 0.1em;
     font-size: 1.2rem;
     opacity: 0.8;

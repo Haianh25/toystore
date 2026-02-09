@@ -8,6 +8,10 @@ import { API_URL } from '../../config/api';
 import './HomePage.css';
 
 const HomePage = () => {
+    useEffect(() => {
+        document.title = "TheDevilPlayz | Home of Premium Collectibles";
+    }, []);
+
     const [sections, setSections] = useState([]);
     const [banners, setBanners] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -56,7 +60,7 @@ const HomePage = () => {
             </div>
 
             <main className="main-content-flow">
-                {/* 2. THE MAISON HERITAGE - The Core Story */}
+                {/* 2. THE BRAND HERITAGE - The Core Story */}
                 <div className="flow-section">
                     <HeritageSection />
                 </div>
@@ -64,9 +68,9 @@ const HomePage = () => {
                 {/* 3. CATEGORY SHOWCASE - Fixed Impact Navigation */}
                 <div className="flow-section">
                     <div className="section-intro">
-                        <span className="dior-dash-title">LES COLLECTIONS</span>
-                        <h2 className="dior-serif">THE WORLD OF WONDER</h2>
-                        <p className="dior-desc">Discover our curated universes for every stage of childhood.</p>
+                        <span className="tdp-dash-title">LES COLLECTIONS</span>
+                        <h2 className="tdp-serif">THE WORLD OF WONDER</h2>
+                        <p className="tdp-desc">Discover our curated universes for every stage of childhood.</p>
                     </div>
                     <CategoryShowcase />
                 </div>

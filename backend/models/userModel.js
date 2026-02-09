@@ -54,22 +54,26 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    wishlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }],
 }, { timestamps: true });
 
 // Middleware mã hóa mật khẩu
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
     next();
 });
 
 // Phương thức so sánh mật khẩu
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
 // Method tạo token xác thực email
-userSchema.methods.createEmailVerifyToken = function() {
+userSchema.methods.createEmailVerifyToken = function () {
     const verifyToken = crypto.randomBytes(32).toString('hex');
     this.emailVerificationToken = crypto
         .createHash('sha256')

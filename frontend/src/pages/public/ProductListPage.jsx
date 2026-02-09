@@ -52,6 +52,7 @@ const ProductListPage = () => {
                 }
 
                 setPageTitle(title);
+                document.title = `${title} | TheDevilPlayz`;
 
                 const productsRes = await axios.get(`${API_URL}/api/v1/products?${params.toString()}`);
                 setProducts(productsRes.data.data.products);

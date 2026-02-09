@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 var(--dior-spacing-lg);
+    padding: 0 var(--tdp-spacing-lg);
 }
 
 .success-content-card {
@@ -22,32 +22,32 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto var(--dior-spacing-xl);
+    margin: 0 auto var(--tdp-spacing-xl);
     font-size: 1.5rem;
 }
 
 .success-message {
     font-size: 1rem;
     line-height: 1.8;
-    color: var(--dior-color-brown);
-    margin-bottom: var(--dior-spacing-xl);
+    color: var(--tdp-color-brown);
+    margin-bottom: var(--tdp-spacing-xl);
     letter-spacing: 0.05em;
 }
 
 .order-number-box {
-    border: 1px solid var(--dior-color-beige-dark);
-    padding: var(--dior-spacing-lg);
-    margin-bottom: var(--dior-spacing-xxl);
+    border: 1px solid var(--tdp-color-beige-dark);
+    padding: var(--tdp-spacing-lg);
+    margin-bottom: var(--tdp-spacing-xxl);
 }
 
 .order-number-box span {
     font-size: 0.7rem;
     letter-spacing: 0.3em;
-    color: var(--dior-color-brown);
+    color: var(--tdp-color-brown);
 }
 
 .order-number-box .order-id {
-    font-family: var(--dior-font-serif);
+    font-family: var(--tdp-font-serif);
     font-size: 2rem;
     letter-spacing: 0.2em;
     margin-top: 0.5rem;
@@ -56,11 +56,11 @@
 .success-actions {
     display: flex;
     flex-direction: column;
-    gap: var(--dior-spacing-md);
+    gap: var(--tdp-spacing-md);
 }
 
-.dior-button-dark,
-.dior-button-outline {
+.tdp-button-dark,
+.tdp-button-outline {
     display: inline-block;
     padding: 1rem;
     text-decoration: none;
@@ -70,17 +70,17 @@
     text-align: center;
 }
 
-.dior-button-dark {
-    background: var(--dior-color-black);
+.tdp-button-dark {
+    background: var(--tdp-color-black);
     color: #fff;
 }
 
-.dior-button-outline {
-    border: 1px solid var(--dior-color-black);
-    color: var(--dior-color-black);
+.tdp-button-outline {
+    border: 1px solid var(--tdp-color-black);
+    color: var(--tdp-color-black);
 }
 
-.dior-button-outline:hover {
-    background: var(--dior-color-black);
+.tdp-button-outline:hover {
+    background: var(--tdp-color-black);
     color: #fff;
 }

@@ -23,11 +23,18 @@
     font-family: var(--font-sans);
 }
 
+.modal-header h2 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    color: var(--tdp-black);
+    margin: 0;
+}
+
 .modal-content h2 {
     font-family: var(--font-serif);
     margin-top: 0;
     margin-bottom: 25px;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     font-size: 2rem;
     text-align: center;
 }

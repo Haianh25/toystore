@@ -1,25 +1,25 @@
 @import '../../assets/global.css';
 
 .editorial-lookbook-section {
-    padding: var(--dior-spacing-xxl) 0;
-    background-color: var(--dior-white);
+    padding: var(--tdp-spacing-xxl) 0;
+    background-color: var(--tdp-white);
 }
 
 .editorial-lookbook-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 var(--dior-spacing-lg);
+    padding: 0 var(--tdp-spacing-lg);
 }
 
 .lookbook-header {
     text-align: center;
-    margin-bottom: var(--dior-spacing-xl);
+    margin-bottom: var(--tdp-spacing-xl);
 }
 
 .lookbook-subtitle {
     font-size: 0.7rem;
     letter-spacing: 0.6em;
-    color: var(--dior-brown);
+    color: var(--tdp-brown);
     display: block;
     margin-bottom: 1rem;
     text-transform: uppercase;
@@ -33,14 +33,14 @@
 .lookbook-main-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: var(--dior-spacing-xl);
+    gap: var(--tdp-spacing-xl);
     align-items: stretch;
 }
 
 .lookbook-visual {
     position: relative;
     height: 700px;
-    background: var(--dior-beige-subtle);
+    background: var(--tdp-beige-subtle);
 }
 
 .visual-inner {
@@ -55,7 +55,7 @@
     height: 100%;
     object-fit: cover;
     filter: saturate(0.9);
-    transition: transform 1.2s var(--dior-curve-smooth);
+    transition: transform 1.2s var(--tdp-curve-smooth);
 }
 
 .lookbook-visual:hover img {
@@ -67,7 +67,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: var(--dior-spacing-xl);
+    padding: var(--tdp-spacing-xl);
     background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
     display: flex;
     justify-content: center;
@@ -76,15 +76,15 @@
 .lookbook-cta {
     padding: 1.2rem 3rem;
     background: #fff;
-    color: var(--dior-black);
+    color: var(--tdp-black);
     font-size: 0.75rem;
     letter-spacing: 0.4em;
     text-transform: uppercase;
-    transition: all 0.4s var(--dior-curve-smooth);
+    transition: all 0.4s var(--tdp-curve-smooth);
 }
 
 .lookbook-cta:hover {
-    background: var(--dior-black);
+    background: var(--tdp-black);
     color: #fff;
 }
 
@@ -97,13 +97,13 @@
 .selection-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--dior-spacing-lg);
+    gap: var(--tdp-spacing-lg);
 }
 
 /* Ensure product cards in this section are extra clean */
 .selection-item {
-    padding-bottom: var(--dior-spacing-md);
-    border-bottom: 1px solid var(--dior-border);
+    padding-bottom: var(--tdp-spacing-md);
+    border-bottom: 1px solid var(--tdp-border);
 }
 
 .selection-item:last-child {
