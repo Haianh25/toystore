@@ -1,0 +1,111 @@
+@import '../../assets/global.css';
+
+.heritage-section {
+    padding: var(--dior-spacing-md) 0;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.heritage-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--dior-spacing-xl);
+    padding: 0 var(--dior-spacing-lg);
+}
+
+.heritage-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.heritage-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    color: var(--dior-color-brown);
+    margin-bottom: var(--dior-spacing-md);
+    text-transform: uppercase;
+}
+
+.heritage-title {
+    font-family: var(--dior-font-serif);
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--dior-spacing-lg);
+    color: var(--dior-color-black);
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.heritage-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: var(--dior-spacing-lg);
+    max-width: 90%;
+    font-style: italic;
+}
+
+.heritage-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--dior-color-brown);
+    margin-bottom: var(--dior-spacing-md);
+}
+
+.heritage-signature {
+    font-family: var(--dior-font-serif);
+    letter-spacing: 0.3em;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--dior-color-black);
+}
+
+.heritage-image-wrapper {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    box-shadow: 20px 20px 0px var(--dior-color-beige-subtle);
+}
+
+.heritage-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.2) contrast(1.1) brightness(0.9);
+    transition: transform 0.8s var(--dior-transition-smooth);
+}
+
+.heritage-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(74, 55, 40, 0.1);
+    pointer-events: none;
+}
+
+.heritage-section:hover .heritage-image {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .heritage-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .heritage-content {
+        align-items: center;
+    }
+
+    .heritage-image-wrapper {
+        height: 350px;
+        order: -1;
+    }
+}

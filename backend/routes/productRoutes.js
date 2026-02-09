@@ -1,17 +1,31 @@
 const express = require('express');
 const productController = require('../controllers/productController');
 const { productUpload } = require('../middleware/uploadMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 router.route('/')
     .get(productController.getAllProducts)
-    .post(productUpload, productController.createProduct);
+    .post(
+        authMiddleware.protect,
+        authMiddleware.restrictTo('admin'),
+        productUpload,
+        productController.createProduct
+    );
 
-// Thêm các route mới
 router.route('/:id')
     .get(productController.getProduct)
-    .patch(productUpload, productController.updateProduct)
-    .delete(productController.deleteProduct);
+    .patch(
+        authMiddleware.protect,
+        authMiddleware.restrictTo('admin'),
+        productUpload,
+        productController.updateProduct
+    )
+    .delete(
+        authMiddleware.protect,
+        authMiddleware.restrictTo('admin'),
+        productController.deleteProduct
+    );
 
 module.exports = router;

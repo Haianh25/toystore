@@ -1,58 +1,70 @@
-/* Container chính của trang chủ */
-.homepage-content {
-    /* Các style chung cho trang chủ nếu cần */
+@import '../../assets/global.css';
+
+.homepage-fade-in {
+    opacity: 1;
+    animation: diorFadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* --- STYLE CHUNG CHO CÁC SECTION --- */
-.product-section, .featured-section {
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 15px;
+@keyframes diorFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.homepage-content-layer {
+    background-color: var(--dior-white);
     position: relative;
+    z-index: 1;
 }
 
-.section-title {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 30px;
-    font-weight: bold;
+.dynamic-sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dior-spacing-xxxl);
+    margin-top: var(--dior-spacing-xxxl);
 }
 
-/* --- STYLE CHO SLIDER SẢN PHẨM (FeaturedSlider) --- */
-.featured-slider {
-    padding-bottom: 40px; /* Tạo không gian cho thanh kéo */
-}
-.featured-slider .swiper-slide {
-    flex-shrink: 0; /* Quan trọng: Ngăn slide bị co lại */
-}
-.featured-slider .swiper-scrollbar {
-    background: #e0e0e0;
-    bottom: 0;
-    height: 6px;
-    border-radius: 3px;
-}
-.featured-slider .swiper-scrollbar-drag {
-    background: #007bff;
-}
-.featured-slider .swiper-button-next,
-.featured-slider .swiper-button-prev {
-    color: #333;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-    top: 50%;
-    transform: translateY(-50%);
-}
-.featured-slider .swiper-button-next::after,
-.featured-slider .swiper-button-prev::after {
-    font-size: 18px;
+.homepage-footer-spacer {
+    height: 0;
 }
 
-/* --- STYLE CHO LƯỚI SẢN PHẨM (ProductSection) --- */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+/* Luxury Loader */
+.luxury-loader {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.loader-text {
+    font-family: var(--dior-font-serif);
+    font-size: 3rem;
+    letter-spacing: 1em;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.98);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Cleanup of any potential global spills from old classes */
+.homepage-content {
+    background: none !important;
 }

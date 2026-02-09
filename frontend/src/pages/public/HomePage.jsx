@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HeroSlider from '../../components/public/HeroSlider';
 import PromoSection from '../../components/public/PromoSection';
-import SectionBannerSlider from '../../components/public/SectionBannerSlider';
+import HeritageSection from '../../components/public/HeritageSection';
+import EditorialGrid from '../../components/public/EditorialGrid';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -28,32 +29,42 @@ const HomePage = () => {
         fetchHomePageData();
     }, []);
 
-    if (loading) return <p>Đang tải trang...</p>;
+    if (loading) return (
+        <div className="luxury-loader">
+            <span className="loader-text">DIOR</span>
+        </div>
+    );
 
-    const renderSection = (section) => {
-        // Kiểm tra nội dung trước khi render
+    const renderSection = (section, index) => {
         const hasTitle = section.title && section.title.trim() !== '';
-        
-        switch (section.type) {
-            case 'promo_with_products':
-                const hasPromoContent = section.content?.bannerImage && section.content?.products?.length > 0;
-                if (!hasTitle || !hasPromoContent) return null; // Chỉ hiện khi có đủ tiêu đề, ảnh và sản phẩm
-                return <PromoSection key={section._id} section={section} />;
 
-            case 'banner_slider':
-                const hasBanners = section.content?.bannerGroup?.length > 0;
-                if (!hasBanners) return null; // Chỉ hiện khi có banner trong nhóm
-                return <SectionBannerSlider key={section._id} section={section} />;
-                
-            default:
-                return null;
+        // Alternate between PromoSection and EditorialGrid for a rhythmic layout
+        if (section.type === 'promo_with_products') {
+            const hasPromoContent = section.content?.bannerImage && section.content?.products?.length > 0;
+            if (!hasTitle || !hasPromoContent) return null;
+
+            if (index % 2 === 0) {
+                return <PromoSection key={section._id} section={section} />;
+            } else {
+                return <EditorialGrid key={section._id} section={section} />;
+            }
         }
+
+        // Feature Audit: We are removing 'banner_slider' (SectionBannerSlider) as it's redundant and clunky
+        return null;
     };
 
     return (
-        <div>
+        <div className="homepage-fade-in">
             {banners.length > 0 && <HeroSlider banners={banners} />}
-            {sections.map(section => renderSection(section))}
+
+            <div className="homepage-content-layer">
+                <HeritageSection />
+
+                <div className="dynamic-sections">
+                    {sections.map((section, index) => renderSection(section, index))}
+                </div>
+            </div>
         </div>
     );
 };

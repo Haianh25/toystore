@@ -16,10 +16,13 @@ const bannerRouter = require('./routes/bannerRoutes');
 const sectionRouter = require('./routes/sectionRoutes');
 
 const app = express();
+
+// MIDDLEWARES
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(express.json());
 
+// ROUTES
 // Sử dụng các router
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter); // Gắn auth router
@@ -34,5 +37,16 @@ app.use('/api/v1/collections', collectionRouter);
 app.use('/api/v1/banners', bannerRouter);
 app.use('/api/v1/sections', sectionRouter);
 
+// GLOBAL ERROR HANDLER
+app.use((err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
+
+    res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
+});
 
 module.exports = app;

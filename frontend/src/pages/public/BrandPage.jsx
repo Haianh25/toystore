@@ -12,9 +12,11 @@ const BrandPage = () => {
         const fetchBrands = async () => {
             try {
                 const { data } = await axios.get('http://localhost:5000/api/v1/brands');
-                setBrands(data.data.brands);
+                // Chấp nhận cả brands và data (từ factory) để tăng tính linh hoạt
+                setBrands(data.data.brands || data.data.data || []);
             } catch (error) {
                 console.error("Lỗi khi tải danh sách thương hiệu:", error);
+                setBrands([]);
             } finally {
                 setLoading(false);
             }

@@ -1,40 +1,52 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    // State riêng cho admin token
     const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
-    // State riêng cho user token
     const [userToken, setUserToken] = useState(localStorage.getItem('userToken'));
+    const [user, setUser] = useState(null); // Optional: could fetch profile here
 
-    // Hàm cho admin
     const adminLogin = (token) => {
         localStorage.setItem('adminToken', token);
         setAdminToken(token);
     };
+
     const adminLogout = () => {
         localStorage.removeItem('adminToken');
         setAdminToken(null);
     };
 
-    // Hàm cho user
-    const userLogin = (token) => {
+    const userLogin = (token, userData) => {
         localStorage.setItem('userToken', token);
         setUserToken(token);
+        if (userData) setUser(userData);
     };
+
     const userLogout = () => {
         localStorage.removeItem('userToken');
         setUserToken(null);
+        setUser(null);
     };
 
+    // Check for tokens on mount (integrity check)
+    useEffect(() => {
+        const aToken = localStorage.getItem('adminToken');
+        const uToken = localStorage.getItem('userToken');
+        if (aToken) setAdminToken(aToken);
+        if (uToken) setUserToken(uToken);
+    }, []);
+
     const value = {
-        token: adminToken, // Giữ lại "token" cho trang admin
+        adminToken,
         adminLogin,
         adminLogout,
-        userToken, // Thêm userToken
+        userToken,
+        user,
         userLogin,
         userLogout,
+        isAuthenticated: !!userToken,
+        isAdminAuthenticated: !!adminToken
     };
 
     return (

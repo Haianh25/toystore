@@ -1,5 +1,8 @@
+@import './ProductCard.css';
+
 .product-grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl) var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
 }

@@ -1,25 +1,25 @@
 const express = require('express');
 const userController = require('../controllers/userController');
-const authController = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 
-router.use(authController.protect);
+router.use(authMiddleware.protect);
 
 router.get('/me', userController.getMe, userController.getUser);
 router.patch('/updateMe', userController.updateMe);
 
 
 
-router.use(authController.restrictTo('admin'));
+router.use(authMiddleware.restrictTo('admin'));
 
 router.route('/')
     .get(userController.getAllUsers)
     .post(userController.createUser);
 
 router.route('/:id')
-    .get(userController.getUser) 
+    .get(userController.getUser)
     .patch(userController.updateUser)
     .delete(userController.deleteUser);
 

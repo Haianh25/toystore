@@ -1,36 +1,140 @@
+@import '../../assets/global.css';
+
 .hero-slider-container {
-    max-width: 1990px; /* Chiều rộng tối đa của box */
-    height: 643px;    /* Chiều cao cố định của box */
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 85vh;
+    min-height: auto;
+    width: 100%;
+    position: relative;
     overflow: hidden;
 }
 
 .hero-slider {
+    height: 100%;
+}
+
+.hero-slide-content {
+    position: relative;
     width: 100%;
     height: 100%;
 }
 
-.hero-slider .swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #fff;
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9) saturate(0.85);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.4), transparent 70%);
     display: flex;
-    justify-content: center;
     align-items: center;
+    padding: 0 10%;
 }
 
-.hero-slider .swiper-slide img {
+.hero-text-content {
+    color: #fff;
+    max-width: 800px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.2, 1, 0.3, 1) 0.5s;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.swiper-slide-active .hero-text-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hero-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 0.8em;
+    font-weight: 500;
     display: block;
-    width: 1600px;  /* Chiều rộng cố định của ảnh */
-    height: 620px; /* Chiều cao cố định của ảnh */
-    object-fit: cover; /* Ảnh sẽ tự crop để lấp đầy khung mà không bị méo */
+    margin-bottom: 2rem;
+    text-transform: uppercase;
 }
 
-/* Tùy chỉnh nút điều hướng */
-.hero-slider .swiper-button-next,
-.hero-slider .swiper-button-prev {
-    color: #333;
+.hero-title {
+    font-family: var(--dior-font-serif);
+    font-size: 5rem;
+    letter-spacing: 0.05em;
+    line-height: 1.05;
+    margin-bottom: 4rem;
+    text-transform: uppercase;
+}
+
+.hero-btn {
+    display: inline-block;
+    padding: 1.5rem 4rem;
+    background: #fff;
+    color: var(--dior-color-black);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.5em;
+    transition: all 0.4s var(--dior-transition-smooth);
+}
+
+.hero-btn:hover {
+    background: var(--dior-color-brown);
+    color: #fff;
+    transform: translateY(-5px);
+}
+
+/* Custom Pagination - Dot Style */
+.hero-slider .swiper-pagination {
+    bottom: 50px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    width: auto !important;
+}
+
+.hero-slider .swiper-pagination-bullet {
+    background: #fff !important;
+    opacity: 0.3 !important;
+    width: 8px !important;
+    height: 8px !important;
+    margin: 0 10px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease;
+}
+
+.hero-slider .swiper-pagination-bullet-active {
+    opacity: 1 !important;
+    transform: scale(1.2);
+}
+
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .hero-overlay {
+        padding-left: 5%;
+        justify-content: center;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-slider .swiper-pagination {
+        left: 0 !important;
+        width: 100% !important;
+        text-align: center;
+        bottom: 30px !important;
+    }
+
+    .hero-slider .swiper-pagination-bullet {
+        margin: 0 0.75rem !important;
+    }
 }

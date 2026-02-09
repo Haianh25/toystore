@@ -1,21 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-  /* Dior Color Palette */
+  /* Dior Color Palette - Core */
   --dior-white: #FFFFFF;
   --dior-black: #000000;
   --dior-gray: #8E9091;
   --dior-light-gray: #F5F5F5;
   --dior-border: #E0E0E0;
   --dior-brown: #4A3728;
-  --dior-color-brown: #4A3728;
   --dior-beige: #D4BE8D;
-  --dior-color-beige: #D4BE8D;
   --dior-beige-subtle: #F9F7F2;
-  --dior-color-beige-subtle: #F9F7F2;
   --dior-beige-dark: #E5DFC8;
-  --dior-color-beige-dark: #E5DFC8;
   --dior-champagne: #F3E5D8;
+
+  /* Aliases - Colors (Full Redundancy) */
+  --dior-color-white: var(--dior-white);
+  --dior-color-black: var(--dior-black);
+  --dior-color-gray: var(--dior-gray);
+  --dior-color-light-gray: var(--dior-light-gray);
+  --dior-color-border: var(--dior-border);
+  --dior-color-brown: var(--dior-brown);
+  --dior-color-beige: var(--dior-beige);
+  --dior-color-beige-subtle: var(--dior-beige-subtle);
+  --dior-color-beige-dark: var(--dior-beige-dark);
+  --dior-color-champagne: var(--dior-champagne);
 
   /* Typography */
   --dior-font-serif: 'Playfair Display', serif;
@@ -23,21 +31,21 @@
   --font-serif: var(--dior-font-serif);
   --font-sans: var(--dior-font-sans);
 
-  /* Spacing */
+  /* Spacing - Core */
   --dior-spacing-xs: 4px;
   --dior-spacing-sm: 8px;
   --dior-spacing-md: 16px;
   --dior-spacing-lg: 32px;
   --dior-spacing-xl: 64px;
   --dior-spacing-xxl: 128px;
-  --dior-spacing-xxxl: 160px;
+
+  /* Aliases - Spacing */
   --spacing-xs: var(--dior-spacing-xs);
   --spacing-sm: var(--dior-spacing-sm);
   --spacing-md: var(--dior-spacing-md);
   --spacing-lg: var(--dior-spacing-lg);
   --spacing-xl: var(--dior-spacing-xl);
   --spacing-xxl: var(--dior-spacing-xxl);
-  --spacing-xxxl: var(--dior-spacing-xxxl);
 
   /* Curves (Timing Functions) */
   --dior-curve-default: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -46,6 +54,11 @@
   /* Transitions */
   --dior-transition: all 0.4s var(--dior-curve-default);
   --dior-transition-smooth: all 0.8s var(--dior-curve-smooth);
+
+  /* Borders */
+  --dior-border-thin: 1px solid var(--dior-border);
+  --dior-border-black: 1px solid var(--dior-black);
+  --dior-border-brown: 1px solid var(--dior-brown);
 
   /* Dior Oblique Pattern */
   --dior-pattern: radial-gradient(circle at 0% 0.5%, var(--dior-beige) 2px, transparent 0),
@@ -57,6 +70,7 @@
   --dior-pattern-size: 60px 60px;
 }
 
+/* Base Reset */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -67,39 +81,16 @@ body {
   font-family: var(--dior-font-sans);
   background-color: var(--dior-white);
   color: var(--dior-black);
-  line-height: 1.8;
+  line-height: 1.5;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-h1,
-h2,
-h3,
-h4,
-.dior-serif {
+h1, h2, h3, h4, .dior-serif-title {
   font-family: var(--dior-font-serif);
-  font-weight: 400;
-  letter-spacing: 0.1em;
-}
-
-h1 {
-  font-size: 3.5rem;
-  line-height: 1.1;
-}
-
-h2 {
-  font-size: 2.5rem;
-  line-height: 1.2;
-}
-
-h3 {
-  font-size: 1.75rem;
-  line-height: 1.3;
-}
-
-h4 {
-  font-size: 1.25rem;
-  line-height: 1.4;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 a {
@@ -110,6 +101,8 @@ a {
 
 ul {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 button {
@@ -117,6 +110,7 @@ button {
   font-family: var(--dior-font-sans);
   border: none;
   background: none;
+  outline: none;
 }
 
 /* Global Utility Classes */
@@ -130,13 +124,15 @@ button {
   font-size: 0.75rem;
   font-weight: 500;
   transition: var(--dior-transition);
+  text-align: center;
 }
 
 .dior-button-outline:hover {
   background: var(--dior-black);
-  color: var(--dior-white);
+  color: var(--dior-white) !important;
 }
 
+/* Luxury Overlay */
 .luxury-pattern-overlay {
   position: fixed;
   top: 0;
@@ -147,14 +143,5 @@ button {
   background-size: var(--dior-pattern-size);
   opacity: 0.03;
   pointer-events: none;
-  z-index: 0;
-}
-
-section {
-  padding: 80px 0;
-  height: auto;
-}
-
-section:empty {
-  display: none;
+  z-index: 9999; /* Changed to top for debugging, but pointer-events will allow clicks */
 }
