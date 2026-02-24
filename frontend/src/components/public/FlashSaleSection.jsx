@@ -13,12 +13,29 @@ const FlashSaleSection = () => {
     const [timeLeft, setTimeLeft] = useState({});
     const [loading, setLoading] = useState(true);
 
+    const calculateTimeLeft = (endTime) => {
+        const now = new Date().getTime();
+        const end = new Date(endTime).getTime();
+        const distance = end - now;
+
+        if (distance < 0) return { expired: true };
+
+        return {
+            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        };
+    };
+
     useEffect(() => {
         const fetchActiveSale = async () => {
             try {
                 const res = await axios.get(`${API_URL}/api/v1/flash-sales/active`);
                 if (res.data.data.flashSales && res.data.data.flashSales.length > 0) {
-                    setFlashSale(res.data.data.flashSales[0]);
+                    const sale = res.data.data.flashSales[0];
+                    setFlashSale(sale);
+                    setTimeLeft(calculateTimeLeft(sale.endTime));
                 }
             } catch (error) {
                 console.error("Error fetching active flash sale:", error);
@@ -33,22 +50,20 @@ const FlashSaleSection = () => {
         if (!flashSale) return;
 
         const timer = setInterval(() => {
-            const now = new Date().getTime();
-            const end = new Date(flashSale.endTime).getTime();
-            const distance = end - now;
-
-            if (distance < 0) {
-                clearInterval(timer);
-                setTimeLeft({ expired: true });
-            } else {
-                setTimeLeft({
-                    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-                    seconds: Math.floor((distance % (1000 * 60)) / 1000),
-                });
-            }
+            const nextTime = calculateTimeLeft(flashSale.endTime);
+            setTimeLeft(nextTime);
+            if (nextTime.expired) clearInterval(timer);
         }, 1000);
+
+        // Scroll to hash if present after data is loaded
+        if (window.location.hash === '#flash-sale') {
+            setTimeout(() => {
+                const element = document.getElementById('flash-sale');
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
 
         return () => clearInterval(timer);
     }, [flashSale]);
@@ -102,7 +117,7 @@ const FlashSaleSection = () => {
                         }}
                         className="flash-sale-swiper"
                     >
-                        {flashSale.products.map((item) => (
+                        {flashSale.products.filter(item => item.product).map((item) => (
                             <SwiperSlide key={item._id}>
                                 <div className="flash-product-wrapper">
                                     <ProductCard product={item.product} salePrice={item.flashSalePrice} />

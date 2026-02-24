@@ -13,6 +13,7 @@ const ProductDetailPage = () => {
     const { id } = useParams();
     const { userToken } = useAuth();
     const [product, setProduct] = useState(null);
+    const [flashSaleInfo, setFlashSaleInfo] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -73,6 +74,31 @@ const ProductDetailPage = () => {
                 setReviews([]);
             }
 
+            // Tải thông tin flash sale (không chặn)
+            try {
+                const flashRes = await axios.get(`${API_URL}/api/v1/flash-sales/active`);
+                if (flashRes.data.data.flashSales && flashRes.data.data.flashSales.length > 0) {
+                    const activeSale = flashRes.data.data.flashSales[0];
+                    console.log("Tìm thấy Flash Sale hoạt động:", activeSale.title);
+                    const saleItem = activeSale.products.find(p => {
+                        const pid = typeof p.product === 'string' ? p.product : p.product._id;
+                        console.log(`Kiểm tra sản phẩm trong sale: ${pid} vs ${id}`);
+                        return pid === id;
+                    });
+                    if (saleItem) {
+                        console.log("Sản phẩm đang trong Flash Sale! Giá sale:", saleItem.flashSalePrice);
+                        setFlashSaleInfo({
+                            salePrice: saleItem.flashSalePrice,
+                            endTime: activeSale.endTime
+                        });
+                    } else {
+                        console.log("Sản phẩm không có trong Flash Sale đang diễn ra.");
+                    }
+                }
+            } catch (err) {
+                console.warn("Không thể tải thông tin flash sale:", err);
+            }
+
         } catch (error) {
             console.error("Lỗi khi tải thông tin sản phẩm:", error);
         } finally {
@@ -126,7 +152,7 @@ const ProductDetailPage = () => {
 
     const handleAddToCart = () => {
         if (product && quantity > 0) {
-            addToCart(product, quantity);
+            addToCart(product, quantity, flashSaleInfo?.salePrice);
             showToast(`Đã thêm ${quantity} sản phẩm "${product.name}" vào giỏ hàng!`, "success");
         }
     };
@@ -230,7 +256,15 @@ const ProductDetailPage = () => {
                             EXCLUSIVELY BY <Link to={`/products?brand=${product.brand._id}`}>{product.brand.name}</Link>
                         </p>
                     )}
-                    <p className="product-price">{product?.sellPrice?.toLocaleString('vi-VN')} VND</p>
+                    {flashSaleInfo ? (
+                        <div className="product-price-container">
+                            <span className="product-price-sale">{flashSaleInfo.salePrice?.toLocaleString('vi-VN')} VND</span>
+                            <span className="product-price-original">{product?.sellPrice?.toLocaleString('vi-VN')} VND</span>
+                            <span className="sale-badge">FLASH SALE</span>
+                        </div>
+                    ) : (
+                        <p className="product-price">{product?.sellPrice?.toLocaleString('vi-VN')} VND</p>
+                    )}
                     <div className="product-stock">
                         AVAILABILITY: {product?.stockQuantity > 0 ? `IN STOCK (${product.stockQuantity} UNITS)` : 'CURRENTLY UNAVAILABLE'}
                     </div>

@@ -26,34 +26,42 @@ const productSchema = new mongoose.Schema({
         type: [String],
         enum: ['1-3', '3-6', '6-12', '12+']
     },
-    weight: { 
+    weight: {
         type: Number,
         default: 0,
     },
     stockQuantity: {
         type: Number,
-        required: [true, 'Số lượng tồn kho không được để trống'],
+        required: [true, 'Sản phẩm phải có số lượng tồn kho'],
         default: 0,
     },
-    mainImage: { 
+    lowStockThreshold: {
+        type: Number,
+        default: 5,
+    },
+    sold: {
+        type: Number,
+        default: 0,
+    },
+    mainImage: {
         type: String,
         required: [true, 'Ảnh đại diện không được để trống'],
     },
-    detailImages: [{ 
+    detailImages: [{
         type: String,
     }],
     // --- THAY ĐỔI TỪ ĐƠN LẺ SANG MẢNG ---
-    categories: [{ 
+    categories: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
     }],
     // ------------------------------------
-    brand: { 
+    brand: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
-        required: false, 
+        required: false,
     },
-    productCollection: { 
+    productCollection: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Collection',
         required: false,

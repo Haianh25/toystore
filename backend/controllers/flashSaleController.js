@@ -1,5 +1,7 @@
-const FlashSale = require('../models/flashSaleModel');
 const Product = require('../models/productModel');
+const User = require('../models/userModel');
+const notificationController = require('./notificationController');
+const catchAsync = require('../utils/catchAsync');
 
 
 exports.getAllFlashSales = async (req, res) => {
@@ -49,6 +51,18 @@ exports.createFlashSale = async (req, res) => {
         }
 
         const newFlashSale = await FlashSale.create(req.body);
+
+        if (newFlashSale.isActive) {
+            const subscribers = await User.find({ pushSubscription: { $exists: true } });
+            subscribers.forEach(user => {
+                notificationController.sendNotification(user, {
+                    title: 'FLASH SALE MỚI!',
+                    body: `Chương trình "${newFlashSale.title}" đã bắt đầu. Săn ngay kẻo lỡ!`,
+                    url: '/flash-sale'
+                });
+            });
+        }
+
         res.status(201).json({ status: 'success', data: { flashSale: newFlashSale } });
     } catch (error) {
         res.status(400).json({ status: 'fail', message: error.message });
@@ -84,6 +98,18 @@ exports.updateFlashSale = async (req, res) => {
 
         const flashSale = await FlashSale.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
         if (!flashSale) return res.status(404).json({ message: 'Không tìm thấy chương trình sale' });
+
+        if (req.body.isActive === true) {
+            const subscribers = await User.find({ pushSubscription: { $exists: true } });
+            subscribers.forEach(user => {
+                notificationController.sendNotification(user, {
+                    title: 'FLASH SALE ĐANG DIỄN RA!',
+                    body: `Chương trình "${flashSale.title}" đang cực hot. Xem ngay!`,
+                    url: '/flash-sale'
+                });
+            });
+        }
+
         res.status(200).json({ status: 'success', data: { flashSale } });
     } catch (error) {
         res.status(400).json({ status: 'fail', message: error.message });

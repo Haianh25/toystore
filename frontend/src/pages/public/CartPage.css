@@ -126,6 +126,28 @@
     margin-bottom: 1.5rem;
 }
 
+.cart-item-price-group {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.cart-item-price-sale {
+    font-size: 1rem;
+    color: #e74c3c;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.cart-item-price-original {
+    font-size: 0.8rem;
+    color: var(--tdp-color-brown);
+    text-decoration: line-through;
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+}
+
 .cart-item-controls {
     margin-top: auto;
     display: flex;

@@ -110,10 +110,12 @@ const CheckoutPage = () => {
                 products: cartItems.map(item => ({
                     product: item.product._id,
                     quantity: item.quantity,
-                    price: item.product.sellPrice
+                    price: item.salePrice || item.product.sellPrice
                 })),
                 shippingAddress: shippingInfo,
                 totalAmount: finalTotal,
+                discount: discount,
+                voucher: appliedVoucher?._id,
                 paymentMethod: 'Online'
             };
 
@@ -141,10 +143,12 @@ const CheckoutPage = () => {
             products: cartItems.map(item => ({
                 product: item.product._id,
                 quantity: item.quantity,
-                price: item.product.sellPrice
+                price: item.salePrice || item.product.sellPrice
             })),
             shippingAddress: shippingInfo,
             totalAmount: finalTotal,
+            discount: discount,
+            voucher: appliedVoucher?._id,
             paymentMethod: 'COD'
         };
 
@@ -238,7 +242,7 @@ const CheckoutPage = () => {
                                         <span className="review-item-qty">QTY: {item.quantity}</span>
                                     </div>
                                     <span className="review-item-price">
-                                        {(item.product.sellPrice * item.quantity).toLocaleString('vi-VN')} VND
+                                        {((item.salePrice || item.product.sellPrice) * item.quantity).toLocaleString('vi-VN')} VND
                                     </span>
                                 </div>
                             ))}

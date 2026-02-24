@@ -36,6 +36,9 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user',
     },
+    pushSubscription: {
+        type: Object,
+    },
     // Thay thế mảng "addresses" bằng object "address"
     address: {
         street: { type: String, default: '' },

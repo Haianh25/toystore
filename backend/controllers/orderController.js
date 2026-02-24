@@ -1,10 +1,16 @@
 const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
+const Voucher = require('../models/voucherModel');
 const factory = require('../utils/handlerFactory');
 const catchAsync = require('../utils/catchAsync');
+const sendEmail = require('../utils/email');
+const { getOrderConfirmationTemplate } = require('../utils/emailTemplates');
 
 exports.createOrder = catchAsync(async (req, res, next) => {
     const { products, shippingAddress } = req.body;
+    console.log("== DEBUG CREATE ORDER ==");
+    console.log("Products from body:", products);
+    console.log("Discount from body:", req.body.discount);
 
     if (!products || products.length === 0) {
         return res.status(400).json({ status: 'fail', message: 'Giỏ hàng của bạn đang trống.' });
@@ -24,19 +30,43 @@ exports.createOrder = catchAsync(async (req, res, next) => {
             return res.status(400).json({ status: 'fail', message: `Sản phẩm "${product.name}" không đủ số lượng tồn kho.` });
         }
 
-        totalAmount += product.sellPrice * item.quantity;
+        const itemPrice = item.price || product.sellPrice;
+        totalAmount += itemPrice * item.quantity;
         productDetails.push({
             product: product._id,
             quantity: item.quantity,
-            price: product.sellPrice
+            price: itemPrice
         });
+    }
+
+    const discount = req.body.discount || 0;
+    const finalTotal = totalAmount - discount;
+    const voucherId = req.body.voucher;
+
+    // Handle Voucher Usage
+    if (voucherId) {
+        const voucher = await Voucher.findById(voucherId);
+        if (!voucher) {
+            return res.status(404).json({ status: 'fail', message: 'Mã giảm giá không tồn tại.' });
+        }
+        if (!voucher.isActive || voucher.expiresAt < Date.now()) {
+            return res.status(400).json({ status: 'fail', message: 'Mã giảm giá đã hết hạn hoặc không còn hoạt động.' });
+        }
+        if (voucher.usesCount >= voucher.maxUses) {
+            return res.status(400).json({ status: 'fail', message: 'Mã giảm giá đã hết lượt sử dụng.' });
+        }
+
+        // Increment usage
+        await Voucher.findByIdAndUpdate(voucherId, { $inc: { usesCount: 1 } });
     }
 
     const newOrder = await Order.create({
         user: req.user.id,
         products: productDetails,
         shippingAddress,
-        totalAmount,
+        totalAmount: finalTotal > 0 ? finalTotal : 0,
+        discount,
+        voucher: voucherId,
         paymentMethod: req.body.paymentMethod || 'COD'
     });
 
@@ -49,6 +79,21 @@ exports.createOrder = catchAsync(async (req, res, next) => {
         });
     } catch (err) {
         console.error("Socket emit error:", err.message);
+    }
+
+    // Send Confirmation Email (Async)
+    try {
+        const orderToEmail = await Order.findById(newOrder._id).populate('products.product');
+        const emailHtml = getOrderConfirmationTemplate(orderToEmail, req.user);
+
+        await sendEmail({
+            email: req.user.email,
+            subject: `Xác nhận đơn hàng #${newOrder._id.toString().slice(-6).toUpperCase()} - TheDevilPlayz`,
+            html: emailHtml
+        });
+        console.log("Order confirmation email sent to:", req.user.email);
+    } catch (err) {
+        console.error("Email sending error:", err.message);
     }
 
     res.status(201).json({
@@ -77,7 +122,19 @@ exports.updateOrderToPaid = catchAsync(async (req, res, next) => {
             order.status = 'Processing';
             // Also decrement stock
             for (const item of order.products) {
-                await Product.findByIdAndUpdate(item.product, { $inc: { stockQuantity: -item.quantity } });
+                const product = await Product.findByIdAndUpdate(item.product, { $inc: { stockQuantity: -item.quantity } }, { new: true });
+                // Check for low stock
+                if (product && product.stockQuantity <= product.lowStockThreshold) {
+                    try {
+                        const io = require('../socket').getIO();
+                        io.emit('lowStockAlert', {
+                            productId: product._id,
+                            name: product.name,
+                            stock: product.stockQuantity,
+                            message: `Cảnh báo: Sản phẩm "${product.name}" đang sắp hết hàng (còn ${product.stockQuantity})`
+                        });
+                    } catch (err) { }
+                }
             }
         }
 
@@ -173,7 +230,19 @@ exports.updateOrderStatus = catchAsync(async (req, res, next) => {
                     message: `Không thể xác nhận đơn hàng. Sản phẩm "${product.name}" hiện không đủ tồn kho.`
                 });
             }
-            await Product.findByIdAndUpdate(item.product, { $inc: { stockQuantity: -item.quantity } });
+            const updatedProduct = await Product.findByIdAndUpdate(item.product, { $inc: { stockQuantity: -item.quantity } }, { new: true });
+            // Check for low stock
+            if (updatedProduct && updatedProduct.stockQuantity <= updatedProduct.lowStockThreshold) {
+                try {
+                    const io = require('../socket').getIO();
+                    io.emit('lowStockAlert', {
+                        productId: updatedProduct._id,
+                        name: updatedProduct.name,
+                        stock: updatedProduct.stockQuantity,
+                        message: `Cảnh báo: Sản phẩm "${updatedProduct.name}" đang sắp hết hàng (còn ${updatedProduct.stockQuantity})`
+                    });
+                } catch (err) { }
+            }
         }
     }
 

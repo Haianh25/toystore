@@ -128,3 +128,38 @@
     margin-top: auto;
     letter-spacing: 0.1em;
 }
+
+.price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.current-price {
+    font-family: var(--tdp-font-sans);
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.original-price-strike {
+    font-family: var(--tdp-font-sans);
+    color: var(--tdp-gray);
+    text-decoration: line-through;
+    font-size: 0.85rem;
+    opacity: 0.6;
+}
+
+.sale-mini-badge {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    background-color: #e74c3c;
+    color: white;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    z-index: 5;
+}

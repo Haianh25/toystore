@@ -43,10 +43,17 @@ const CartPage = () => {
                                 <div className="cart-item-info-top">
                                     <Link to={`/products/${item.product._id}`} className="cart-item-name">{item.product.name}</Link>
                                     <div className="cart-item-subtotal">
-                                        {(item.product.sellPrice * item.quantity).toLocaleString('vi-VN')} VND
+                                        {((item.salePrice || item.product.sellPrice) * item.quantity).toLocaleString('vi-VN')} VND
                                     </div>
                                 </div>
-                                <p className="cart-item-price">{item.product.sellPrice.toLocaleString('vi-VN')} VND</p>
+                                {item.salePrice ? (
+                                    <div className="cart-item-price-group">
+                                        <span className="cart-item-price-sale">{item.salePrice.toLocaleString('vi-VN')} VND</span>
+                                        <span className="cart-item-price-original">{item.product.sellPrice.toLocaleString('vi-VN')} VND</span>
+                                    </div>
+                                ) : (
+                                    <p className="cart-item-price">{item.product.sellPrice.toLocaleString('vi-VN')} VND</p>
+                                )}
 
                                 {item.quantity > item.product.stockQuantity && (
                                     <p className="stock-warning">Exceeds available stock ({item.product.stockQuantity} left)</p>

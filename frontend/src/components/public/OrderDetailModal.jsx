@@ -14,7 +14,7 @@ const OrderDetailModal = ({ orderId, onClose }) => {
                 const res = await axios.get(`${API_URL}/api/v1/orders/${orderId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setOrder(res.data.data.data); // Adjust based on controller response structure
+                setOrder(res.data.data.order); // Adjust based on controller response structure
             } catch (error) {
                 console.error("Lỗi tải chi tiết đơn hàng:", error);
                 const message = error.response?.data?.message || "Không thể tải chi tiết đơn hàng.";
@@ -47,6 +47,9 @@ const OrderDetailModal = ({ orderId, onClose }) => {
                                 <p><strong>Delivery:</strong> <span className="status-badge delivered">DELIVERED ({new Date(order.deliveredAt).toLocaleDateString('vi-VN')})</span></p>
                             )}
                             <p><strong>Total:</strong> {order.totalAmount.toLocaleString('vi-VN')} VND</p>
+                            {order.discount > 0 && (
+                                <p><strong>Discount:</strong> -{order.discount.toLocaleString('vi-VN')} VND</p>
+                            )}
                         </div>
 
                         <div className="order-items-list">

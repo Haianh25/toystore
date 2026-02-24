@@ -157,7 +157,7 @@ const Header = () => {
                 <ul className="nav-links">
                     <li><Link to="/category/hang-moi?sort=-createdAt">NEW ARRIVALS</Link></li>
                     <li>
-                        <Link to="/#flash-sale" className="flash-sale-link">
+                        <Link to="/flash-sale" className="flash-sale-link">
                             <span className="bolt-icon">⚡</span> FLASH SALE
                         </Link>
                     </li>

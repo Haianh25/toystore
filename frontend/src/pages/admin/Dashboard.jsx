@@ -4,6 +4,8 @@ import { Line, Doughnut } from 'react-chartjs-2';
 import { API_URL } from '../../config/api';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { FaShoppingCart, FaBoxOpen } from 'react-icons/fa';
+import { useSocket } from '../../context/SocketContext';
+import { useToast } from '../../context/ToastContext';
 import './Dashboard.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
@@ -15,6 +17,8 @@ const Dashboard = () => {
     const [productsSoldChartData, setProductsSoldChartData] = useState({ labels: [], datasets: [] });
     const [stockChartData, setStockChartData] = useState({ labels: [], datasets: [] });
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
+    const { socket } = useSocket();
+    const { showToast } = useToast();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -95,6 +99,25 @@ const Dashboard = () => {
         };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on('lowStockAlert', (data) => {
+            console.log("Cảnh báo kho mới:", data);
+            showToast(data.message, 'warning');
+            // Refresh stats to update circles/counters
+            const refreshStats = async () => {
+                try {
+                    const statsRes = await axios.get(`${API_URL}/api/v1/dashboard/stats`, apiConfig);
+                    setStats(statsRes.data?.data || {});
+                } catch (err) { }
+            };
+            refreshStats();
+        });
+
+        return () => socket.off('lowStockAlert');
+    }, [socket, showToast]);
 
     const commonOptions = {
         responsive: true,

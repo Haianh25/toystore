@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../../config/api';
 import './MyAccount.css';
 import OrderHistory from './OrderHistory';
+import { useNotifications } from '../../hooks/useNotifications';
 
 const MyAccount = () => {
     const [user, setUser] = useState(null);
@@ -14,6 +15,7 @@ const MyAccount = () => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` } };
+    const { isSubscribed, subscribeUser } = useNotifications(localStorage.getItem('userToken'));
 
     const fetchUserData = async () => {
         try {
@@ -72,6 +74,18 @@ const MyAccount = () => {
             <h1>Tài khoản của tôi</h1>
             {message && <p className="account-message message-success">{message}</p>}
             {error && <p className="account-message message-error">{error}</p>}
+
+            <div className="notification-subscription" style={{ marginBottom: '20px', padding: '15px', border: '1px solid #eee', background: '#f9f9f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h4 style={{ margin: 0 }}>Thông báo đẩy</h4>
+                    <p style={{ margin: '5px 0 0', fontSize: '0.9rem', color: '#666' }}>Nhận thông báo khi có Flash Sale mới hoặc cập nhật đơn hàng.</p>
+                </div>
+                {!isSubscribed ? (
+                    <button onClick={subscribeUser} className="tdp-button-dark" style={{ padding: '8px 15px', fontSize: '0.8rem' }}>BẬT THÔNG BÁO</button>
+                ) : (
+                    <span style={{ color: '#27ae60', fontWeight: 600 }}>ĐÃ BẬT</span>
+                )}
+            </div>
 
             <form onSubmit={handleSubmit} className="account-form">
                 <div className="form-group full-width">

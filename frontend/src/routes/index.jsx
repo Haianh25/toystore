@@ -38,6 +38,7 @@ import CartPage from '../pages/public/CartPage.jsx';
 import CheckoutPage from '../pages/public/CheckoutPage.jsx'; // <-- Thêm import
 import OrderSuccessPage from '../pages/public/OrderSuccessPage.jsx';
 import WishlistPage from '../pages/public/WishlistPage.jsx';
+import FlashSalePage from '../pages/public/FlashSalePage.jsx';
 const ProtectedRoute = ({ children }) => {
     const { adminToken } = useAuth();
     return adminToken ? children : <Navigate to="/admin/login" replace />;
@@ -75,6 +76,7 @@ const AppRoutes = () => {
             {/* === ROUTE USER (NẰM TRONG MAINLAYOUT) === */}
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<HomePage />} />
+                <Route path="flash-sale" element={<FlashSalePage />} />
                 <Route path="products" element={<ProductListPage />} />
                 <Route path="category/:slug" element={<ProductListPage />} />
                 <Route path="collection/:slug" element={<ProductListPage />} />

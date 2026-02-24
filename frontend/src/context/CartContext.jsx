@@ -19,7 +19,7 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
     }, [cartItems]);
 
-    const addToCart = (product, quantity) => {
+    const addToCart = (product, quantity, salePrice = null) => {
         setCartItems(prevItems => {
             const existingItem = prevItems.find(item => item.product._id === product._id);
 
@@ -28,11 +28,11 @@ export const CartProvider = ({ children }) => {
                 const finalQuantity = Math.min(newQuantity, product.stockQuantity);
                 return prevItems.map(item =>
                     item.product._id === product._id
-                        ? { ...item, quantity: finalQuantity }
+                        ? { ...item, quantity: finalQuantity, salePrice: salePrice || item.salePrice }
                         : item
                 );
             } else {
-                return [...prevItems, { product, quantity }];
+                return [...prevItems, { product, quantity, salePrice }];
             }
         });
     };
@@ -66,7 +66,10 @@ export const CartProvider = ({ children }) => {
 
     // Calculate totals
     const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
-    const totalPrice = cartItems.reduce((total, item) => total + item.product.sellPrice * item.quantity, 0);
+    const totalPrice = cartItems.reduce((total, item) => {
+        const price = item.salePrice || item.product.sellPrice;
+        return total + price * item.quantity;
+    }, 0);
 
     const checkStockBeforeCheckout = () => {
         // Return false if any item exceeds stock (based on local data)

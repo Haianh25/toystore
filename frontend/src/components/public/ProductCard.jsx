@@ -7,6 +7,7 @@ import './ProductCard.css';
 import { API_URL } from '../../config/api';
 
 const ProductCard = ({ product, salePrice }) => {
+    if (!product) return null;
     const { showToast } = useToast();
     const [isWishlisted, setIsWishlisted] = useState(false);
     const userToken = localStorage.getItem('userToken');

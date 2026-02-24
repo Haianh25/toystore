@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
+const FlashSale = require('../models/flashSaleModel');
 
 const parseArrayFields = (body) => {
     ['ageGroups', 'categories'].forEach(field => {
@@ -40,6 +41,19 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
         matchStage.sellPrice = {};
         if (minPrice) matchStage.sellPrice.$gte = Number(minPrice);
         if (maxPrice) matchStage.sellPrice.$lte = Number(maxPrice);
+    }
+
+    // --- EXCLUDE PRODUCTS IN ACTIVE FLASH SALES ---
+    if (req.query.excludeActiveSale === 'true') {
+        const now = new Date();
+        const activeSales = await FlashSale.find({
+            startTime: { $lte: now },
+            endTime: { $gte: now }
+        });
+        const productIdsInSales = activeSales.flatMap(s => s.products.map(p => p.product));
+        if (productIdsInSales.length > 0) {
+            matchStage._id = { ...matchStage._id, $nin: productIdsInSales };
+        }
     }
 
     const pipeline = [{ $match: matchStage }];
