@@ -15,7 +15,7 @@ const VoucherTable = ({ vouchers, onEdit, onDelete }) => {
     };
 
     return (
-        <table className="voucher-table">
+        <table className="admin-table">
             <thead>
                 <tr>
                     <th>Mã Code</th>

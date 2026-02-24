@@ -14,34 +14,34 @@ const OrderTable = ({ orders }) => {
     };
 
     return (
-        <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white' }}>
+        <table className="admin-table">
             <thead>
-                <tr style={{ backgroundColor: '#f2f2f2' }}>
-                    <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>Mã Đơn Hàng</th>
-                    <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>Khách Hàng</th>
-                    <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>Ngày Đặt</th>
-                    <th style={{ padding: '12px', border: '1px solid #ddd' }}>Tổng Tiền</th>
-                    <th style={{ padding: '12px', border: '1px solid #ddd' }}>Trạng Thái</th>
-                    <th style={{ padding: '12px', border: '1px solid #ddd' }}>Hành động</th>
+                <tr>
+                    <th>Mã Đơn Hàng</th>
+                    <th>Khách Hàng</th>
+                    <th>Ngày Đặt</th>
+                    <th>Tổng Tiền</th>
+                    <th>Trạng Thái</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
                 {orders && orders.length > 0 ? orders.map(order => (
                     <tr key={order._id}>
-                        <td style={{ padding: '12px', border: '1px solid #ddd' }}>#{order._id.slice(-6)}</td>
-                        <td style={{ padding: '12px', border: '1px solid #ddd' }}>{order.user?.fullName || 'N/A'}</td>
-                        <td style={{ padding: '12px', border: '1px solid #ddd' }}>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
-                        <td style={{ padding: '12px', border: '1px solid #ddd' }}>{order.totalAmount.toLocaleString('vi-VN')} VND</td>
-                        <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                            <span style={getStatusStyle(order.status)}>{order.status}</span>
+                        <td>#{order._id.slice(-6)}</td>
+                        <td>{order.user?.fullName || 'N/A'}</td>
+                        <td>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
+                        <td>{order.totalAmount.toLocaleString('vi-VN')} VND</td>
+                        <td>
+                            <span className={`status-${order.status.toLowerCase()}`}>{order.status}</span>
                         </td>
-                        <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                            <Link to={`/admin/orders/${order._id}`}>Xem chi tiết</Link>
+                        <td className="action-buttons">
+                            <Link to={`/admin/orders/${order._id}`} className="btn-outline" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>Xem chi tiết</Link>
                         </td>
                     </tr>
                 )) : (
                     <tr>
-                        <td colSpan="6" style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>Chưa có đơn hàng nào.</td>
+                        <td colSpan="6" style={{ textAlign: 'center' }}>Chưa có đơn hàng nào.</td>
                     </tr>
                 )}
             </tbody>

@@ -3,13 +3,15 @@ import axios from 'axios';
 import VoucherTable from '../../components/admin/VoucherTable';
 import VoucherFormModal from '../../components/admin/VoucherFormModal';
 import { API_URL } from '../../config/api';
-import './VoucherManagement.css'; // <-- Đảm bảo dòng này được import
+import { useToast } from '../../context/ToastContext';
+import './VoucherManagement.css';
 
 const VoucherManagement = () => {
     const [vouchers, setVouchers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingVoucher, setEditingVoucher] = useState(null);
+    const { showToast } = useToast();
 
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
 
@@ -48,8 +50,9 @@ const VoucherManagement = () => {
             }
             fetchVouchers();
             handleCloseModal();
+            showToast(editingVoucher ? "Cập nhật voucher thành công!" : "Tạo voucher thành công!", "success");
         } catch (error) {
-            alert(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
+            showToast(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra'}`, "error");
         }
     };
 
@@ -58,8 +61,9 @@ const VoucherManagement = () => {
             try {
                 await axios.delete(`${API_URL}/api/v1/vouchers/${id}`, apiConfig);
                 fetchVouchers();
+                showToast("Xóa voucher thành công!", "success");
             } catch (error) {
-                alert('Xóa voucher thất bại!');
+                showToast("Xóa voucher thất bại!", "error");
             }
         }
     };
@@ -67,10 +71,10 @@ const VoucherManagement = () => {
     if (loading) return <p>Đang tải...</p>;
 
     return (
-        <div className="voucher-page-container">
-            <div className="voucher-page-header">
+        <div className="page-container">
+            <div className="page-header">
                 <h1>Quản lý Voucher</h1>
-                <button className="btn-create" onClick={handleOpenCreateModal}>Tạo Voucher Mới</button>
+                <button className="btn-primary" onClick={handleOpenCreateModal}>Tạo Voucher Mới</button>
             </div>
             <VoucherTable vouchers={vouchers} onEdit={handleOpenEditModal} onDelete={handleDelete} />
             <VoucherFormModal isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleSubmit} voucher={editingVoucher} />

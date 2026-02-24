@@ -17,6 +17,9 @@ router.route('/:id')
     .get(authMiddleware.protect, orderController.getOrder)
     .patch(authMiddleware.protect, authMiddleware.restrictTo('admin'), orderController.updateOrderStatus);
 
+router.put('/:id/pay', authMiddleware.protect, orderController.updateOrderToPaid);
+router.put('/:id/deliver', authMiddleware.protect, authMiddleware.restrictTo('admin'), orderController.updateOrderToDelivered);
+
 // These routes are for ADMINS to edit products within an order
 router.route('/:id/products')
     .post(authMiddleware.protect, authMiddleware.restrictTo('admin'), orderController.addProductToOrder);

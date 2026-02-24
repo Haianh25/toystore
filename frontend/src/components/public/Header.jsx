@@ -94,7 +94,7 @@ const Header = () => {
                             <div className="search-input-wrapper">
                                 <input
                                     type="text"
-                                    placeholder="SEARCH"
+                                    placeholder="LOOKING FOR SOMETHING SPECIAL?"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     onKeyDown={handleSearch}
@@ -156,6 +156,11 @@ const Header = () => {
             <nav className="minimal-nav">
                 <ul className="nav-links">
                     <li><Link to="/category/hang-moi?sort=-createdAt">NEW ARRIVALS</Link></li>
+                    <li>
+                        <Link to="/#flash-sale" className="flash-sale-link">
+                            <span className="bolt-icon">⚡</span> FLASH SALE
+                        </Link>
+                    </li>
                     <li className="with-dropdown"
                         onMouseEnter={() => setIsProductMenuOpen(true)}
                         onMouseLeave={() => setIsProductMenuOpen(false)}>

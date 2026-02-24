@@ -113,53 +113,44 @@
 
 .search-result-item:hover {
     background: var(--tdp-beige-subtle);
-    padding-left: 30px;
 }
 
 .search-result-item img {
-    width: 60px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     object-fit: contain;
     background: #fff;
     border: 1px solid var(--tdp-color-beige-subtle);
-    padding: 5px;
+}
+
+.result-info {
+    flex: 1;
 }
 
 .result-name {
-    font-family: var(--tdp-font-sans);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
     color: var(--tdp-black);
     text-transform: uppercase;
-    margin-bottom: 4px;
 }
 
 .result-price {
-    font-family: var(--tdp-font-serif);
-    font-size: 0.85rem;
-    color: var(--tdp-color-brown);
+    font-size: 0.75rem;
+    color: var(--tdp-gray);
+    letter-spacing: 0.05em;
 }
 
 .search-status {
-    padding: 40px;
+    padding: 20px;
     text-align: center;
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
+    font-size: 0.8rem;
     color: var(--tdp-gray);
-    text-transform: uppercase;
+    font-style: italic;
 }
 
 .view-all-results {
-    padding: 18px;
-    text-align: center;
-    font-size: 0.65rem;
-    letter-spacing: 0.4em;
-    font-weight: 700;
-    border-top: 1px solid var(--tdp-color-beige-dark);
-    cursor: pointer;
-    background: var(--tdp-black);
-    color: #fff;
     transition: all 0.3s ease;
 }
 
@@ -258,6 +249,47 @@
 
 .nav-links a:hover {
     color: var(--tdp-color-brown);
+}
+
+.flash-sale-link {
+    color: #ff4d4d !important;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+    animation: headerPulse 2s infinite;
+}
+
+@keyframes headerPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+        text-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.flash-sale-link .bolt-icon {
+    font-size: 0.9rem;
+    animation: boltFlicker 1.5s infinite;
+}
+
+@keyframes boltFlicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 
 /* Dropdown */

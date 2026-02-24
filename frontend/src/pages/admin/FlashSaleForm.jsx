@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_URL } from '../../config/api';
+import { useToast } from '../../context/ToastContext';
 import './FlashSaleForm.css';
 
 const FlashSaleForm = () => {
@@ -12,6 +13,7 @@ const FlashSaleForm = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const { showToast } = useToast();
 
     const navigate = useNavigate();
     const { id } = useParams();
@@ -52,7 +54,7 @@ const FlashSaleForm = () => {
 
         // Logic mới: Kiểm tra giá sale
         if (Number(flashSalePrice) > product.sellPrice) {
-            alert('Lỗi: Giá sale không được cao hơn giá gốc!');
+            showToast('Lỗi: Giá sale không được cao hơn giá gốc!', "error");
             return;
         }
 
@@ -75,7 +77,7 @@ const FlashSaleForm = () => {
 
         // Logic mới: Kiểm tra giá sale
         if (Number(newPrice) > productToEdit.product.sellPrice) {
-            alert('Lỗi: Giá sale không được cao hơn giá gốc!');
+            showToast('Lỗi: Giá sale không được cao hơn giá gốc!', "error");
             return;
         }
 
@@ -106,10 +108,10 @@ const FlashSaleForm = () => {
             } else {
                 await axios.post(`${API_URL}/api/v1/flash-sales`, payload, apiConfig);
             }
-            alert('Lưu chương trình Flash Sale thành công!');
+            showToast('Lưu chương trình Flash Sale thành công!', "success");
             navigate('/admin/flash-sales');
         } catch (error) {
-            alert(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra!'}`);
+            showToast(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra!'}`, "error");
         }
     };
 

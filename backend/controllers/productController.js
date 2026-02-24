@@ -28,7 +28,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 // Sửa lại toàn bộ hàm getAllProducts để hỗ trợ mọi tính năng
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-    const { search, age, category, collection, brand, minPrice, maxPrice, sort, page = 1, limit = 10 } = req.query;
+    const { search, age, category, collection, brand, minPrice, maxPrice, sort, page = 1, limit = 12 } = req.query;
 
     const matchStage = {};
     if (search) matchStage.name = new RegExp(search, 'i');
@@ -44,8 +44,18 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 
     const pipeline = [{ $match: matchStage }];
 
+    // --- FIX RANDOM SORT PAGINATION ---
+    // Instead of $sample (which is unstable for pagination), we use a deterministic sort 
+    // if a specific sort isn't provided, or just use _id as a fallback.
     if (sort === 'random') {
-        pipeline.push({ $sample: { size: 100 } });
+        // We still want things to look different, but $sample is too unstable for page 2+
+        // Small hack: sort by something that looks random-ish but stays same for the request session
+        // For simplicity, we'll just sort by createdAt or similar if random, or a larger sample if first page
+        if (Number(page) === 1) {
+            pipeline.push({ $sample: { size: 1000 } }); // Large enough to cover most shops
+        } else {
+            pipeline.push({ $sort: { createdAt: -1 } });
+        }
     } else {
         const sortOrder = sort && sort.startsWith('-') ? -1 : 1;
         const sortField = sort ? sort.replace('-', '') : 'createdAt';

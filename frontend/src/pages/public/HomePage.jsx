@@ -4,6 +4,7 @@ import HeroSlider from '../../components/public/HeroSlider';
 import HeritageSection from '../../components/public/HeritageSection';
 import CategoryShowcase from '../../components/public/CategoryShowcase';
 import EditorialGrid from '../../components/public/EditorialGrid';
+import FlashSaleSection from '../../components/public/FlashSaleSection';
 import { API_URL } from '../../config/api';
 import './HomePage.css';
 
@@ -64,6 +65,9 @@ const HomePage = () => {
                 <div className="flow-section">
                     <HeritageSection />
                 </div>
+
+                {/* 2.5 FLASH SALE - Urgent Luxury */}
+                <FlashSaleSection />
 
                 {/* 3. CATEGORY SHOWCASE - Fixed Impact Navigation */}
                 <div className="flow-section">

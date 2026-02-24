@@ -51,7 +51,7 @@ const Sidebar = () => {
                             <FaShoppingCart className="icon" /> Quản lý Đơn hàng
                         </NavLink>
                     </li>
-                    {/* <li>
+                    <li>
                         <NavLink to="/admin/vouchers">
                             <FaGift className="icon" /> Quản lý Voucher
                         </NavLink>
@@ -60,7 +60,7 @@ const Sidebar = () => {
                         <NavLink to="/admin/flash-sales">
                             <FaBolt className="icon" /> Quản lý Flash Sale
                         </NavLink>
-                    </li> */}
+                    </li>
                     <li>
                         <NavLink to="/admin/users">
                             <FaUsers className="icon" /> Quản lý Người dùng

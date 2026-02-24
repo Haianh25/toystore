@@ -31,7 +31,8 @@
     border-radius: 50%;
     width: 44px;
     height: 44px;
-    top: 50%; /* Căn giữa theo chiều dọc */
+    top: 50%;
+    /* Căn giữa theo chiều dọc */
 }
 
 .featured-slider .swiper-button-next::after,
@@ -42,12 +43,14 @@
 /* Thêm style cho thanh scrollbar */
 .featured-slider .swiper-scrollbar {
     background: rgba(0, 0, 0, 0.1);
-    bottom: 0px; /* Di chuyển thanh kéo xuống dưới */
+    bottom: 0px;
+    /* Di chuyển thanh kéo xuống dưới */
     height: 8px;
     border-radius: 4px;
     cursor: grab;
 }
+
 .featured-slider .swiper-scrollbar-drag {
-    background: #007bff;
+    background: var(--tdp-black);
     border-radius: 4px;
 }

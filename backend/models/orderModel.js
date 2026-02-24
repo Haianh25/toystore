@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema({
             type: Number,
             required: true,
         },
-        price: { 
+        price: {
             type: Number,
             required: true,
         }
@@ -42,7 +42,27 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['COD', 'Online'],
         default: 'COD',
-    }
+    },
+    paymentResult: {
+        id: { type: String },
+        status: { type: String },
+        update_time: { type: String },
+        email_address: { type: String },
+    },
+    isPaid: {
+        type: Boolean,
+        default: false,
+    },
+    paidAt: {
+        type: Date,
+    },
+    isDelivered: {
+        type: Boolean,
+        default: false,
+    },
+    deliveredAt: {
+        type: Date,
+    },
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);

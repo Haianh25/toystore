@@ -59,7 +59,7 @@ exports.getChartData = async (req, res) => {
                     _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
                     dailyOrders: { $sum: 1 },
                     dailyRevenue: { $sum: { $cond: [{ $eq: ["$status", "Completed"] }, "$totalAmount", 0] } },
-                    dailyProductsSold: { $sum: { $sum: "$products.quantity" } }
+                    dailyProductsSold: { $sum: { $reduce: { input: "$products", initialValue: 0, in: { $add: ["$$value", "$$this.quantity"] } } } }
                 }
             },
             { $sort: { _id: 1 } }

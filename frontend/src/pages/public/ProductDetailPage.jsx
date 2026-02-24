@@ -3,8 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import { API_URL } from '../../config/api';
-import { FaStar, FaRegStar } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaHeart, FaRegHeart } from 'react-icons/fa';
 import ProductCard from '../../components/public/ProductCard';
 import './ProductDetailPage.css';
 
@@ -18,12 +19,14 @@ const ProductDetailPage = () => {
     const [quantity, setQuantity] = useState(1);
     const [mainImageUrl, setMainImageUrl] = useState('');
     const { addToCart } = useCart();
+    const { showToast } = useToast();
 
     // Review Form State
     const [userRating, setUserRating] = useState(5);
     const [reviewComment, setReviewComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [reviewError, setReviewError] = useState('');
+    const [isWishlisted, setIsWishlisted] = useState(false);
 
     const fetchProductAndReviews = async () => {
         setLoading(true);
@@ -33,7 +36,6 @@ const ProductDetailPage = () => {
             const productData = productRes.data?.data?.data || productRes.data?.data?.product;
 
             if (productData) {
-                console.log('[DEBUG] Product Data:', productData);
                 setProduct(productData);
                 document.title = `${productData.name} | TheDevilPlayz`;
                 setMainImageUrl(productData.mainImage ? `${API_URL}${productData.mainImage}` : '');
@@ -44,23 +46,21 @@ const ProductDetailPage = () => {
                         ? productData.categories[0]
                         : productData.categories[0]._id;
 
-                    console.log('[DEBUG] Fetching related for category:', categoryId);
-
-                    try {
-                        const relatedRes = await axios.get(`${API_URL}/api/v1/products`, {
-                            params: {
-                                category: categoryId,
-                                limit: 5
-                            }
-                        });
-                        console.log('[DEBUG] Related Products Res:', relatedRes.data);
-                        const filtered = (relatedRes.data?.data?.products || []).filter(p => p._id !== id);
-                        setRelatedProducts(filtered.slice(0, 4));
-                    } catch (err) {
-                        console.warn("Không thể tải sản phẩm tương quan:", err);
-                    }
-                } else {
-                    console.log('[DEBUG] No categories found for product');
+                    const fetchRelated = async () => {
+                        try {
+                            const relatedRes = await axios.get(`${API_URL}/api/v1/products`, {
+                                params: {
+                                    category: categoryId,
+                                    limit: 5
+                                }
+                            });
+                            const filtered = (relatedRes.data?.data?.products || []).filter(p => p._id !== id);
+                            setRelatedProducts(filtered.slice(0, 4));
+                        } catch (err) {
+                            console.warn("Không thể tải sản phẩm tương quan:", err);
+                        }
+                    };
+                    fetchRelated();
                 }
             }
 
@@ -85,16 +85,55 @@ const ProductDetailPage = () => {
         window.scrollTo(0, 0); // Cuộn lên đầu trang khi đổi sản phẩm
     }, [id]);
 
+    useEffect(() => {
+        const checkWishlist = async () => {
+            if (!userToken) return;
+            try {
+                const res = await axios.get(`${API_URL}/api/v1/users/wishlist`, {
+                    headers: { Authorization: `Bearer ${userToken}` }
+                });
+                const isInWishlist = res.data.data.wishlist.some(item => item._id === id);
+                setIsWishlisted(isInWishlist);
+            } catch (err) {
+                console.error("Lỗi check wishlist:", err);
+            }
+        };
+        checkWishlist();
+    }, [id, userToken]);
+
+    const toggleWishlist = async () => {
+        if (!userToken) {
+            showToast("Vui lòng đăng nhập để lưu sản phẩm!", "error");
+            return;
+        }
+
+        try {
+            const apiConfig = { headers: { Authorization: `Bearer ${userToken}` } };
+            if (isWishlisted) {
+                await axios.delete(`${API_URL}/api/v1/users/wishlist`, {
+                    ...apiConfig,
+                    data: { productId: id }
+                });
+                setIsWishlisted(false);
+            } else {
+                await axios.post(`${API_URL}/api/v1/users/wishlist`, { productId: id }, apiConfig);
+                setIsWishlisted(true);
+            }
+        } catch (err) {
+            console.error("Lỗi toggle wishlist:", err);
+        }
+    };
+
     const handleAddToCart = () => {
         if (product && quantity > 0) {
             addToCart(product, quantity);
-            alert(`Đã thêm ${quantity} sản phẩm "${product.name}" vào giỏ hàng!`);
+            showToast(`Đã thêm ${quantity} sản phẩm "${product.name}" vào giỏ hàng!`, "success");
         }
     };
 
     const handleReviewSubmit = async (e) => {
         e.preventDefault();
-        if (!userToken) return alert("Vui lòng đăng nhập để đánh giá");
+        if (!userToken) return showToast("Vui lòng đăng nhập để đánh giá", "error");
 
         setIsSubmitting(true);
         setReviewError('');
@@ -109,6 +148,7 @@ const ProductDetailPage = () => {
 
             setReviewComment('');
             setUserRating(5);
+            showToast("Cảm ơn bạn đã đánh giá sản phẩm!", "success");
             fetchProductAndReviews(); // Reload reviews
         } catch (err) {
             setReviewError(err.response?.data?.message || "Lỗi khi gửi đánh giá");
@@ -130,6 +170,11 @@ const ProductDetailPage = () => {
         ? [...new Set([product.mainImage, ...(product.detailImages || [])])].filter(Boolean)
         : [];
 
+    // Helper to get category info safely
+    const primaryCategory = product?.categories?.[0];
+    const categoryName = typeof primaryCategory === 'object' ? primaryCategory?.name : '';
+    const categoryId = typeof primaryCategory === 'object' ? primaryCategory?._id : primaryCategory;
+
     return (
         <div className="product-detail-container">
             {/* Breadcrumbs & Architectural Line ("gạch") */}
@@ -137,11 +182,11 @@ const ProductDetailPage = () => {
                 <Link to="/">HOME</Link>
                 <span className="separator">/</span>
                 <Link to="/products">SHOP</Link>
-                {product?.categories?.[0] && (
+                {categoryName && (
                     <>
                         <span className="separator">/</span>
-                        <Link to={`/products?category=${product.categories[0]._id}`}>
-                            {product.categories[0].name.toUpperCase()}
+                        <Link to={`/products?category=${categoryId}`}>
+                            {categoryName.toUpperCase()}
                         </Link>
                     </>
                 )}
@@ -201,6 +246,9 @@ const ProductDetailPage = () => {
                             onClick={handleAddToCart}
                         >
                             ADD TO BAG
+                        </button>
+                        <button className={`wishlist-detail-btn ${isWishlisted ? 'active' : ''}`} onClick={toggleWishlist}>
+                            {isWishlisted ? <FaHeart /> : <FaRegHeart />}
                         </button>
                     </div>
                 </div>

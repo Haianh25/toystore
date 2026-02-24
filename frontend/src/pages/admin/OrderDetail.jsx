@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
+import { useToast } from '../../context/ToastContext';
 import './OrderDetail.css';
 
 const OrderDetail = () => {
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [newStatus, setNewStatus] = useState('');
+    const { showToast } = useToast();
     const { id } = useParams();
     const serverUrl = API_URL;
 
@@ -20,53 +22,43 @@ const OrderDetail = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` }
     }), []);
 
-    const fetchOrder = async () => {
+    const fetchOrder = React.useCallback(async () => {
         setLoading(true);
         try {
             const response = await axios.get(`${API_URL}/api/v1/orders/${id}`, apiConfig);
-            const orderData = response.data.data.order;
-            setOrder(orderData);
-            setNewStatus(orderData.status);
-            setProductsInOrder(orderData.products);
+            // Handle multiple possible data keys for resilience
+            const orderData = response.data?.data?.order || response.data?.data?.data || response.data?.data;
+
+            if (orderData) {
+                setOrder(orderData);
+                setNewStatus(orderData.status);
+                setProductsInOrder(orderData.products);
+            }
         } catch (error) {
             console.error("Lỗi tải chi tiết đơn hàng:", error);
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, apiConfig]);
 
     useEffect(() => {
-        const fetchOrder = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`${API_URL}/api/v1/orders/${id}`, apiConfig);
-                const orderData = response.data.data.order;
-                setOrder(orderData);
-                setNewStatus(orderData.status);
-                setProductsInOrder(orderData.products);
-            } catch (error) {
-                console.error("Lỗi tải chi tiết đơn hàng:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchOrder();
-    }, [id, apiConfig]);
+    }, [fetchOrder]);
 
     const handleStatusUpdate = async () => {
         // Thêm dòng kiểm tra này
         if (newStatus === order.status) {
-            alert('Bạn chưa chọn trạng thái mới để cập nhật.');
+            showToast('Bạn chưa chọn trạng thái mới để cập nhật.', "error");
             return;
         }
 
         if (window.confirm(`Bạn có chắc muốn cập nhật trạng thái thành "${newStatus}"?`)) {
             try {
                 await axios.patch(`${API_URL}/api/v1/orders/${id}`, { status: newStatus }, apiConfig);
-                alert('Cập nhật trạng thái thành công!');
+                showToast('Cập nhật trạng thái thành công!', "success");
                 fetchOrder(); // Tải lại để thấy trạng thái mới
             } catch (error) {
-                alert(`Cập nhật thất bại: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
+                showToast(`Cập nhật thất bại: ${error.response?.data?.message || 'Có lỗi xảy ra'}`, "error");
                 console.error("Lỗi cập nhật:", error);
             }
         }
@@ -93,8 +85,9 @@ const OrderDetail = () => {
             }, apiConfig);
             setProductsInOrder(res.data.data.order.products);
             setOrder(res.data.data.order);
+            showToast("Thêm sản phẩm thành công!", "success");
         } catch (error) {
-            alert(`Thêm sản phẩm thất bại: ${error.response?.data?.message || ''}`);
+            showToast(`Thêm sản phẩm thất bại: ${error.response?.data?.message || ''}`, "error");
         }
     };
 
@@ -105,8 +98,9 @@ const OrderDetail = () => {
                 { quantity }, apiConfig);
             setProductsInOrder(res.data.data.order.products);
             setOrder(res.data.data.order);
+            showToast("Cập nhật số lượng thành công!", "success");
         } catch (error) {
-            alert(`Cập nhật số lượng thất bại: ${error.response?.data?.message || ''}`);
+            showToast(`Cập nhật số lượng thất bại: ${error.response?.data?.message || ''}`, "error");
             console.error(error);
         }
     };
@@ -121,8 +115,8 @@ const OrderDetail = () => {
     const getNextAvailableStatuses = (currentStatus) => {
         const transitions = {
             Pending: ['Processing', 'Cancelled'],
-            Processing: ['Shipped', 'Completed', 'Cancelled'],
-            Shipped: ['Completed'],
+            Processing: ['Shipped', 'Cancelled'],
+            Shipped: ['Completed', 'Cancelled'],
         };
         return transitions[currentStatus] || [];
     };
@@ -131,8 +125,19 @@ const OrderDetail = () => {
 
     return (
         <div className="order-detail-container">
-            <Link to="/admin/orders" style={{ marginBottom: '20px', display: 'inline-block' }}>&larr; Quay lại danh sách</Link>
-            <h1>Chi tiết Đơn hàng #{order._id.slice(-6)}</h1>
+            <Link to="/admin/orders" className="back-link">&larr; QUAY LẠI DANH SÁCH</Link>
+            <div className="order-header-main">
+                <div className="title-section">
+                    <h1>ĐƠN HÀNG <span className="order-id">#{order._id.slice(-8).toUpperCase()}</span></h1>
+                    <div className={`status-badge status-${order.status.toLowerCase()}`}>
+                        {order.status.toUpperCase()}
+                    </div>
+                </div>
+                <div className="order-meta">
+                    <span>NGÀY ĐẶT: {new Date(order.createdAt).toLocaleString('vi-VN')}</span>
+                    <span>HÌNH THỨC: {order.paymentMethod.toUpperCase()}</span>
+                </div>
+            </div>
 
             {isCancelled && (
                 <div style={{ padding: '15px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '20px' }}>
@@ -230,22 +235,33 @@ const OrderDetail = () => {
                         </div>
                     </div>
                     <div className="card status-update" style={{ marginTop: '20px' }}>
-                        <h3>Cập nhật trạng thái</h3>
-                        <p>Trạng thái hiện tại: <strong>{order.status}</strong></p>
+                        <h3>Cập nhật Trạng thái</h3>
+                        <div className="status-flow">
+                            <div className="current-state">
+                                <span>Trạng thái hiện tại:</span>
+                                <strong>{order.status}</strong>
+                            </div>
 
-                        {!isCompleted && !isCancelled ? (
-                            <>
-                                <select value={newStatus} onChange={e => setNewStatus(e.target.value)}>
-                                    <option value={order.status} disabled>{order.status}</option>
-                                    {availableStatuses.map(status => (
-                                        <option key={status} value={status}>{status}</option>
-                                    ))}
-                                </select>
-                                <button onClick={handleStatusUpdate}>Cập nhật Trạng thái</button>
-                            </>
-                        ) : (
-                            <p>Đơn hàng đã ở trạng thái cuối cùng, không thể thay đổi.</p>
-                        )}
+                            {!isCompleted && !isCancelled ? (
+                                <div className="status-transition">
+                                    <div className="status-select-wrapper">
+                                        <select value={newStatus} onChange={e => setNewStatus(e.target.value)}>
+                                            <option value={order.status} disabled>CHỌN TRẠNG THÁI TIẾP THEO</option>
+                                            {availableStatuses.map(status => (
+                                                <option key={status} value={status}>{status}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button className="btn-update-status" onClick={handleStatusUpdate}>
+                                        CẬP NHẬT NGAY
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="status-final">
+                                    Đơn hàng đã ở trạng thái cuối cùng.
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { useToast } from '../../context/ToastContext';
 import './ProductCard.css';
 import { API_URL } from '../../config/api';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, salePrice }) => {
+    const { showToast } = useToast();
     const [isWishlisted, setIsWishlisted] = useState(false);
     const userToken = localStorage.getItem('userToken');
 
@@ -29,7 +31,7 @@ const ProductCard = ({ product }) => {
     const toggleWishlist = async (e) => {
         e.preventDefault(); // Ngăn chặn chuyển trang khi bấm vào tim
         if (!userToken) {
-            alert("Vui lòng đăng nhập để lưu sản phẩm!");
+            showToast("Vui lòng đăng nhập để lưu sản phẩm!", "error");
             return;
         }
 
@@ -58,10 +60,20 @@ const ProductCard = ({ product }) => {
                     <button className="wishlist-toggle" onClick={toggleWishlist}>
                         {isWishlisted ? <FaHeart className="heart-icon active" /> : <FaRegHeart className="heart-icon" />}
                     </button>
+                    {salePrice && (
+                        <div className="sale-mini-badge">SALE</div>
+                    )}
                 </div>
                 <div className="product-info">
-                    <p className="product-name">{product.name}</p>
-                    <p className="product-price">{product.sellPrice.toLocaleString('vi-VN')} VND</p>
+                    <p className="product-name">{product?.name}</p>
+                    {salePrice ? (
+                        <div className="price-container">
+                            <span className="current-price">{(salePrice || 0).toLocaleString('vi-VN')} VND</span>
+                            <span className="original-price-strike">{(product?.sellPrice || 0).toLocaleString('vi-VN')} VND</span>
+                        </div>
+                    ) : (
+                        <p className="product-price">{(product?.sellPrice || 0).toLocaleString('vi-VN')} VND</p>
+                    )}
                 </div>
             </Link>
         </div>

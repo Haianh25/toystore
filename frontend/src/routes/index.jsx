@@ -13,9 +13,9 @@ import CategoryManagement from '../pages/admin/CategoryManagement';
 import OrderManagement from '../pages/admin/OrderManagement';
 import ProductForm from '../pages/admin/ProductForm';
 import OrderDetail from '../pages/admin/OrderDetail';
-// import VoucherManagement from '../pages/admin/VoucherManagement';
-// import FlashSaleManagement from '../pages/admin/FlashSaleManagement';
-// import FlashSaleForm from '../pages/admin/FlashSaleForm';
+import VoucherManagement from '../pages/admin/VoucherManagement';
+import FlashSaleManagement from '../pages/admin/FlashSaleManagement';
+import FlashSaleForm from '../pages/admin/FlashSaleForm';
 import BrandManagement from '../pages/admin/BrandManagement';
 import CollectionManagement from '../pages/admin/CollectionManagement';
 import BannerManagement from '../pages/admin/BannerManagement';
@@ -29,6 +29,10 @@ import ProductListPage from '../pages/public/ProductListPage';
 import BrandPage from '../pages/public/BrandPage';
 import BrandDetailPage from '../pages/public/BrandDetailPage';
 import AboutPage from '../pages/public/AboutPage.jsx';
+import ContactPage from '../pages/public/ContactPage.jsx';
+import ShippingPage from '../pages/public/ShippingPage.jsx';
+import FAQPage from '../pages/public/FAQPage.jsx';
+import PolicyPage from '../pages/public/PolicyPage.jsx';
 import ProductDetailPage from '../pages/public/ProductDetailPage.jsx';
 import CartPage from '../pages/public/CartPage.jsx';
 import CheckoutPage from '../pages/public/CheckoutPage.jsx'; // <-- Thêm import
@@ -57,10 +61,10 @@ const AppRoutes = () => {
                 <Route path="categories" element={<CategoryManagement />} />
                 <Route path="orders" element={<OrderManagement />} />
                 <Route path="orders/:id" element={<OrderDetail />} />
-                {/* <Route path="vouchers" element={<VoucherManagement />} />
+                <Route path="vouchers" element={<VoucherManagement />} />
                 <Route path="flash-sales" element={<FlashSaleManagement />} />
                 <Route path="flash-sales/new" element={<FlashSaleForm />} />
-                <Route path="flash-sales/edit/:id" element={<FlashSaleForm />} /> */}
+                <Route path="flash-sales/edit/:id" element={<FlashSaleForm />} />
                 <Route path="brands" element={<BrandManagement />} />
                 <Route path="collections" element={<CollectionManagement />} />
                 <Route path="banners" element={<BannerManagement />} />
@@ -80,6 +84,11 @@ const AppRoutes = () => {
                 <Route path="brands" element={<BrandPage />} />
                 <Route path="brands/:slug" element={<BrandDetailPage />} />
                 <Route path="about" element={<AboutPage />} />
+                <Route path="contact" element={<ContactPage />} />
+                <Route path="shipping" element={<ShippingPage />} />
+                <Route path="faq" element={<FAQPage />} />
+                <Route path="terms" element={<PolicyPage />} />
+                <Route path="policy/:type" element={<PolicyPage />} />
                 <Route path="products/:id" element={<ProductDetailPage />} />
                 <Route path="cart" element={<CartPage />} />
                 <Route path="checkout" element={<UserProtectedRoute><CheckoutPage /></UserProtectedRoute>} />

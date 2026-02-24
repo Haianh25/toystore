@@ -54,9 +54,13 @@ const OrderHistory = () => {
                             <span>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</span>
                             <span className="order-total">{order.totalAmount.toLocaleString('vi-VN')} VND</span>
                             <span>
-                                <span className={`status-badge ${order.status.toLowerCase()}`}>
-                                    {order.status}
-                                </span>
+                                <div className="status-badges-group">
+                                    <span className={`status-badge ${order.status.toLowerCase()}`}>
+                                        {order.status}
+                                    </span>
+                                    {order.isPaid && <span className="status-badge paid">ĐÃ THANH TOÁN</span>}
+                                    {order.isDelivered && <span className="status-badge delivered">ĐÃ GIAO HÀNG</span>}
+                                </div>
                             </span>
                             <span>
                                 <button className="btn-detail" onClick={() => handleViewDetail(order._id)}>

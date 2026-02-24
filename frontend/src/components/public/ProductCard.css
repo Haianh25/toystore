@@ -53,8 +53,8 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -64,7 +64,7 @@
     cursor: pointer;
     z-index: 5;
     transition: var(--tdp-transition);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .wishlist-toggle:hover {

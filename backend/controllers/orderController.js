@@ -37,7 +37,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
         products: productDetails,
         shippingAddress,
         totalAmount,
-        paymentMethod: 'COD'
+        paymentMethod: req.body.paymentMethod || 'COD'
     });
 
     // Notify connected clients (e.g., Admin Dashboard)
@@ -59,7 +59,62 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getAllOrders = factory.getAll(Order);
+// Update order to paid
+exports.updateOrderToPaid = catchAsync(async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+        order.paymentResult = {
+            id: req.body.id,
+            status: req.body.status,
+            update_time: req.body.update_time,
+            email_address: req.body.payer.email_address,
+        };
+        // Auto update status to Processing if paid
+        if (order.status === 'Pending') {
+            order.status = 'Processing';
+            // Also decrement stock
+            for (const item of order.products) {
+                await Product.findByIdAndUpdate(item.product, { $inc: { stockQuantity: -item.quantity } });
+            }
+        }
+
+        const updatedOrder = await order.save();
+        res.status(200).json({ status: 'success', data: { order: updatedOrder } });
+    } else {
+        res.status(404).json({ status: 'fail', message: 'Không tìm thấy đơn hàng' });
+    }
+});
+
+// Update order to delivered
+exports.updateOrderToDelivered = catchAsync(async (req, res, next) => {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+        order.status = 'Completed';
+
+        const updatedOrder = await order.save();
+        res.status(200).json({ status: 'success', data: { order: updatedOrder } });
+    } else {
+        res.status(404).json({ status: 'fail', message: 'Không tìm thấy đơn hàng' });
+    }
+});
+
+exports.getAllOrders = catchAsync(async (req, res, next) => {
+    const orders = await Order.find().populate('user').sort('-createdAt');
+
+    res.status(200).json({
+        status: 'success',
+        results: orders.length,
+        data: {
+            orders
+        }
+    });
+});
 
 exports.getOrder = catchAsync(async (req, res, next) => {
     let query = Order.findById(req.params.id).populate('user').populate('products.product');
@@ -81,7 +136,7 @@ exports.getOrder = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         data: {
-            data: doc
+            order: doc
         }
     });
 });

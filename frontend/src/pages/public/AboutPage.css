@@ -1,23 +1,26 @@
 .about-page-container {
     max-width: 900px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: var(--tdp-spacing-xl) auto;
+    padding: var(--tdp-spacing-xl);
+    background-color: var(--tdp-white);
+    border: 1px solid var(--tdp-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .about-content h1 {
     text-align: center;
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 2rem;
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    color: var(--tdp-black);
+    margin-bottom: var(--tdp-spacing-xl);
+    text-transform: uppercase;
 }
 
 .about-content p {
-    font-size: 1.1rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
     line-height: 1.8;
-    color: #555;
+    color: var(--tdp-gray);
     text-align: justify;
     margin-bottom: 1.5rem;
 }

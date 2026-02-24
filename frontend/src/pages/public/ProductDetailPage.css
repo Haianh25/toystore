@@ -189,14 +189,13 @@
     justify-content: center;
     transition: all 0.2s ease;
     line-height: 1;
-    /* Fixes vertical offset for + and - */
-    padding: 0 0 4px 0;
-    /* Tiny adjustment for optical centering */
+    padding: 2px 0 0 0;
+    /* Adjusted for visual centering of + and - glyphs */
 }
 
 .quantity-selector button:first-child {
     padding: 0 0 2px 0;
-    /* Minus sign sometimes needs different adjustment */
+    /* Minus sign nudged slightly differently */
 }
 
 .quantity-selector button:hover {
@@ -254,6 +253,36 @@
     background-color: #eee;
     border-color: #eee;
     color: #999;
+}
+
+.wishlist-detail-btn {
+    width: 56px;
+    height: 56px;
+    background: transparent;
+    border: 1px solid var(--tdp-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--tdp-black);
+    transition: all 0.3s var(--tdp-curve-smooth);
+}
+
+.wishlist-detail-btn:hover {
+    background: var(--tdp-beige-subtle);
+    border-color: var(--tdp-brown);
+    color: var(--tdp-brown);
+}
+
+.wishlist-detail-btn.active {
+    background: var(--tdp-black);
+    color: #e74c3c;
+    border-color: var(--tdp-black);
+}
+
+.wishlist-detail-btn.active:hover {
+    background: #1a1a1a;
 }
 
 /* Description Section */

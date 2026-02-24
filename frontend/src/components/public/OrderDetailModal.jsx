@@ -42,6 +42,10 @@ const OrderDetailModal = ({ orderId, onClose }) => {
                         <div className="order-meta">
                             <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString('vi-VN')}</p>
                             <p><strong>Status:</strong> <span className={`status-badge ${order.status.toLowerCase()}`}>{order.status}</span></p>
+                            <p><strong>Payment:</strong> {order.isPaid ? <span className="status-badge paid">PAID ({new Date(order.paidAt).toLocaleDateString('vi-VN')})</span> : <span className="status-badge pending">UNPAID</span>}</p>
+                            {order.isDelivered && (
+                                <p><strong>Delivery:</strong> <span className="status-badge delivered">DELIVERED ({new Date(order.deliveredAt).toLocaleDateString('vi-VN')})</span></p>
+                            )}
                             <p><strong>Total:</strong> {order.totalAmount.toLocaleString('vi-VN')} VND</p>
                         </div>
 

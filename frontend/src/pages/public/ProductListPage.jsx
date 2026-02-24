@@ -4,10 +4,10 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import ProductGrid from '../../components/public/ProductGrid';
 import FilterSidebar from '../../components/public/FilterSidebar';
 import Pagination from '../../components/public/Pagination';
+import ProductSkeleton from '../../components/common/ProductSkeleton';
 import { API_URL } from '../../config/api';
 import './ProductListPage.css';
 
-// --- CẬP NHẬT: "Mặc định" bây giờ có giá trị là "random" ---
 const sortOptions = [
     { label: 'Mặc định (Ngẫu nhiên)', value: 'random' },
     { label: 'Sản phẩm mới', value: '-createdAt' },
@@ -24,7 +24,6 @@ const ProductListPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const location = useLocation();
-    const navigate = useNavigate();
     const { slug } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -46,9 +45,12 @@ const ProductListPage = () => {
                     title = res.data.data.collection.name;
                 }
 
-                // --- CẬP NHẬT LOGIC: Luôn mặc định sắp xếp ngẫu nhiên nếu không có tham số sort ---
                 if (!params.has('sort')) {
                     params.set('sort', 'random');
+                }
+
+                if (!params.has('limit')) {
+                    params.set('limit', '12');
                 }
 
                 setPageTitle(title);
@@ -83,10 +85,9 @@ const ProductListPage = () => {
         setSearchParams(searchParams);
     };
 
-    // Hàm để xác định giá trị hiện tại của dropdown
     const getCurrentSortValue = () => {
         return searchParams.get('sort') || 'random';
-    }
+    };
 
     return (
         <div className="product-list-page-container">
@@ -96,7 +97,7 @@ const ProductListPage = () => {
 
                 <div className="toolbar">
                     <div className="product-count">
-                        {pagination.totalProducts || 0} sản phẩm
+                        {loading ? 'Đang tải...' : `${pagination.totalProducts || 0} sản phẩm`}
                     </div>
                     <div className="sort-by">
                         <label htmlFor="sort">Sắp xếp theo:</label>
@@ -110,9 +111,15 @@ const ProductListPage = () => {
                     </div>
                 </div>
 
-                {loading && <p>Đang tải sản phẩm...</p>}
-                {error && <p>{error}</p>}
-                {!loading && !error && (
+                {error ? (
+                    <p className="error-message">{error}</p>
+                ) : loading ? (
+                    <div className="product-grid">
+                        {[...Array(12)].map((_, i) => (
+                            <ProductSkeleton key={i} />
+                        ))}
+                    </div>
+                ) : (
                     <>
                         <ProductGrid products={products} />
                         <Pagination

@@ -29,15 +29,15 @@ exports.createFlashSale = async (req, res) => {
     try {
         const now = new Date();
         for (const item of req.body.products) {
-          
+
             const product = await Product.findById(item.product);
             if (!product || item.flashSalePrice > product.sellPrice) {
-                return res.status(400).json({ 
-                    message: `Giá sale của sản phẩm "${product.name}" không được cao hơn giá gốc.` 
+                return res.status(400).json({
+                    message: `Giá sale của sản phẩm "${product.name}" không được cao hơn giá gốc.`
                 });
             }
 
-            
+
             const otherActiveSale = await FlashSale.findOne({
                 'products.product': item.product,
                 startTime: { $lte: now },
@@ -61,17 +61,17 @@ exports.updateFlashSale = async (req, res) => {
         const now = new Date();
         if (req.body.products) {
             for (const item of req.body.products) {
-                
+
                 const product = await Product.findById(item.product);
                 if (!product || item.flashSalePrice > product.sellPrice) {
-                    return res.status(400).json({ 
-                        message: `Giá sale của sản phẩm "${product.name}" không được cao hơn giá gốc.` 
+                    return res.status(400).json({
+                        message: `Giá sale của sản phẩm "${product.name}" không được cao hơn giá gốc.`
                     });
                 }
 
-                
+
                 const otherActiveSale = await FlashSale.findOne({
-                    _id: { $ne: req.params.id }, 
+                    _id: { $ne: req.params.id },
                     'products.product': item.product,
                     startTime: { $lte: now },
                     endTime: { $gte: now }
@@ -107,7 +107,7 @@ exports.getActiveFlashSales = async (req, res) => {
         const activeSales = await FlashSale.find({
             startTime: { $lte: now }, // Bắt đầu trước hoặc bằng thời điểm hiện tại
             endTime: { $gte: now }    // Kết thúc sau hoặc bằng thời điểm hiện tại
-        }).sort('startTime');
+        }).sort('startTime').populate('products.product', 'name mainImage sellPrice stockQuantity');
 
         res.status(200).json({ status: 'success', data: { flashSales: activeSales } });
     } catch (error) {

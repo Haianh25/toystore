@@ -2,11 +2,13 @@ import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../../config/api';
+import { useToast } from '../../context/ToastContext';
 import './FlashSaleManagement.css';
 
 const FlashSaleManagement = () => {
     const [flashSales, setFlashSales] = useState([]);
     const [expandedSaleId, setExpandedSaleId] = useState(null); // State để theo dõi dòng được mở rộng
+    const { showToast } = useToast();
     const apiConfig = { headers: { Authorization: `Bearer ${localStorage.getItem('adminToken')}` } };
     const serverUrl = API_URL;
 
@@ -20,8 +22,13 @@ const FlashSaleManagement = () => {
 
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc muốn xóa chương trình sale này?')) {
-            await axios.delete(`${API_URL}/api/v1/flash-sales/${id}`, apiConfig);
-            setFlashSales(flashSales.filter(fs => fs._id !== id));
+            try {
+                await axios.delete(`${API_URL}/api/v1/flash-sales/${id}`, apiConfig);
+                setFlashSales(flashSales.filter(fs => fs._id !== id));
+                showToast("Xóa chương trình flash sale thành công!", "success");
+            } catch (error) {
+                showToast("Xóa flash sale thất bại!", "error");
+            }
         }
     };
 

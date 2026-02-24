@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { FaChevronRight, FaCheckCircle } from 'react-icons/fa';
 import { API_URL } from '../../config/api';
+import { PayPalButtons } from "@paypal/react-paypal-js";
 import './CheckoutPage.css';
 
 const CheckoutPage = () => {
@@ -18,6 +19,7 @@ const CheckoutPage = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('COD');
 
     // Voucher States
     const [voucherCode, setVoucherCode] = useState('');
@@ -98,8 +100,43 @@ const CheckoutPage = () => {
         window.scrollTo(0, 0);
     };
 
+    const finalTotal = totalPrice - discount;
+
+    const handlePayPalSuccess = async (details, data) => {
+        try {
+            const apiConfig = { headers: { Authorization: `Bearer ${userToken}` } };
+            // First create the order in Pending state with Online payment method
+            const orderData = {
+                products: cartItems.map(item => ({
+                    product: item.product._id,
+                    quantity: item.quantity,
+                    price: item.product.sellPrice
+                })),
+                shippingAddress: shippingInfo,
+                totalAmount: finalTotal,
+                paymentMethod: 'Online'
+            };
+
+            const orderRes = await axios.post(`${API_URL}/api/v1/orders`, orderData, apiConfig);
+            const orderId = orderRes.data.data.order._id;
+
+            // Then update the order to Paid
+            await axios.put(`${API_URL}/api/v1/orders/${orderId}/pay`, details, apiConfig);
+
+            clearCart();
+            navigate(`/order-success/${orderId}`);
+        } catch (err) {
+            console.error("PayPal capture error:", err);
+            setError("Thanh toán thành công nhưng không thể cập nhật đơn hàng. Vui lòng liên hệ hỗ trợ.");
+        }
+    };
+
     const handlePlaceOrder = async () => {
         setError('');
+        if (paymentMethod === 'Online') {
+            return;
+        }
+
         const orderData = {
             products: cartItems.map(item => ({
                 product: item.product._id,
@@ -107,7 +144,7 @@ const CheckoutPage = () => {
                 price: item.product.sellPrice
             })),
             shippingAddress: shippingInfo,
-            totalAmount: totalPrice,
+            totalAmount: finalTotal,
             paymentMethod: 'COD'
         };
 
@@ -207,16 +244,72 @@ const CheckoutPage = () => {
                             ))}
                         </div>
 
-                        <div className="payment-method-badge">
-                            <FaCheckCircle /> PAYMENT ON DELIVERY (COD)
+                        <div className="payment-method-selector" style={{ marginTop: '30px', marginBottom: '30px' }}>
+                            <h3 className="tdp-serif" style={{ fontSize: '1.2rem', marginBottom: '15px' }}>SELECT PAYMENT METHOD</h3>
+                            <div className="method-options" style={{ display: 'flex', gap: '20px' }}>
+                                <label className={`method-card ${paymentMethod === 'COD' ? 'active' : ''}`} style={{
+                                    flex: 1, padding: '15px', border: '1px solid #ddd', cursor: 'pointer',
+                                    backgroundColor: paymentMethod === 'COD' ? '#f9f9f9' : 'transparent'
+                                }}>
+                                    <input
+                                        type="radio"
+                                        name="paymentMethod"
+                                        value="COD"
+                                        checked={paymentMethod === 'COD'}
+                                        onChange={() => setPaymentMethod('COD')}
+                                        style={{ marginRight: '10px' }}
+                                    />
+                                    CASH ON DELIVERY (COD)
+                                </label>
+                                <label className={`method-card ${paymentMethod === 'Online' ? 'active' : ''}`} style={{
+                                    flex: 1, padding: '15px', border: '1px solid #ddd', cursor: 'pointer',
+                                    backgroundColor: paymentMethod === 'Online' ? '#f9f9f9' : 'transparent'
+                                }}>
+                                    <input
+                                        type="radio"
+                                        name="paymentMethod"
+                                        value="Online"
+                                        checked={paymentMethod === 'Online'}
+                                        onChange={() => setPaymentMethod('Online')}
+                                        style={{ marginRight: '10px' }}
+                                    />
+                                    PAYPAL / CREDIT CARD
+                                </label>
+                            </div>
                         </div>
 
                         {error && <p className="tdp-error-message">{error}</p>}
 
                         <div className="review-actions">
-                            <button onClick={handlePlaceOrder} className="tdp-button-dark place-order-btn">
-                                PLACE ORDER & COMPLETE
-                            </button>
+                            {paymentMethod === 'COD' ? (
+                                <button onClick={handlePlaceOrder} className="tdp-button-dark place-order-btn">
+                                    PLACE ORDER & COMPLETE
+                                </button>
+                            ) : (
+                                <div className="paypal-button-wrapper">
+                                    <PayPalButtons
+                                        style={{ layout: "vertical", color: "black", shape: "rect", label: "pay" }}
+                                        createOrder={(data, actions) => {
+                                            return actions.order.create({
+                                                purchase_units: [{
+                                                    amount: {
+                                                        currency_code: "USD",
+                                                        value: ((totalPrice - discount) / 25000).toFixed(2)
+                                                    },
+                                                    description: "Order from TheDevilPlayz"
+                                                }]
+                                            });
+                                        }}
+                                        onApprove={(data, actions) => {
+                                            return actions.order.capture().then(handlePayPalSuccess);
+                                        }}
+                                        onError={(err) => {
+                                            console.error("PayPal Error:", err);
+                                            setError("Lỗi kết nối PayPal. Vui lòng thử lại hoặc chọn COD.");
+                                        }}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

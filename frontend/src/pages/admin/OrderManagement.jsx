@@ -3,10 +3,12 @@ import axios from 'axios';
 import OrderTable from '../../components/admin/OrderTable';
 import { API_URL } from '../../config/api';
 import { useSocket } from '../../context/SocketContext';
+import { useToast } from '../../context/ToastContext';
 
 const OrderManagement = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { showToast } = useToast();
     const socket = useSocket();
 
     const fetchOrders = async () => {
@@ -16,7 +18,8 @@ const OrderManagement = () => {
             const response = await axios.get(`${API_URL}/api/v1/orders`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setOrders(response.data?.data?.orders || []);
+            const ordersData = response.data?.data?.orders || response.data?.data?.data || response.data?.data || [];
+            setOrders(Array.isArray(ordersData) ? ordersData : []);
         } catch (error) {
             console.error("Lỗi tải đơn hàng:", error);
         } finally {
@@ -34,7 +37,7 @@ const OrderManagement = () => {
 
         socket.on('newOrder', (data) => {
             console.log("New order received:", data);
-            alert(`🔔 Đơn hàng mới! ${data.message || ''}`); // Simple alert for now, can be Toast
+            showToast(`🔔 Đơn hàng mới! ${data.message || ''}`, "success");
             fetchOrders(); // Refresh list immediately
         });
 

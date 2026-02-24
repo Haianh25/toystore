@@ -205,11 +205,10 @@
 }
 
 .error-message {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    padding: 10px;
-    border-radius: 5px;
+    color: var(--tdp-color-brown);
+    background-color: var(--tdp-beige-subtle);
+    border: 1px solid var(--tdp-color-beige-dark);
+    padding: 15px;
     margin-top: 15px;
     text-align: center;
 }
