@@ -5,6 +5,7 @@ import ProductGrid from '../../components/public/ProductGrid';
 import FilterSidebar from '../../components/public/FilterSidebar';
 import Pagination from '../../components/public/Pagination';
 import ProductSkeleton from '../../components/common/ProductSkeleton';
+import SEO from '../../components/common/SEO';
 import { API_URL } from '../../config/api';
 import './ProductListPage.css';
 
@@ -54,7 +55,7 @@ const ProductListPage = () => {
                 }
 
                 setPageTitle(title);
-                document.title = `${title} | TheDevilPlayz`;
+                // document.title = `${title} | TheDevilPlayz`; // Moved to SEO component
 
                 const productsRes = await axios.get(`${API_URL}/api/v1/products?${params.toString()}`);
                 setProducts(productsRes.data.data.products);
@@ -62,9 +63,13 @@ const ProductListPage = () => {
 
             } catch (err) {
                 console.error("Lỗi tải trang sản phẩm:", err);
-                setError('Không tìm thấy nội dung bạn yêu cầu.');
+                if (err.response?.status === 404) {
+                    setError('Danh mục hoặc bộ sưu tập này không tồn tại hoặc đã bị xóa.');
+                } else {
+                    setError('Không thể tải sản phẩm. Vui lòng thử lại sau.');
+                }
                 setProducts([]);
-                setPageTitle('Lỗi');
+                setPageTitle('Không tìm thấy');
             } finally {
                 setLoading(false);
             }
@@ -91,6 +96,11 @@ const ProductListPage = () => {
 
     return (
         <div className="product-list-page-container">
+            <SEO
+                title={pageTitle}
+                description={`Browse our premium collection of LEGO ${pageTitle}. High-quality sets, rare finds, and the best building experience at TheDevilPlayz.`}
+                keywords={`LEGO, ${pageTitle}, toys, collectibles, TheDevilPlayz`}
+            />
             <FilterSidebar />
             <main className="product-list-main">
                 <h1 className="product-list-title">{pageTitle}</h1>

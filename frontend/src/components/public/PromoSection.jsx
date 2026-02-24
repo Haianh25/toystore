@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import './PromoSection.css';
 import { API_URL } from '../../config/api';
+import { getImageUrl } from '../../utils/imageUtils';
 
 const PromoSection = ({ section }) => {
     const { title, content } = section;
@@ -22,7 +23,7 @@ const PromoSection = ({ section }) => {
             <div className="promo-content">
                 <div className="promo-banner">
                     <Link to={link || '#'}>
-                        <img src={`${API_URL}${bannerImage}`} alt={title} />
+                        <img src={getImageUrl(bannerImage)} alt={title} />
                     </Link>
                 </div>
                 <div className="promo-products">

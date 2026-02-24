@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useToast } from '../../context/ToastContext';
+import QuickViewModal from './QuickViewModal';
 import './ProductCard.css';
 import { API_URL } from '../../config/api';
 
@@ -10,6 +11,7 @@ const ProductCard = ({ product, salePrice }) => {
     if (!product) return null;
     const { showToast } = useToast();
     const [isWishlisted, setIsWishlisted] = useState(false);
+    const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
     const userToken = localStorage.getItem('userToken');
 
     useEffect(() => {
@@ -28,6 +30,10 @@ const ProductCard = ({ product, salePrice }) => {
         };
         checkWishlist();
     }, [product._id, userToken]);
+
+    const handleImageError = (e) => {
+        e.target.src = 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?auto=format&fit=crop&q=80&w=1000';
+    };
 
     const toggleWishlist = async (e) => {
         e.preventDefault(); // Ngăn chặn chuyển trang khi bấm vào tim
@@ -57,7 +63,23 @@ const ProductCard = ({ product, salePrice }) => {
         <div className="product-card">
             <Link to={`/products/${product._id}`}>
                 <div className="product-image-container">
-                    <img src={`${API_URL}${product.mainImage}`} alt={product.name} />
+                    <img
+                        src={product.mainImage?.startsWith('http') ? product.mainImage : `${API_URL}${product.mainImage}`}
+                        alt={product.name}
+                        onError={handleImageError}
+                    />
+                    <div className="product-overlay-actions">
+                        <button
+                            className="quick-view-btn"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setIsQuickViewOpen(true);
+                            }}
+                        >
+                            QUICK VIEW
+                        </button>
+                    </div>
                     <button className="wishlist-toggle" onClick={toggleWishlist}>
                         {isWishlisted ? <FaHeart className="heart-icon active" /> : <FaRegHeart className="heart-icon" />}
                     </button>
@@ -77,6 +99,12 @@ const ProductCard = ({ product, salePrice }) => {
                     )}
                 </div>
             </Link>
+
+            <QuickViewModal
+                product={product}
+                isOpen={isQuickViewOpen}
+                onClose={() => setIsQuickViewOpen(false)}
+            />
         </div>
     );
 };

@@ -5,8 +5,10 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { API_URL } from '../../config/api';
+import { getImageUrl } from '../../utils/imageUtils';
 import { FaStar, FaRegStar, FaHeart, FaRegHeart } from 'react-icons/fa';
 import ProductCard from '../../components/public/ProductCard';
+import SEO from '../../components/common/SEO';
 import './ProductDetailPage.css';
 
 const ProductDetailPage = () => {
@@ -38,8 +40,8 @@ const ProductDetailPage = () => {
 
             if (productData) {
                 setProduct(productData);
-                document.title = `${productData.name} | TheDevilPlayz`;
-                setMainImageUrl(productData.mainImage ? `${API_URL}${productData.mainImage}` : '');
+                // document.title = `${productData.name} | TheDevilPlayz`; // Moved to SEO component
+                setMainImageUrl(productData.mainImage ? getImageUrl(productData.mainImage) : '');
 
                 // Tải các sản phẩm tương quan (cùng category)
                 if (productData.categories && productData.categories.length > 0) {
@@ -203,6 +205,11 @@ const ProductDetailPage = () => {
 
     return (
         <div className="product-detail-container">
+            <SEO
+                title={product?.name}
+                description={product?.description?.substring(0, 160)}
+                keywords={`LEGO, ${product?.name}, ${product?.brand?.name}, toys, collectibles`}
+            />
             {/* Breadcrumbs & Architectural Line ("gạch") */}
             <nav className="breadcrumb-nav">
                 <Link to="/">HOME</Link>
@@ -234,7 +241,7 @@ const ProductDetailPage = () => {
                         <div className="thumbnail-gallery">
                             {allImages.map((imgUrl, index) => {
                                 // Ensure no double slashes if imgUrl starts with /
-                                const fullUrl = imgUrl.startsWith('http') ? imgUrl : `${API_URL}${imgUrl.startsWith('/') ? '' : '/'}${imgUrl}`;
+                                const fullUrl = getImageUrl(imgUrl);
                                 return (
                                     <img
                                         key={index}

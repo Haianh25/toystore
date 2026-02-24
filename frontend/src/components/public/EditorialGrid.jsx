@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import './EditorialGrid.css';
 import { API_URL } from '../../config/api';
+import { getImageUrl } from '../../utils/imageUtils';
 
 const EditorialGrid = ({ section }) => {
     const { title, content } = section;
     const { products, bannerImage, subtitle } = content;
 
-    // We only want a few products for the editorial look
-    const displayProducts = products.slice(0, 3);
+    // We only want a few products for the editorial look (2x2 grid)
+    const displayProducts = products.slice(0, 4);
 
     return (
         <section className="editorial-lookbook-section">
@@ -23,7 +24,10 @@ const EditorialGrid = ({ section }) => {
                     {/* Left: Featured Visual */}
                     <div className="lookbook-visual">
                         <div className="visual-inner">
-                            <img src={`${API_URL}${bannerImage}`} alt={title} />
+                            <img
+                                src={getImageUrl(bannerImage) || 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?auto=format&fit=crop&q=80&w=1000'}
+                                alt={title}
+                            />
                             <div className="visual-overlay">
                                 <Link to="/products" className="lookbook-cta">VIEW THE COLLECTION</Link>
                             </div>

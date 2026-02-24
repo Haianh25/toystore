@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './BrandPage.css';
 import { API_URL } from '../../config/api';
+import { getImageUrl } from '../../utils/imageUtils';
 
 const BrandPage = () => {
     const [brands, setBrands] = useState([]);
@@ -34,7 +35,7 @@ const BrandPage = () => {
             <div className="brand-grid">
                 {brands.map((brand) => (
                     <Link to={`/brands/${brand.slug}`} key={brand._id} className="brand-card">
-                        <img src={`${API_URL}${brand.logo}`} alt={`${brand.name} logo`} />
+                        <img src={getImageUrl(brand.logo)} alt={`${brand.name} logo`} />
                         <h3>{brand.name}</h3>
                     </Link>
                 ))}

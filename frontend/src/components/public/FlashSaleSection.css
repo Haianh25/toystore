@@ -89,6 +89,21 @@
     min-width: 60px;
     padding: 8px;
     border-radius: 4px;
+    animation: timerPulse 2s infinite ease-in-out;
+}
+
+@keyframes timerPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 rgba(249, 203, 40, 0);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(249, 203, 40, 0.2);
+        border-color: rgba(249, 203, 40, 0.4);
+    }
 }
 
 .timer-slot .number {

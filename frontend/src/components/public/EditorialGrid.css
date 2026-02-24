@@ -96,18 +96,18 @@
 
 .selection-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--tdp-spacing-lg);
 }
 
 /* Ensure product cards in this section are extra clean */
 .selection-item {
-    padding-bottom: var(--tdp-spacing-md);
-    border-bottom: 1px solid var(--tdp-border);
+    padding-bottom: var(--tdp-spacing-sm);
+    transition: transform 0.3s ease;
 }
 
-.selection-item:last-child {
-    border-bottom: none;
+.selection-item:hover {
+    transform: translateY(-5px);
 }
 
 @media (max-width: 1024px) {

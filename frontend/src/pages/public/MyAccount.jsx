@@ -75,15 +75,24 @@ const MyAccount = () => {
             {message && <p className="account-message message-success">{message}</p>}
             {error && <p className="account-message message-error">{error}</p>}
 
-            <div className="notification-subscription" style={{ marginBottom: '20px', padding: '15px', border: '1px solid #eee', background: '#f9f9f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="notification-subscription" style={{ marginBottom: '30px', padding: '20px', border: '1px solid #e0be8d', background: '#fffcf7', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h4 style={{ margin: 0 }}>Thông báo đẩy</h4>
-                    <p style={{ margin: '5px 0 0', fontSize: '0.9rem', color: '#666' }}>Nhận thông báo khi có Flash Sale mới hoặc cập nhật đơn hàng.</p>
+                    <h4 style={{ margin: 0, color: '#1a1a1a', letterSpacing: '0.1em' }}>THÔNG BÁO TỨC THÌ</h4>
+                    <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: '#666', lineHeight: '1.4' }}>Nhận thông báo Real-time khi có Flash Sale mới hoặc cập nhật trạng thái đơn hàng của bạn.</p>
                 </div>
                 {!isSubscribed ? (
-                    <button onClick={subscribeUser} className="tdp-button-dark" style={{ padding: '8px 15px', fontSize: '0.8rem' }}>BẬT THÔNG BÁO</button>
+                    <button
+                        onClick={subscribeUser}
+                        className="tdp-button-dark"
+                        style={{ padding: '10px 20px', fontSize: '0.75rem', minWidth: '150px' }}
+                    >
+                        BẬT THÔNG BÁO
+                    </button>
                 ) : (
-                    <span style={{ color: '#27ae60', fontWeight: 600 }}>ĐÃ BẬT</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#27ae60', fontWeight: 600, fontSize: '0.85rem' }}>
+                        <span style={{ width: '8px', height: '8px', backgroundColor: '#27ae60', borderRadius: '50%', display: 'inline-block' }}></span>
+                        ĐÃ KÍCH HOẠT
+                    </div>
                 )}
             </div>
 

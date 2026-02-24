@@ -9,6 +9,7 @@ import 'swiper/css/pagination';
 import './HeroSlider.css';
 
 import { API_URL } from '../../config/api';
+import { getImageUrl } from '../../utils/imageUtils';
 
 // Component này giờ sẽ nhận banners làm prop
 const HeroSlider = ({ banners }) => {
@@ -33,7 +34,7 @@ const HeroSlider = ({ banners }) => {
         {banners.map((banner) => (
           <SwiperSlide key={banner._id}>
             <div className="hero-slide-content">
-              <img src={`${API_URL}/${banner.image}`} alt="Banner" className="hero-image" />
+              <img src={getImageUrl(banner.image)} alt="Banner" className="hero-image" />
               <div className="hero-overlay">
                 <div className="hero-text-content">
                   <span className="hero-subtitle">NEW COLLECTIONS</span>

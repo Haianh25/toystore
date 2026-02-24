@@ -19,6 +19,18 @@ export const useNotifications = (userToken) => {
         return outputArray;
     };
 
+    useEffect(() => {
+        const checkSubscription = async () => {
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                const registration = await navigator.serviceWorker.ready;
+                const sub = await registration.pushManager.getSubscription();
+                setSubscription(sub);
+                setIsSubscribed(!!sub);
+            }
+        };
+        checkSubscription();
+    }, []);
+
     const subscribeUser = async () => {
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
             console.warn('Push messaging is not supported');
@@ -26,11 +38,21 @@ export const useNotifications = (userToken) => {
         }
 
         try {
+            console.log("Requesting push subscription...");
             const registration = await navigator.serviceWorker.ready;
+
+            // Check if permission is denied
+            if (Notification.permission === 'denied') {
+                alert("Bạn đã chặn quyền thông báo. Vui lòng bật lại trong cài đặt trình duyệt để nhận thông báo.");
+                return;
+            }
+
             const sub = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
             });
+
+            console.log("Subscription object:", sub);
 
             await axios.post(`${API_URL}/api/v1/notifications/subscribe`, sub, {
                 headers: { Authorization: `Bearer ${userToken}` }
@@ -41,8 +63,9 @@ export const useNotifications = (userToken) => {
             console.log('User subscribed to push notifications');
         } catch (error) {
             console.error('Failed to subscribe user:', error);
+            alert("Không thể bật thông báo. Vui lòng thử lại sau.");
         }
     };
 
-    return { isSubscribed, subscribeUser };
+    return { isSubscribed, subscribeUser, subscription };
 };

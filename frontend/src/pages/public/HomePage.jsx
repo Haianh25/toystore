@@ -5,13 +5,11 @@ import HeritageSection from '../../components/public/HeritageSection';
 import CategoryShowcase from '../../components/public/CategoryShowcase';
 import EditorialGrid from '../../components/public/EditorialGrid';
 import FlashSaleSection from '../../components/public/FlashSaleSection';
+import SEO from '../../components/common/SEO';
 import { API_URL } from '../../config/api';
 import './HomePage.css';
 
 const HomePage = () => {
-    useEffect(() => {
-        document.title = "TheDevilPlayz | Home of Premium Collectibles";
-    }, []);
 
     const [sections, setSections] = useState([]);
     const [banners, setBanners] = useState([]);
@@ -46,6 +44,11 @@ const HomePage = () => {
 
     return (
         <div className="pure-luxury-homepage">
+            <SEO
+                title="Marvel & DC Hero Collections"
+                description="Explore the ultimate LEGO Superhero Store. Exclusive Marvel sets, legendary DC collectibles, and high-end playthings."
+                keywords="LEGO Marvel, LEGO DC, Superhero toys, TheDevilPlayz, collectibles"
+            />
             {/* 1. CINEMATIC INTRO */}
             <div className="homepage-hero-wrapper">
                 {banners.length > 0 ? (
