@@ -246,10 +246,15 @@ exports.updateOrderStatus = catchAsync(async (req, res, next) => {
         }
     }
 
-    // 2. Confirmed status back to Cancelled: Increment stock back
+    // 2. Confirmed status back to Cancelled: Increment stock back and restore voucher
     if (['Processing', 'Shipped', 'Completed'].includes(oldStatus) && newStatus === 'Cancelled') {
         for (const item of order.products) {
             await Product.findByIdAndUpdate(item.product, { $inc: { stockQuantity: +item.quantity } });
+        }
+
+        // Restore Voucher if any
+        if (order.voucher) {
+            await Voucher.findByIdAndUpdate(order.voucher, { $inc: { usesCount: -1 } });
         }
     }
 
@@ -286,7 +291,10 @@ exports.addProductToOrder = catchAsync(async (req, res, next) => {
     // Decrement stock for the item added while in Processing
     await Product.findByIdAndUpdate(productId, { $inc: { stockQuantity: -quantity } });
 
-    order.totalAmount = order.products.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+    const subtotal = order.products.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+    const finalTotal = subtotal - (order.discount || 0);
+    order.totalAmount = finalTotal > 0 ? finalTotal : 0;
+
     await order.save();
     await order.populate('products.product');
     res.status(200).json({ status: 'success', data: { order } });
@@ -319,7 +327,10 @@ exports.updateProductInOrder = catchAsync(async (req, res, next) => {
         order.products.splice(itemIndex, 1);
     }
 
-    order.totalAmount = order.products.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+    const subtotal = order.products.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+    const finalTotal = subtotal - (order.discount || 0);
+    order.totalAmount = finalTotal > 0 ? finalTotal : 0;
+
     await order.save({ validateBeforeSave: false });
     await order.populate('products.product');
     res.status(200).json({ status: 'success', data: { order } });
@@ -342,7 +353,10 @@ exports.removeProductFromOrder = catchAsync(async (req, res, next) => {
         order.products = order.products.filter(p => p.product.toString() !== productId);
     }
 
-    order.totalAmount = order.products.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+    const subtotal = order.products.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+    const finalTotal = subtotal - (order.discount || 0);
+    order.totalAmount = finalTotal > 0 ? finalTotal : 0;
+
     await order.save();
     await order.populate('products.product');
     res.status(200).json({ status: 'success', data: { order } });

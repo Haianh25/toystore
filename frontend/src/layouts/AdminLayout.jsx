@@ -8,7 +8,7 @@ import './AdminLayout.css';
 
 const AdminLayout = () => {
     const { logout } = useAuth();
-    const socket = useSocket();
+    const { socket } = useSocket();
     const { showToast } = useToast();
     const navigate = useNavigate();
 

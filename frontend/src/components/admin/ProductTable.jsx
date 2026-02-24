@@ -9,8 +9,33 @@ const ageGroupLabels = {
     '12+': '12+ tuổi',
 };
 
-const ProductTable = ({ products, onDelete }) => {
+import axios from 'axios';
+import { useToast } from '../../context/ToastContext';
+
+const ProductTable = ({ products, onDelete, onRefresh }) => {
     const serverUrl = API_URL;
+    const { showToast } = useToast();
+    const [editingStockId, setEditingStockId] = React.useState(null);
+    const [stockValue, setStockValue] = React.useState(0);
+
+    const handleStockEditClick = (product) => {
+        setEditingStockId(product._id);
+        setStockValue(product.stockQuantity);
+    };
+
+    const handleSaveStock = async (productId) => {
+        try {
+            const token = localStorage.getItem('adminToken');
+            await axios.patch(`${API_URL}/api/v1/products/${productId}`, { stockQuantity: stockValue }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            showToast("Cập nhật kho thành công!", "success");
+            setEditingStockId(null);
+            if (onRefresh) onRefresh();
+        } catch (error) {
+            showToast("Lỗi cập nhật kho", "error");
+        }
+    };
 
     const formatAgeGroups = (groups) => {
         if (!groups || groups.length === 0) return 'Chưa gán';
@@ -47,7 +72,28 @@ const ProductTable = ({ products, onDelete }) => {
                         <td>{formatCategories(product.categories)}</td>
 
                         <td>{product.sellPrice.toLocaleString('vi-VN')} VND</td>
-                        <td>{product.stockQuantity}</td>
+                        <td style={{ minWidth: '100px' }}>
+                            {editingStockId === product._id ? (
+                                <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                                    <input
+                                        type="number"
+                                        value={stockValue}
+                                        onChange={(e) => setStockValue(parseInt(e.target.value))}
+                                        style={{ width: '50px', padding: '4px' }}
+                                    />
+                                    <button onClick={() => handleSaveStock(product._id)} style={{ padding: '4px', cursor: 'pointer', background: '#2ecc71', color: 'white', border: 'none', borderRadius: '3px' }}>✓</button>
+                                    <button onClick={() => setEditingStockId(null)} style={{ padding: '4px', cursor: 'pointer', background: '#e74c3c', color: 'white', border: 'none', borderRadius: '3px' }}>✕</button>
+                                </div>
+                            ) : (
+                                <div
+                                    onClick={() => handleStockEditClick(product)}
+                                    style={{ cursor: 'pointer', textDecoration: 'underline dotted', color: product.stockQuantity <= product.lowStockThreshold ? 'red' : 'inherit', fontWeight: product.stockQuantity <= product.lowStockThreshold ? 'bold' : 'normal' }}
+                                    title="Click để sửa nhanh"
+                                >
+                                    {product.stockQuantity}
+                                </div>
+                            )}
+                        </td>
                         <td>{formatAgeGroups(product.ageGroups)}</td>
                         <td className="action-buttons">
                             <Link to={`/admin/products/edit/${product._id}`} className="btn-edit">Sửa</Link>

@@ -1,16 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../../config/api';
+import { useToast } from '../../context/ToastContext';
 
-const OrderTable = ({ orders }) => {
-    const getStatusStyle = (status) => {
-        switch (status) {
-            case 'Pending': return { color: 'orange', fontWeight: 'bold' };
-            case 'Processing': return { color: 'blue', fontWeight: 'bold' };
-            case 'Shipped': return { color: 'purple', fontWeight: 'bold' };
-            case 'Completed': return { color: 'green', fontWeight: 'bold' };
-            case 'Cancelled': return { color: 'red', fontWeight: 'bold' };
-            default: return {};
+const OrderTable = ({ orders, onRefresh }) => {
+    const { showToast } = useToast();
+
+    const handleQuickStatusUpdate = async (orderId, newStatus) => {
+        try {
+            const token = localStorage.getItem('adminToken');
+            await axios.patch(`${API_URL}/api/v1/orders/${orderId}`, { status: newStatus }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            showToast("Cập nhật trạng thái thành công!", "success");
+            if (onRefresh) onRefresh();
+        } catch (error) {
+            console.error("Lỗi cập nhật nhanh:", error);
+            showToast(error.response?.data?.message || "Cập nhật thất bại", "error");
         }
+    };
+
+    const getStatusClass = (status) => {
+        return `status-badge status-${status.toLowerCase()}`;
     };
 
     return (
@@ -35,8 +47,28 @@ const OrderTable = ({ orders }) => {
                         <td>
                             <span className={`status-${order.status.toLowerCase()}`}>{order.status}</span>
                         </td>
-                        <td className="action-buttons">
-                            <Link to={`/admin/orders/${order._id}`} className="btn-outline" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>Xem chi tiết</Link>
+                        <td className="action-buttons" style={{ display: 'flex', gap: '5px' }}>
+                            <Link to={`/admin/orders/${order._id}`} className="btn-outline" style={{ padding: '6px 10px', fontSize: '0.7rem' }}>Chi tiết</Link>
+
+                            {order.status === 'Pending' && (
+                                <button
+                                    onClick={() => handleQuickStatusUpdate(order._id, 'Processing')}
+                                    className="btn-primary"
+                                    style={{ padding: '6px 10px', fontSize: '0.7rem', backgroundColor: '#2ecc71' }}
+                                >
+                                    Xác nhận
+                                </button>
+                            )}
+
+                            {order.status === 'Processing' && (
+                                <button
+                                    onClick={() => handleQuickStatusUpdate(order._id, 'Shipped')}
+                                    className="btn-primary"
+                                    style={{ padding: '6px 10px', fontSize: '0.7rem', backgroundColor: '#3498db' }}
+                                >
+                                    Giao hàng
+                                </button>
+                            )}
                         </td>
                     </tr>
                 )) : (

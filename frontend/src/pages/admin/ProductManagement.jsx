@@ -9,10 +9,28 @@ const ProductManagement = () => {
     const [products, setProducts] = useState([]);
     const [pagination, setPagination] = useState({});
     const [loading, setLoading] = useState(true);
+    const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
 
-    // State cho ô tìm kiếm
+    // State cho ô tìm kiếm và lọc
     const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+    const [catFilter, setCatFilter] = useState(searchParams.get('category') || '');
+    const [brandFilter, setBrandFilter] = useState(searchParams.get('brand') || '');
+
+    useEffect(() => {
+        const fetchFilters = async () => {
+            try {
+                const [catRes, brandRes] = await Promise.all([
+                    axios.get(`${API_URL}/api/v1/categories`),
+                    axios.get(`${API_URL}/api/v1/brands`)
+                ]);
+                setCategories(catRes.data?.data?.categories || []);
+                setBrands(brandRes.data?.data?.brands || []);
+            } catch (err) { }
+        };
+        fetchFilters();
+    }, []);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -29,7 +47,7 @@ const ProductManagement = () => {
             }
         };
         fetchProducts();
-    }, [searchParams]); // Chạy lại mỗi khi searchParams thay đổi
+    }, [searchParams]);
 
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
@@ -51,8 +69,10 @@ const ProductManagement = () => {
     const handleSearch = (e) => {
         e.preventDefault();
         const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set('search', searchTerm);
-        newSearchParams.set('page', '1'); // Reset về trang 1 khi tìm kiếm
+        if (searchTerm) newSearchParams.set('search', searchTerm); else newSearchParams.delete('search');
+        if (catFilter) newSearchParams.set('category', catFilter); else newSearchParams.delete('category');
+        if (brandFilter) newSearchParams.set('brand', brandFilter); else newSearchParams.delete('brand');
+        newSearchParams.set('page', '1');
         setSearchParams(newSearchParams);
     };
 
@@ -73,19 +93,53 @@ const ProductManagement = () => {
                 </Link>
             </div>
 
-            {/* THANH TÌM KIẾM MỚI */}
-            <form onSubmit={handleSearch} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+            {/* THANH TÌM KIẾM VÀ LỌC MỚI */}
+            <form onSubmit={handleSearch} style={{ marginBottom: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    placeholder="Nhập tên sản phẩm..."
-                    style={{ flexGrow: 1, padding: '10px' }}
+                    placeholder="Tên sản phẩm..."
+                    style={{ flexGrow: 1, padding: '10px', minWidth: '200px' }}
                 />
-                <button type="submit" className="btn-primary">Tìm kiếm</button>
+                <select
+                    value={catFilter}
+                    onChange={e => setCatFilter(e.target.value)}
+                    style={{ padding: '10px', minWidth: '150px' }}
+                >
+                    <option value="">Tất cả danh mục</option>
+                    {categories.map(cat => (
+                        <option key={cat._id} value={cat._id}>{cat.name}</option>
+                    ))}
+                </select>
+                <select
+                    value={brandFilter}
+                    onChange={e => setBrandFilter(e.target.value)}
+                    style={{ padding: '10px', minWidth: '150px' }}
+                >
+                    <option value="">Tất cả thương hiệu</option>
+                    {brands.map(brand => (
+                        <option key={brand._id} value={brand._id}>{brand.name}</option>
+                    ))}
+                </select>
+                <button type="submit" className="btn-primary">Lọc & Tìm</button>
             </form>
 
-            <ProductTable products={products} onDelete={handleDelete} />
+            <ProductTable products={products} onDelete={handleDelete} onRefresh={() => {
+                const fetchProducts = async () => {
+                    setLoading(true);
+                    try {
+                        const response = await axios.get(`${API_URL}/api/v1/products?${searchParams.toString()}`);
+                        setProducts(response.data?.data?.products || []);
+                        setPagination(response.data?.pagination || {});
+                    } catch (error) {
+                        console.error("Lỗi tải sản phẩm:", error);
+                    } finally {
+                        setLoading(false);
+                    }
+                };
+                fetchProducts();
+            }} />
 
             {/* PHÂN TRANG MỚI */}
             <Pagination

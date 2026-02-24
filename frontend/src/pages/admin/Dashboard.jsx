@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { API_URL } from '../../config/api';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler } from 'chart.js';
 import { FaShoppingCart, FaBoxOpen } from 'react-icons/fa';
 import { useSocket } from '../../context/SocketContext';
 import { useToast } from '../../context/ToastContext';
 import './Dashboard.css';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler);
 
 const Dashboard = () => {
     const [stats, setStats] = useState({ totalOrders: 0, totalRevenue: 0, totalProductsSold: 0, lowStockCount: 0, outOfStockCount: 0, totalProducts: 0 });
