@@ -71,6 +71,7 @@ const ProductCard = ({ product, salePrice }) => {
                     <div className="product-overlay-actions">
                         <button
                             className="quick-view-btn"
+                            aria-label="Xem nhanh"
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -80,7 +81,11 @@ const ProductCard = ({ product, salePrice }) => {
                             QUICK VIEW
                         </button>
                     </div>
-                    <button className="wishlist-toggle" onClick={toggleWishlist}>
+                    <button
+                        className="wishlist-toggle"
+                        onClick={toggleWishlist}
+                        aria-label={isWishlisted ? "Xóa khỏi danh sách yêu thích" : "Thêm vào danh sách yêu thích"}
+                    >
                         {isWishlisted ? <FaHeart className="heart-icon active" /> : <FaRegHeart className="heart-icon" />}
                     </button>
                     {salePrice && (

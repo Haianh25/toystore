@@ -4,12 +4,15 @@ const User = require('../models/userModel');
 const webpush = require('web-push');
 
 // Configure web-push with VAPID keys
-// These should be in .env but we'll set them here once we have them
-webpush.setVapidDetails(
-    'mailto:admin@thedevilplayz.com',
-    process.env.VAPID_PUBLIC_KEY,
-    process.env.VAPID_PRIVATE_KEY
-);
+if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+    webpush.setVapidDetails(
+        'mailto:admin@thedevilplayz.com',
+        process.env.VAPID_PUBLIC_KEY,
+        process.env.VAPID_PRIVATE_KEY
+    );
+} else if (process.env.NODE_ENV !== 'test') {
+    console.warn('VAPID keys not set. Push notifications will not work.');
+}
 
 exports.subscribe = catchAsync(async (req, res, next) => {
     const subscription = req.body;

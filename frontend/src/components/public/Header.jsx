@@ -191,7 +191,7 @@ const Header = () => {
                         </div>
                     </div>
 
-                    <Link to="/" className="hero-logo">
+                    <Link to="/" className="hero-logo" aria-label="Trang chủ">
                         <span className="brand-name">TheDevilPlayz</span>
                     </Link>
 
@@ -242,16 +242,16 @@ const Header = () => {
                             )}
                         </div>
 
-                        <Link to="/wishlist" className="icon-link"><FaRegHeart /></Link>
+                        <Link to="/wishlist" className="icon-link" aria-label="Danh sách yêu thích"><FaRegHeart /></Link>
                         {userToken ? (
                             <>
-                                <Link to="/my-account" className="icon-link"><FaUser /></Link>
+                                <Link to="/my-account" className="icon-link" aria-label="Tài khoản"><FaUser /></Link>
                                 <button onClick={handleLogout} className="logout-text-btn">LOGOUT</button>
                             </>
                         ) : (
-                            <Link to="/login" className="icon-link"><FaUser /></Link>
+                            <Link to="/login" className="icon-link" aria-label="Đăng nhập"><FaUser /></Link>
                         )}
-                        <Link to="/cart" className="icon-link cart-trigger">
+                        <Link to="/cart" className="icon-link cart-trigger" aria-label="Giỏ hàng">
                             <FaShoppingCart />
                             {cartCount > 0 && <span className="cart-dot">{cartCount}</span>}
                         </Link>
