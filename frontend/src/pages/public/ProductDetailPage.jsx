@@ -51,16 +51,11 @@ const ProductDetailPage = () => {
 
                     const fetchRelated = async () => {
                         try {
-                            const relatedRes = await axios.get(`${API_URL}/api/v1/products`, {
-                                params: {
-                                    category: categoryId,
-                                    limit: 5
-                                }
-                            });
-                            const filtered = (relatedRes.data?.data?.products || []).filter(p => p._id !== id);
-                            setRelatedProducts(filtered.slice(0, 4));
+                            const relatedRes = await axios.get(`${API_URL}/api/v1/products/${id}/related`);
+                            setRelatedProducts(relatedRes.data?.data?.products || []);
                         } catch (err) {
-                            console.warn("Không thể tải sản phẩm tương quan:", err);
+                            console.warn("Không thể tải sản phẩm tương quan thông minh:", err);
+                            // Fallback to category-based if needed
                         }
                     };
                     fetchRelated();
@@ -296,8 +291,8 @@ const ProductDetailPage = () => {
             </div>
 
             <div className="product-details-extra">
-                <div className="description-section">
-                    <h2 className="tdp-serif">MÔ TẢ SẢN PHẨM</h2>
+                <div className="description-section glass-panel">
+                    <h2 className="tdp-serif">THE COLLECTOR'S DOSSIER</h2>
                     <div className="content" dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
                 </div>
 
@@ -345,10 +340,12 @@ const ProductDetailPage = () => {
                     {/* Reviews List */}
                     <div className="reviews-list">
                         {reviews.length === 0 ? (
-                            <p className="no-reviews">Chưa có đánh giá nào cho sản phẩm này.</p>
+                            <div className="no-reviews glass-panel">
+                                <p>BE THE FIRST HERO TO REVIEW THIS PIECE.</p>
+                            </div>
                         ) : (
                             reviews.map(review => (
-                                <div key={review._id} className="review-item">
+                                <div key={review._id} className="review-item glass-card">
                                     <div className="review-meta">
                                         <span className="reviewer-name">{review.user?.fullName}</span>
                                         <span className="review-date">{new Date(review.createdAt).toLocaleDateString('vi-VN')}</span>

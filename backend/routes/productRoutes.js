@@ -19,6 +19,8 @@ router.route('/')
         productController.createProduct
     );
 
+router.get('/:id/related', productController.getRelatedProducts);
+
 router.route('/:id')
     .get(productController.getProduct)
     .patch(

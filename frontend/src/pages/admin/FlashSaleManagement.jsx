@@ -14,8 +14,13 @@ const FlashSaleManagement = () => {
 
     useEffect(() => {
         const fetchFlashSales = async () => {
-            const res = await axios.get(`${API_URL}/api/v1/flash-sales`, apiConfig);
-            setFlashSales(res.data.data.flashSales);
+            try {
+                const res = await axios.get(`${API_URL}/api/v1/flash-sales`, apiConfig);
+                setFlashSales(res.data.data.flashSales);
+            } catch (error) {
+                console.error("Error fetching flash sales:", error);
+                showToast("Không thể tải danh sách flash sale!", "error");
+            }
         };
         fetchFlashSales();
     }, []);

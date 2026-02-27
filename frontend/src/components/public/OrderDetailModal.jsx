@@ -28,6 +28,28 @@ const OrderDetailModal = ({ orderId, onClose }) => {
         fetchOrderDetail();
     }, [orderId, onClose]);
 
+    const handleDownloadInvoice = async () => {
+        try {
+            const token = localStorage.getItem('userToken');
+            const res = await axios.get(`${API_URL}/api/v1/orders/${orderId}/invoice`, {
+                headers: { Authorization: `Bearer ${token}` },
+                responseType: 'blob'
+            });
+
+            // Create a blob URL and trigger download
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `invoice-${orderId.slice(-6).toUpperCase()}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error("Lỗi tải hóa đơn:", error);
+            alert("Không thể tải hóa đơn. Vui lòng thử lại sau.");
+        }
+    };
+
     if (!loading && !order) return null;
 
     return (
@@ -50,16 +72,28 @@ const OrderDetailModal = ({ orderId, onClose }) => {
                             {order.discount > 0 && (
                                 <p><strong>Discount:</strong> -{order.discount.toLocaleString('vi-VN')} VND</p>
                             )}
+                            <div className="order-actions" style={{ marginTop: '20px' }}>
+                                <button
+                                    className="tdp-button-dark download-invoice-btn"
+                                    onClick={handleDownloadInvoice}
+                                >
+                                    DOWNLOAD INVOICE (PDF)
+                                </button>
+                            </div>
                         </div>
 
                         <div className="order-items-list">
                             {order.products.map(item => (
                                 <div key={item._id} className="order-item-row">
                                     <div className="item-img">
-                                        <img src={`${API_URL}${item.product.mainImage}`} alt={item.product.name} />
+                                        {item.product ? (
+                                            <img src={`${API_URL}${item.product.mainImage}`} alt={item.product.name} />
+                                        ) : (
+                                            <div className="item-placeholder">No Image</div>
+                                        )}
                                     </div>
                                     <div className="item-info">
-                                        <h4>{item.product.name}</h4>
+                                        <h4>{item.product ? item.product.name : 'Sản phẩm không còn tồn tại'}</h4>
                                         <p>Qty: {item.quantity}</p>
                                         <p>{item.price.toLocaleString('vi-VN')} VND</p>
                                     </div>

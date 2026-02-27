@@ -172,12 +172,18 @@ const OrderDetail = () => {
                                     <tr key={item._id}>
                                         <td>
                                             <div className="product-item-info">
-                                                <img src={`${serverUrl}${item.product.mainImage}`} alt={item.product.name} />
-                                                <div>{item.product.name}</div>
+                                                {item.product ? (
+                                                    <>
+                                                        <img src={`${serverUrl}${item.product.mainImage}`} alt={item.product.name} />
+                                                        <div>{item.product.name}</div>
+                                                    </>
+                                                ) : (
+                                                    <div>Sản phẩm không còn tồn tại</div>
+                                                )}
                                             </div>
                                         </td>
                                         <td>
-                                            {isEditing && isEditable ? (
+                                            {isEditing && isEditable && item.product ? (
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                                     <button onClick={() => handleUpdateQuantity(item.product._id, item.quantity - 1)}>-</button>
                                                     <input
@@ -195,7 +201,12 @@ const OrderDetail = () => {
                                         <td>{(item.price * item.quantity).toLocaleString('vi-VN')} VND</td>
                                         {isEditing && isEditable && (
                                             <td>
-                                                <button onClick={() => handleUpdateQuantity(item.product._id, 0)} style={{ backgroundColor: 'red', color: 'white' }}>Xóa</button>
+                                                <button
+                                                    onClick={() => handleUpdateQuantity(item.product ? item.product._id : item._id, 0)}
+                                                    style={{ backgroundColor: 'red', color: 'white' }}
+                                                >
+                                                    Xóa
+                                                </button>
                                             </td>
                                         )}
                                     </tr>

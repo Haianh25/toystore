@@ -96,6 +96,31 @@ const MyAccount = () => {
                 )}
             </div>
 
+            {/* BRICKPOINTS LOYALTY CARD */}
+            <div className="brickpoints-luxury-card glass-panel">
+                <div className="brickpoints-header">
+                    <div className="brickpoints-info">
+                        <span className="label">LOYALTY STATUS</span>
+                        <h2 className="points-value">{user.brickPoints || 0} <small>BRICKPOINTS</small></h2>
+                    </div>
+                    <div className="hero-rank">
+                        <span className="rank-name">COLLECTOR LEVEL: {user.brickPoints >= 500 ? 'HERO' : user.brickPoints >= 100 ? 'SENTINEL' : 'RECRUIT'}</span>
+                    </div>
+                </div>
+                <div className="points-progress-container">
+                    <div className="progress-bar">
+                        <div
+                            className="progress-fill"
+                            style={{ width: `${Math.min(100, ((user.brickPoints || 0) % 500) / 5)}%` }}
+                        ></div>
+                    </div>
+                    <div className="progress-labels">
+                        <span>{user.brickPoints || 0} PTS</span>
+                        <span>NEXT TIER: {user.brickPoints >= 500 ? 'MAX' : user.brickPoints >= 100 ? '500 PTS' : '100 PTS'}</span>
+                    </div>
+                </div>
+            </div>
+
             <form onSubmit={handleSubmit} className="account-form">
                 <div className="form-group full-width">
                     <label>Email</label>

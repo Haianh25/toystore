@@ -232,3 +232,88 @@
     color: #999;
     font-style: italic;
 }
+
+/* BrickPoints Luxury Card */
+.brickpoints-luxury-card {
+    margin-bottom: 50px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.brickpoints-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.brickpoints-info .label {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--tdp-gray);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.brickpoints-info .points-value {
+    font-family: var(--tdp-font-serif);
+    font-size: 3rem;
+    margin: 0;
+    line-height: 1;
+}
+
+.brickpoints-info .points-value small {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    font-family: var(--tdp-font-sans);
+    color: var(--tdp-gray);
+}
+
+.hero-rank {
+    background: var(--tdp-black);
+    color: white;
+    padding: 8px 15px;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+}
+
+.points-progress-container {
+    width: 100%;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--tdp-black);
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--tdp-gray);
+    font-weight: 500;
+}
+
+/* Reuse glass-panel from ProductDetail if not in global */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+}

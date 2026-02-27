@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+dotenv.config({ path: './.env' });
+
+const mongoose = require('mongoose');
 const app = require('./app');
 const notificationRouter = require('./routes/notificationRoutes');
-const brandRouter = require('./routes/brandRoutes'); // Added brandRouter import
 
-app.use('/api/v1/brands', brandRouter); // Added brandRouter middleware
-app.use('/api/v1/notifications', notificationRouter); // Added notificationRouter middleware
-
-dotenv.config({ path: './.env' });
+// Routes specific to the final server setup
+app.use('/api/v1/notifications', notificationRouter);
 
 const DB = process.env.MONGO_URI;
 

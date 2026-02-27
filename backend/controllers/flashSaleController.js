@@ -2,6 +2,7 @@ const Product = require('../models/productModel');
 const User = require('../models/userModel');
 const notificationController = require('./notificationController');
 const catchAsync = require('../utils/catchAsync');
+const FlashSale = require('../models/flashSaleModel');
 
 
 exports.getAllFlashSales = async (req, res) => {

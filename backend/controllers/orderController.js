@@ -139,6 +139,21 @@ exports.updateOrderToPaid = catchAsync(async (req, res, next) => {
         }
 
         const updatedOrder = await order.save();
+
+        // AWARD BRICKPOINTS (1 point per 100k VND)
+        try {
+            const User = require('../models/userModel');
+            const pointsToAward = Math.floor(updatedOrder.totalAmount / 100000);
+            if (pointsToAward > 0) {
+                await User.findByIdAndUpdate(updatedOrder.user, {
+                    $inc: { brickPoints: pointsToAward }
+                });
+                console.log(`Awarded ${pointsToAward} BrickPoints to user ${updatedOrder.user}`);
+            }
+        } catch (err) {
+            console.error("Error awarding BrickPoints:", err.message);
+        }
+
         res.status(200).json({ status: 'success', data: { order: updatedOrder } });
     } else {
         res.status(404).json({ status: 'fail', message: 'Không tìm thấy đơn hàng' });
@@ -361,3 +376,22 @@ exports.removeProductFromOrder = catchAsync(async (req, res, next) => {
     await order.populate('products.product');
     res.status(200).json({ status: 'success', data: { order } });
 });
+
+exports.getInvoice = catchAsync(async (req, res, next) => {
+    const order = await Order.findById(req.params.id).populate('products.product');
+    if (!order) return res.status(404).json({ status: 'fail', message: 'Không tìm thấy đơn hàng' });
+
+    // Check ownership
+    const orderUserId = order.user && order.user._id ? order.user._id.toString() : order.user.toString();
+    if (req.user.role !== 'admin' && orderUserId !== req.user.id) {
+        return res.status(403).json({ status: 'fail', message: 'Bạn không có quyền tải hóa đơn này' });
+    }
+
+    const { generateInvoice } = require('../utils/pdfGenerator');
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=invoice-${order._id}.pdf`);
+
+    generateInvoice(order, req.user, res);
+});
+

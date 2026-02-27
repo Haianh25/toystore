@@ -487,6 +487,84 @@
     gap: 30px;
 }
 
+.product-detail-layout,
+.reviews-section,
+.related-products-section {
+    position: relative;
+    z-index: 1;
+}
+
+/* Glassmorphism for Review Items */
+.review-item {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-bottom: 2px solid var(--tdp-color-beige-subtle);
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s var(--tdp-curve-smooth);
+}
+
+.review-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero Review Stars */
+.star-filled {
+    color: #f1c40f;
+    /* Hero Gold */
+    filter: drop-shadow(0 0 2px rgba(241, 196, 15, 0.5));
+}
+
+/* Review Form Sophistication */
+.review-form {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 60px;
+    border-radius: 1px;
+    /* Maintain sharp luxury lines */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.4s var(--tdp-curve-smooth);
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-8px);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific Adjustments */
+.description-section.glass-panel {
+    margin-bottom: 80px;
+}
+
+.no-reviews.glass-panel {
+    padding: 40px;
+    text-align: center;
+    color: var(--tdp-gray);
+    font-style: italic;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .product-detail-layout {

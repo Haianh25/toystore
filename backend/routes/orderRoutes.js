@@ -4,6 +4,9 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
+// Specific sub-routes SHOULD BE FIRST
+router.get('/:id/invoice', authMiddleware.protect, orderController.getInvoice);
+
 // This route is for CUSTOMERS who are logged in to get their own orders
 router.get('/my-orders', authMiddleware.protect, orderController.getMyOrders);
 
